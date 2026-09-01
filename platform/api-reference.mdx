@@ -1,0 +1,104 @@
+---
+title: "API Reference"
+description: "xFabric platform REST API — insights-backend and admin-backend endpoints."
+---
+
+The xFabric platform exposes two API surfaces: the **insights-backend** (core API on port 8080) and the **admin-backend** (identity and management on port 8100).
+
+## Authentication
+
+All requests require a JWT or API key:
+
+```bash
+Authorization: Bearer YOUR_TOKEN
+```
+
+See the [Authentication](/platform/authentication) page for details on obtaining tokens.
+
+## insights-backend (port 8080)
+
+### All authenticated users
+
+These endpoints are available to both Admin and User roles.
+
+| Group | Prefix | Description |
+|---|---|---|
+| **Agent** | `/agent/` | Agent management and execution |
+| **GitHub connection** | `/github-connection/` | GitHub repository connections |
+| **Graph** | `/graph/` | Entity graph queries and traversal |
+| **Ontology** | `/ontology/` | Entity type definitions and schemas |
+| **PR files** | `/pr-files/` | Pull request file analysis |
+| **PR impact** | `/pr-impact/` | Pull request impact assessment |
+| **PR reviews** | `/pr-reviews/` | Code review results |
+| **PR tracking** | `/pr-tracking/` | Pull request monitoring |
+| **RCA** | `/rca/` | Root cause analysis |
+| **Resources** | `/resource-list/` | Cloud resource inventory |
+| **Scanner** | `/scanner/` | Security scanning |
+| **Simulation runs** | `/simulation-runs/` | Simulation execution |
+| **Simulation stats** | `/simulation-stats/` | Simulation metrics and history |
+| **Simulations** | `/simulations/` | Simulation scenario management |
+| **Summary** | `/summary/` | Dashboard summaries and aggregations |
+| **LLM status** | `/llm-providers-status/` | LLM provider health |
+
+### Admin-only endpoints
+
+| Group | Prefix | Description |
+|---|---|---|
+| **API keys** | `/apikey/` | API key CRUD |
+| **Canva** | `/canva-integration/` | Canva integration |
+| **Confluence** | `/confluence-integration/` | Confluence integration |
+| **Connectors** | `/connectors/` | Data source connectors |
+| **Google Drive** | `/google-drive-integration/` | Google Drive integration |
+| **Jira** | `/jira-integration/` | Jira integration |
+| **LLM providers** | `/llm-providers/` | LLM provider configuration |
+| **Notion** | `/notion-integration/` | Notion integration |
+| **Ingestion status** | `/ingestion-status/` | Document ingestion monitoring |
+| **Operator hints** | `/operator-hints/` | Operator hint configuration |
+| **Policy** | `/policy/` | Security policy management |
+| **Provider accounts** | `/provider-account/` | Cloud provider accounts |
+| **Settings** | `/settings/` | Platform settings |
+| **Slack** | `/slack-integration/` | Slack integration |
+| **MCP audit** | `/mcp-audit/` | MCP usage audit logs |
+| **MCP analytics** | `/mcp-analytics/` | MCP usage analytics |
+
+### Special routes
+
+| Prefix | Description |
+|---|---|
+| `/v1/products/cielara-code/` | Product usage tracking |
+| `/v1/telemetry` | Telemetry ingestion |
+| `/v1/llm/` | LLM gateway (proxy to configured providers) |
+| `/scripts/` | Script execution |
+
+## admin-backend (port 8100)
+
+### Public endpoints (no auth required)
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/iam/login` | Email/password login |
+| `POST` | `/api/iam/login/options` | Resolve auth method for an email |
+| `POST` | `/api/iam/signup` | Create a new account |
+| `GET` | `/saml/discovery` | SAML discovery |
+| `GET` | `/saml/metadata` | SAML metadata |
+| `POST` | `/saml/acs` | SAML assertion consumer service |
+
+### Authenticated endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/iam/users` | List users |
+| `POST` | `/api/iam/users` | Create user |
+| `PUT` | `/api/iam/users/:id` | Update user |
+| `DELETE` | `/api/iam/users/:id` | Delete user |
+| `GET` | `/api/iam/roles` | List roles |
+
+### System administration
+
+System reset requires a 3-layer guard (admin role + confirmation token + feature flag).
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/server-admin/reconcile/` | Reconcile system state |
+| `PUT` | `/server-admin/config-states/` | Update config |
+| `POST` | `/api/system/reset` | System reset (guarded) |

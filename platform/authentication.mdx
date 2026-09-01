@@ -1,0 +1,83 @@
+---
+title: "Authentication"
+description: "How authentication works in xFabric — JWT tokens, SSO with Google Workspace, and API keys."
+---
+
+xFabric uses JWT-based authentication issued by the admin-backend service. All API requests must include a valid token in the `Authorization` header.
+
+## Authentication methods
+
+### Email and password
+
+The standard login flow:
+
+1. User submits email and password to the admin-backend
+2. Admin-backend validates credentials against PostgreSQL
+3. On success, a JWT is issued and returned to the client
+4. The client includes the JWT in subsequent requests
+
+### Google Workspace SSO (OIDC)
+
+xFabric supports single sign-on via Google Workspace using OpenID Connect.
+
+**Data model:**
+
+| Table | Purpose |
+|---|---|
+| `users` | Extended with `auth_provider` enum and `google_subject` field |
+| `oidc_identity_providers` | Stores Google OIDC provider configuration |
+| `oidc_auth_codes` | Tracks authorization codes during the flow |
+
+**Login flow:**
+
+<Steps>
+  <Step title="Method resolution">
+    The frontend sends the user's email to `POST /api/iam/login/options` to determine which auth method to use (password or SSO).
+  </Step>
+  <Step title="OIDC redirect">
+    If SSO, the browser is redirected to Google's authorization endpoint with PKCE challenge.
+  </Step>
+  <Step title="Callback">
+    Google redirects back to the admin-backend with an authorization code. The backend exchanges it for tokens, validates the ID token, and issues a platform JWT.
+  </Step>
+</Steps>
+
+**Security properties:**
+- PKCE (Proof Key for Code Exchange) prevents authorization code interception
+- Browser-bound state parameter prevents CSRF
+- Nonce replay protection prevents token reuse
+- JWKS key caching with automatic rotation
+
+### API keys
+
+For programmatic access, generate an API key from the dashboard.
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+  https://api.xfabric.io/v1/projects
+```
+
+API keys are long-lived and must be manually rotated. Store them securely and never commit them to source control.
+
+## Authorization
+
+The insights-backend enforces role-based access control (RBAC) with two roles:
+
+| Role | Access |
+|---|---|
+| **Admin** | Full access: all endpoints including integrations, settings, policies, and provider accounts |
+| **User** | Read/write access to agents, graph, ontology, PR reviews, RCA, scanners, simulations, and summaries |
+
+Admin-only endpoints include API key management, third-party integrations (Slack, Jira, Confluence, Notion, Google Drive, Canva), LLM provider configuration, connector management, and policy settings.
+
+## Service-to-service auth
+
+Internal services authenticate using the `X-Internal-Service-Token` header. The agent-fabric service has no ingress and relies on a proxy JWT forwarded from the insights-backend.
+
+| Service | Auth mechanism |
+|---|---|
+| insights-backend | JWT + RBAC |
+| admin-backend | JWT issuer (login endpoints are public) |
+| mcp-server | Static bearer token |
+| agent-fabric | No direct auth (internal only, proxy JWT) |
+| agent-memory | JWT when accessed via ALB prefix |

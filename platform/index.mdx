@@ -1,0 +1,33 @@
+---
+title: "Platform overview"
+description: "The core xFabric platform — six services, multi-cloud support, and a unified API."
+---
+
+All xFabric products run on the platform. It has six services behind a shared edge layer, with multi-cloud support (AWS, Azure, GCP) and a graph-based entity model supporting 78+ entity types.
+
+## Capabilities
+
+- **Multi-cloud inventory**: discover and scan resources across AWS, Azure, GCP, and Kubernetes via cloud provider plugins
+- **Graph-based modeling**: FalkorDB entity graph with 78+ entity types and relationship traversal
+- **Authentication**: JWT-based auth with Google Workspace SSO (OIDC), RBAC with Admin and User roles
+- **Integrations**: GitHub, Slack, Jira, Confluence, Notion, Google Drive, Canva
+- **MCP server**: AI-native tool access via the Model Context Protocol
+- **LLM gateway**: proxy to configured LLM providers
+
+<CardGroup cols={2}>
+  <Card title="Architecture" icon="sitemap" href="/platform/architecture">
+    Six services, edge routing, and deployment.
+  </Card>
+  <Card title="Authentication" icon="lock" href="/platform/authentication">
+    JWT, Google SSO, RBAC, and service-to-service auth.
+  </Card>
+  <Card title="Configuration" icon="gear" href="/platform/configuration">
+    Config types, feature flags, and secret management.
+  </Card>
+  <Card title="MCP Server" icon="robot" href="/platform/mcp-server">
+    AI-native tool access to all platform capabilities.
+  </Card>
+  <Card title="API Reference" icon="code" href="/platform/api-reference">
+    All backend and admin endpoints.
+  </Card>
+</CardGroup>

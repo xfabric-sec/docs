@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "xFabric Docs",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -16,19 +16,53 @@
           "index",
           "quickstart"
         ]
+      },
+      {
+        "group": "Platform",
+        "pages": [
+          "platform/index",
+          "platform/architecture",
+          "platform/authentication",
+          "platform/configuration",
+          "platform/mcp-server",
+          "platform/api-reference"
+        ]
+      },
+      {
+        "group": "Agent Fabric",
+        "pages": [
+          "agent-fabric/index",
+          "agent-fabric/foresight",
+          "agent-fabric/simulations",
+          "agent-fabric/world-model",
+          "agent-fabric/deep-inquiry",
+          "agent-fabric/api-reference"
+        ]
+      },
+      {
+        "group": "Agent Memory",
+        "pages": [
+          "agent-memory/index",
+          "agent-memory/quickstart",
+          "agent-memory/ingestion",
+          "agent-memory/retrieval",
+          "agent-memory/connectors",
+          "agent-memory/configuration",
+          "agent-memory/api-reference"
+        ]
       }
     ],
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "API Reference",
+          "href": "/platform/api-reference",
+          "icon": "code"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "GitHub",
+          "href": "https://github.com/xfabric-sec",
+          "icon": "github"
         }
       ]
     }
@@ -41,32 +75,21 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:support@cielara.ai"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
-    }
+    ]
   },
   "contextual": {
     "options": [
       "copy",
       "view",
-      "chatgpt",
       "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
+      "mcp"
     ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/xfabric-sec"
     }
   }
 }

@@ -1,0 +1,53 @@
+---
+title: "Agent Fabric overview"
+description: "A multi-agent platform for code review, simulations, root cause analysis, and the World Model."
+---
+
+Agent Fabric is xFabric's multi-agent system. It hosts specialized AI agents that analyze your code, simulate incidents, audit your infrastructure, and maintain a live topology of your services.
+
+## Products
+
+<CardGroup cols={2}>
+  <Card title="Foresight" icon="magnifying-glass" href="/agent-fabric/foresight">
+    AI-powered code review that runs on every pull request.
+  </Card>
+  <Card title="Simulations" icon="flask" href="/agent-fabric/simulations">
+    Scenario and incident simulations to test your system's resilience.
+  </Card>
+  <Card title="World Model" icon="globe" href="/agent-fabric/world-model">
+    A live service-graph topology with natural-language queries.
+  </Card>
+  <Card title="Deep Inquiry" icon="microscope" href="/agent-fabric/deep-inquiry">
+    Agentic audits that deeply investigate infrastructure questions.
+  </Card>
+</CardGroup>
+
+## Architecture
+
+Agent Fabric is a single FastAPI service (port 3001) built as a layered Python monorepo with strict downward import dependencies:
+
+```
+bootstrap/       → composition root, wires the object graph
+  ↓
+api_server/      → HTTP surface, generated from OpenAPI specs
+  ↓
+apps/            → product agents (foresight, simulations, deep_inquiry, wm_editing)
+  ↓
+worldmodel/      → taxonomy, executor, ledger, views, topology store
+  ↓
+substrate/       → agent harness, LLM providers, skills, messaging, persistence
+```
+
+Each layer may only import from layers below it. The **substrate** provides the agent runtime: LLM access (via litellm gateway or direct OpenAI/Azure), skill execution, messaging, and observability. The **worldmodel** builds on substrate to manage the service graph. The **apps** implement product-specific agents. The **api_server** exposes everything over HTTP.
+
+## Deployment
+
+Agent Fabric runs as a single Docker image on GKE. It is internal-only with no direct internet ingress. The insights-backend proxies requests to it with a forwarded JWT.
+
+The `WM_VERSION` environment variable controls which implementation is active (v1 legacy or v2 layered).
+
+## Security
+
+- Content scanning for secrets in all processed code
+- Prompt-injection screening on agent inputs
+- Service-to-service auth via `X-Internal-Service-Token`

@@ -1,47 +1,42 @@
 ---
 title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+description: "Get up and running with xFabric in minutes."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+This guide walks you through setting up xFabric and connecting it to your first project.
 
 ## Prerequisites
 
-Before you begin, you must have:
+Before you begin, you need:
 
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
+- An xFabric account
+- Access to a Git repository you want to analyze
+- An API key (generated from your dashboard)
 
 ## Get started
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
-
-    ```bash
-    npm install your-package
-    ```
+  <Step title="Sign up">
+    Create your xFabric account and generate an API key from the dashboard.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
-
-    ```bash
-    your-cli init
-    ```
+  <Step title="Connect a repository">
+    Link your GitHub repository to xFabric. This enables code review with Foresight and topology mapping with the World Model.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
-
-    ```bash
-    your-cli start
-    ```
+  <Step title="Run your first scan">
+    Trigger a code review or simulation from the dashboard, or let xFabric run automatically on your next pull request.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## What's next?
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+<CardGroup cols={3}>
+  <Card title="Platform overview" icon="server" href="/platform">
+    Learn about the core platform and API.
+  </Card>
+  <Card title="Foresight code review" icon="magnifying-glass" href="/agent-fabric/foresight">
+    Set up AI-powered code review on your PRs.
+  </Card>
+  <Card title="Agent Memory" icon="brain" href="/agent-memory/quickstart">
+    Ingest documents and query your knowledge base.
+  </Card>
+</CardGroup>

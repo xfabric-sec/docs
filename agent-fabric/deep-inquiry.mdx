@@ -1,0 +1,78 @@
+---
+title: "Deep Inquiry"
+description: "Agentic audits that deeply investigate infrastructure and security questions."
+---
+
+Deep Inquiry is an agentic audit system that investigates complex questions about your infrastructure. Unlike a simple World Model query, a deep inquiry runs multiple research steps, follows citation chains, and produces a structured report.
+
+## How it works
+
+1. You submit a question and optionally select a focus category
+2. The agent plans a multi-step investigation
+3. It queries the World Model, reads documentation, and cross-references findings
+4. A structured report is produced with citations to source files and documents
+
+## Running a deep inquiry
+
+### From the API
+
+```bash
+# Start an inquiry
+curl -X POST https://api.xfabric.io/fabric/api/deep-inquiry/run \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "Audit our authentication flow for security gaps", "category": "security"}'
+
+# Check results
+curl https://api.xfabric.io/fabric/api/deep-inquiry/{inquiry_id} \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Preview a cited file
+curl https://api.xfabric.io/fabric/api/deep-inquiry/file-preview \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -G -d "path=src/auth/middleware.go"
+```
+
+## Focus categories
+
+List available categories to focus an inquiry:
+
+```bash
+curl https://api.xfabric.io/fabric/api/deep-inquiry/categories \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## Prompt templates
+
+Deep Inquiry supports custom prompt templates to guide investigations:
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/deep-inquiry/templates` | List all templates (built-in and custom) |
+| `POST` | `/api/deep-inquiry/templates` | Create a custom template |
+| `PUT` | `/api/deep-inquiry/templates/{id}` | Update a template |
+| `DELETE` | `/api/deep-inquiry/templates/{id}` | Delete a template |
+
+## Inquiry history
+
+Browse past and running inquiries:
+
+```bash
+curl https://api.xfabric.io/fabric/api/deep-inquiry/history \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## All endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/deep-inquiry/categories` | Focus categories |
+| `GET` | `/api/deep-inquiry/templates` | List prompt templates |
+| `POST` | `/api/deep-inquiry/templates` | Create a template |
+| `PUT` | `/api/deep-inquiry/templates/{id}` | Update a template |
+| `DELETE` | `/api/deep-inquiry/templates/{id}` | Delete a template |
+| `GET` | `/api/deep-inquiry/history` | Past and running inquiries |
+| `POST` | `/api/deep-inquiry/run` | Start an inquiry |
+| `GET` | `/api/deep-inquiry/file-preview` | Preview a cited file |
+| `GET` | `/api/deep-inquiry/{inquiry_id}` | Get one inquiry |
+| `DELETE` | `/api/deep-inquiry/{inquiry_id}` | Delete an inquiry |

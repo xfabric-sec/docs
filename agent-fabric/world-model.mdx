@@ -1,0 +1,122 @@
+---
+title: "World Model"
+description: "A live service-graph topology with natural-language queries, sessions, and inquiries."
+---
+
+The World Model is a continuously updated graph of your services, their dependencies, and metadata. It powers simulations, root cause analysis, and natural-language queries about your infrastructure.
+
+## What it captures
+
+| Entity type | Examples |
+|---|---|
+| **Workloads** | Microservices, APIs, background workers |
+| **Data stores** | Databases, caches, queues |
+| **External services** | Third-party APIs, SaaS dependencies |
+| **Infrastructure** | Clusters, namespaces, deployments |
+| **Integrations** | PagerDuty services, Jira projects/issues, wiki documents |
+| **Repositories** | Source code repositories linked to workloads |
+
+Relationships capture how entities connect: calls, depends-on, publishes-to, reads-from, deployed-in, owns.
+
+## Topology API
+
+### Full topology
+
+```bash
+# Everything — every node, every edge
+curl https://api.xfabric.io/fabric/api/resources/v1/topology \
+  -H "Authorization: Bearer YOUR_TOKEN"
+
+# Metadata only — when it was built, how big it is
+curl https://api.xfabric.io/fabric/api/resources/v1/metadata \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### Subgraph queries
+
+Get the workloads within N hops of an anchor:
+
+```bash
+curl https://api.xfabric.io/fabric/api/resources/v1/graph/subgraph \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -G -d "anchors=payments-service" -d "hops=2"
+```
+
+### Catalog endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/resources/v1/workloads` | All workloads |
+| `GET` | `/api/resources/v1/workloads/{id}` | One workload in full |
+| `GET` | `/api/resources/v1/workloads/{id}/edges` | All edges touching a workload |
+| `GET` | `/api/resources/v1/workloads/{id}/outbound-calls` | What a workload calls |
+| `GET` | `/api/resources/v1/data-stores` | All data stores |
+| `GET` | `/api/resources/v1/external-services` | All external services |
+| `GET` | `/api/resources/v1/deployments` | All deployments |
+| `GET` | `/api/resources/v1/namespaces` | All namespaces |
+| `GET` | `/api/resources/v1/clusters` | All clusters |
+| `GET` | `/api/resources/v1/repos` | All repositories |
+| `GET` | `/api/resources/v1/documents` | All documents |
+| `GET` | `/api/resources/v1/pagerduty-services` | All PagerDuty services |
+| `GET` | `/api/resources/v1/jira-projects` | All Jira projects |
+| `GET` | `/api/resources/v1/jira-issues` | All Jira issues |
+
+## Sessions (conversational queries)
+
+Start a conversation with the World Model agent and ask natural-language questions:
+
+```bash
+# Start a session
+curl -X POST https://api.xfabric.io/fabric/api/wm-agent/v1/session/start \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What services depend on the payments API?"}'
+
+# Continue the conversation
+curl -X POST https://api.xfabric.io/fabric/api/wm-agent/v1/session/continue \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"session_id": "...", "question": "Which of those are critical path?"}'
+```
+
+Streaming variants (`/session/start/stream`, `/session/continue/stream`) return results as they're produced.
+
+For one-off questions without session management:
+
+```bash
+curl -X POST https://api.xfabric.io/fabric/api/wm-agent/v1/chat \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "Show me the blast radius if Redis goes down"}'
+```
+
+## Inquiries (async deep questions)
+
+For questions that take longer to answer, use the inquiry API:
+
+```bash
+# Start an inquiry
+curl -X POST https://api.xfabric.io/fabric/api/wm-agent/v1/inquiry/start \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What are the single points of failure in our payment flow?"}'
+
+# Check the result
+curl https://api.xfabric.io/fabric/api/wm-agent/v1/inquiry/{inquiry_id} \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+## Taxonomy
+
+The World Model uses a structured taxonomy to classify entities and relationships. The taxonomy is defined declaratively and processed through an executor → ledger → views pipeline. The World Model rebuilds when `WORLD_MODEL_REBUILD_ENABLED` is set.
+
+## Wiki mapping
+
+Map documentation to workloads so the World Model knows which docs describe which services:
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/wiki-mapping/state` | Current document-to-workload mappings |
+| `GET` | `/api/wiki-mapping/doc-health` | Which workloads have docs, which don't |
+| `POST` | `/api/wiki-mapping/override` | Manually map a document to a workload |
+| `POST` | `/api/wiki-mapping/sync` | Re-derive mappings from the document catalog |

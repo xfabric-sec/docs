@@ -1,0 +1,49 @@
+---
+title: "Simulations"
+description: "Run scenario and incident simulations to test your system's resilience."
+---
+
+Simulations let you model failure scenarios against your live service topology. You see the blast radius, affected services, and recommended mitigations before an incident happens in production.
+
+## How it works
+
+Simulations use the [World Model](/agent-fabric/world-model) topology as the ground truth for your infrastructure. When you run a simulation, xFabric:
+
+1. Loads the current service graph from the World Model
+2. Applies the scenario (e.g., "Redis goes down") to the topology
+3. Traces the cascading impact through service dependencies
+4. Reports the blast radius, affected services, and mitigation recommendations
+
+## Running a simulation
+
+### From the dashboard
+
+Select a scenario from the library or describe a custom one in natural language. Choose which services to include, then run.
+
+### Via API
+
+Simulations use the topology subgraph endpoint to scope the blast radius:
+
+```bash
+curl https://api.xfabric.io/fabric/api/simu-agent/v1/simulation/topology/subgraph \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -G -d "anchor=payments-service" -d "hops=3"
+```
+
+### Via MCP
+
+Use the MCP server tools for AI-assisted simulation:
+
+| Tool | Description |
+|---|---|
+| `list_scenarios` | List available simulation scenarios |
+| `get_scenario` | Get scenario details |
+| `trigger_scenario` | Execute a simulation |
+| `trigger_incident_rca` | Trigger root cause analysis for an incident |
+
+## Use cases
+
+- **Incident simulation**: model service outages and trace cascading failures through your dependency graph
+- **Threat modeling**: simulate attack scenarios and identify exposed services
+- **Change impact**: assess the risk of infrastructure changes before deploying
+- **Resilience validation**: verify that failover and redundancy mechanisms work as expected

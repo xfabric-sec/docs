@@ -1,0 +1,223 @@
+---
+title: "API Reference"
+description: "Agent Fabric REST API — all 72 public endpoints and 21 internal endpoints."
+---
+
+Agent Fabric exposes a public API (72 endpoints) and an internal control-plane API (21 endpoints). The service runs on port 3001 and is accessed through the xFabric edge layer.
+
+## Authentication
+
+All requests require an xFabric JWT or API key:
+
+```bash
+Authorization: Bearer YOUR_TOKEN
+```
+
+## Public API
+
+### Service info
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/agents` | List agents this deployment serves |
+
+### Auth and credentials
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/auth/status` | Authorization document status |
+| `GET` | `/api/auth/model` | Derived authorization model |
+| `GET` | `/api/auth/conformance` | Conformance verdict between observed and intended models |
+| `GET` | `/api/credentials/status` | Credential provider status and configuration |
+
+### Workloads
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/resources/v1/workloads` | All workloads in the topology |
+| `GET` | `/api/resources/v1/workloads/{id}` | One workload in full |
+| `GET` | `/api/resources/v1/workloads/{id}/edges` | All edges touching a workload |
+| `GET` | `/api/resources/v1/workloads/{id}/outbound-calls` | What a workload calls |
+| `GET` | `/api/resources/v1/nodes/{id}` | Node body behind a canvas node |
+
+### Graph and topology
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/resources/v1/topology` | Full canvas: every node and edge |
+| `GET` | `/api/resources/v1/graph` | Full estate: workloads, edges, and six infrastructure views |
+| `GET` | `/api/resources/v1/graph/subgraph` | Workloads within N hops of anchor(s) |
+| `GET` | `/api/resources/v1/metadata` | Build timestamp and graph size |
+| `GET` | `/api/wm-agent/v1/topology` | Stored graph for pollers |
+| `GET` | `/api/wm-agent/v1/topology/schema` | Field descriptor for topology documents |
+| `GET` | `/api/simu-agent/v1/simulation/topology/subgraph` | Subgraph for simulation surface |
+
+### Catalog
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/resources/v1/data-stores` | All data stores |
+| `GET` | `/api/resources/v1/external-services` | All external services |
+| `GET` | `/api/resources/v1/deployments` | All deployments |
+| `GET` | `/api/resources/v1/namespaces` | All namespaces |
+| `GET` | `/api/resources/v1/clusters` | All clusters |
+| `GET` | `/api/resources/v1/repos` | All repositories |
+| `GET` | `/api/resources/v1/documents` | All documents |
+| `GET` | `/api/resources/v1/pagerduty-services` | All PagerDuty services |
+| `GET` | `/api/resources/v1/jira-projects` | All Jira projects |
+| `GET` | `/api/resources/v1/jira-issues` | All Jira issues |
+
+### Builds and repos
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/topology/status` | Topology build status |
+| `GET` | `/api/repos` | Cloned repositories |
+
+### Skills and tools
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/context-agent/v1/skills` | Installed skills |
+| `GET` | `/api/context-agent/v1/tools` | Built-in agent tools |
+
+### Code review
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/simu-agent/v1/code-review/start` | Synchronous review |
+| `POST` | `/api/simu-agent/v1/code-review/start-async` | Async review (returns job ID) |
+| `GET` | `/api/simu-agent/v1/code-review/status/{job_id}` | Poll review status |
+| `GET` | `/api/simu-agent/v1/queue/status` | Queue depth and running count |
+
+### Webhooks
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/webhook/pr` | Provider-agnostic PR receiver |
+| `POST` | `/api/webhook/github/pr` | GitHub PR receiver |
+
+### Sessions (conversational World Model)
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/wm-agent/v1/session/start` | Start a conversation |
+| `POST` | `/api/wm-agent/v1/session/continue` | Continue a conversation |
+| `POST` | `/api/wm-agent/v1/chat` | One-off question |
+| `POST` | `/api/wm-agent/v1/session/stop` | Stop a session |
+| `DELETE` | `/api/wm-agent/v1/session/{id}` | Delete a session |
+| `GET` | `/api/wm-agent/v1/sessions` | List all sessions |
+| `POST` | `/api/wm-agent/v1/session/start/stream` | Start with streaming |
+| `POST` | `/api/wm-agent/v1/session/continue/stream` | Continue with streaming |
+
+### Inquiries
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/wm-agent/v1/inquiry/start` | Start an inquiry |
+| `GET` | `/api/wm-agent/v1/inquiry/{id}` | Get inquiry and answer |
+| `GET` | `/api/wm-agent/v1/inquiries` | List all inquiries |
+
+### Deep inquiry
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/deep-inquiry/categories` | Focus categories |
+| `GET` | `/api/deep-inquiry/templates` | List prompt templates |
+| `POST` | `/api/deep-inquiry/templates` | Create template |
+| `PUT` | `/api/deep-inquiry/templates/{id}` | Update template |
+| `DELETE` | `/api/deep-inquiry/templates/{id}` | Delete template |
+| `GET` | `/api/deep-inquiry/history` | Inquiry history |
+| `POST` | `/api/deep-inquiry/run` | Run an inquiry |
+| `GET` | `/api/deep-inquiry/file-preview` | Preview cited file |
+| `GET` | `/api/deep-inquiry/{id}` | Get one inquiry |
+| `DELETE` | `/api/deep-inquiry/{id}` | Delete an inquiry |
+
+### Wiki mapping
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/wiki-mapping/state` | Current mappings |
+| `GET` | `/api/wiki-mapping/available-files` | Mappable documents |
+| `POST` | `/api/wiki-mapping/override` | Map a document to a workload |
+| `DELETE` | `/api/wiki-mapping/override` | Remove a mapping |
+| `POST` | `/api/wiki-mapping/override/batch` | Batch map |
+| `POST` | `/api/wiki-mapping/override/batch-delete` | Batch remove |
+| `GET` | `/api/wiki-mapping/file-content` | Get a mapped document |
+| `GET` | `/api/wiki-mapping/doc-health` | Documentation coverage |
+| `POST` | `/api/wiki-mapping/sync` | Re-derive mappings |
+
+### Ledger
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/ledger/layers` | Ledger layers |
+| `GET` | `/api/ledger/entities/{type}` | All objects of one type |
+| `GET` | `/api/ledger/entities/{type}/{key}` | One object with envelope |
+| `GET` | `/api/ledger/relationships/{type}` | Relationships of one type |
+| `GET` | `/api/ledger/subgraph` | N-hop subgraph from an object |
+
+---
+
+## Internal API (control plane)
+
+<Warning>
+  Internal endpoints are not exposed to the internet. They are used by the platform's control plane for operational management.
+</Warning>
+
+### Credential management
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/internal/github-credentials/refresh` | Re-read GitHub credentials |
+| `POST` | `/internal/ado-credentials/refresh` | Re-read Azure DevOps credentials |
+| `POST` | `/internal/cloud-credentials/refresh` | Re-read cloud credentials |
+| `POST` | `/internal/workspace-integrations/refresh` | Re-read workspace integrations |
+| `POST` | `/internal/llm-config/reload` | Reload LLM config |
+| `POST` | `/internal/github-credentials/sync` | Sync GitHub credentials |
+| `POST` | `/internal/model-catalog/refresh` | Refresh model catalog |
+
+### Operator hints
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/internal/operator-hints` | Read hints |
+| `PUT` | `/internal/operator-hints` | Update hints |
+
+### Diagnostics
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/internal/debug/ingestion-status` | Ingestion status |
+| `POST` | `/internal/debug/env-check` | Environment check |
+| `DELETE` | `/internal/reset` | Reset (requires `RESETS_ENABLED`) |
+
+### Topology admin
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/topology/rebuild` | Rebuild topology |
+| `POST` | `/api/topology/import` | Import topology |
+| `DELETE` | `/api/topology` | Destroy topology |
+| `DELETE` | `/api/topology/cancel` | Cancel build |
+
+### Skills admin
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/context-agent/v1/reload` | Reload agent context |
+| `POST` | `/api/context-agent/v1/skills/upload` | Upload a skill |
+| `DELETE` | `/api/context-agent/v1/skills/{name}` | Delete a skill |
+
+### Repos admin
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/repos/init` | Clone repos |
+| `POST` | `/api/repos/cielara-enable` | Enable Cielara on repos |
+
+### Auth admin
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/api/auth/rebuild` | Rebuild auth model |

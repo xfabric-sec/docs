@@ -1,0 +1,104 @@
+---
+title: "Ingestion"
+description: "How Agent Memory ingests and processes documents into retrievable knowledge."
+---
+
+Agent Memory supports ingesting documents from file uploads and [external connectors](/agent-memory/connectors). Each document passes through normalization, segmentation, and memory extraction before it becomes queryable.
+
+## Supported formats
+
+| Format | Extension | Engine | Notes |
+|---|---|---|---|
+| Markdown | `.md` | Built-in `MarkdownAdapter` | Full support including frontmatter |
+| PDF | `.pdf` | Docling (default) or Marker | OCR, table extraction, image handling |
+| DOCX | `.docx` | `DocxAdapter` (pypandoc) | Preserves heading structure |
+| CSV | `.csv` | `CsvAdapter` | Row-based chunking |
+
+### PDF engine configuration
+
+The default PDF engine is Docling. You can switch to Marker or use a hybrid approach:
+
+```yaml
+normalization:
+  pdf:
+    engine: docling  # or "marker" or "hybrid"
+    docling:
+      do_ocr: true
+      table_mode: accurate
+    marker:
+      use_llm: false
+      force_ocr: false
+    hybrid:
+      text_threshold: 0.8
+```
+
+## Ingestion API
+
+### Upload a document
+
+```bash
+curl -X POST https://api.xfabric.io/v1/memory/ingest \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -F "file=@document.pdf" \
+  -F "collection=my-project" \
+  -F "data_source=manual" \
+  -F "tags=architecture,backend"
+```
+
+**Form fields:**
+
+| Field | Required | Default | Description |
+|---|---|---|---|
+| `file` | Yes | — | The document file |
+| `collection` | No | `"default"` | Target collection |
+| `data_source` | No | — | Source identifier |
+| `source_id` | No | — | External source ID |
+| `source_url` | No | — | URL of the source document |
+| `public_url` | No | — | Public-facing URL |
+| `path` | No | — | File path within the source |
+| `is_parent` | No | — | Whether this is a parent document |
+| `created_at` | No | — | Original creation timestamp |
+| `last_edited_at` | No | — | Last edit timestamp |
+| `created_by` | No | — | Author |
+| `last_edited_by` | No | — | Last editor |
+| `tags` | No | — | Comma-separated tags |
+
+### Poll ingestion status
+
+```bash
+curl https://api.xfabric.io/v1/memory/ingest/{job_id} \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+**Stages:** `queued` → `normalizing` → `segmenting` → `extracting` → `embedding` → `storing` → `done`
+
+### Manage documents
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/documents` | List documents (supports `limit`, `offset`, `search`) |
+| `GET` | `/documents/{id}/content` | Get document markdown content |
+| `DELETE` | `/documents/{id}` | Delete document + segments + memories |
+
+## Processing pipeline
+
+When a document is ingested:
+
+1. **Normalization**: the appropriate adapter converts the document to a `NormalizedRecord` with uniform metadata and content
+2. **Segmentation**: the `MarkdownChunker` (or `CsvChunker`) splits content into `Segment` objects respecting heading hierarchy (chunk size: 2000, overlap: 200, min chars: 500)
+3. **Extraction**: the LLM (default: gpt-5.4-mini) extracts atomic memories from each segment: facts, relationships, procedures
+4. **Embedding**: each memory gets a vector embedding (text-embedding-3-small) for semantic search
+5. **Deduplication**: memories with similarity above 0.90 are merged
+6. **Cue anchors**: contextual keywords are extracted for cue-based retrieval
+7. **Indexing**: memories are stored in semantic storage (ChromaDB/pgvector) and BM25 index
+
+## Concurrency
+
+Ingestion runs with a configurable concurrency limit (default: 2 concurrent jobs). Additional jobs are queued and processed in order. Monitor the pipeline status:
+
+```bash
+curl https://api.xfabric.io/v1/memory/status \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+Returns queue depth, processing count, and totals per data source.

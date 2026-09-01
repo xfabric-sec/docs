@@ -1,0 +1,185 @@
+---
+title: "API Reference"
+description: "Agent Memory REST API — all 42 endpoints for ingestion, retrieval, question answering, connectors, and maintenance."
+---
+
+Agent Memory exposes a FastAPI REST API on port 8001. All endpoints return JSON. Async operations return a job ID to poll.
+
+## Authentication
+
+When accessed via the xFabric edge layer (ALB prefix), requests require a JWT:
+
+```bash
+Authorization: Bearer YOUR_TOKEN
+```
+
+## Health and system
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/health` | Health check |
+| `GET` | `/metrics` | Prometheus metrics |
+| `GET` | `/jobs` | List all active jobs |
+| `GET` | `/status` | Pipeline status: queue depth, processing count, totals per data source |
+| `POST` | `/internal/llm-config/reload` | Reload LLM config at runtime |
+| `DELETE` | `/internal/reset` | System reset (requires `RESETS_ENABLED=true`) |
+
+## Question answering
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/ask` | Submit a question for async answering (returns 202 with job ID) |
+| `GET` | `/ask/{job_id}` | Poll ask job status and result |
+| `POST` | `/judge` | Judge a generated answer against an expected answer |
+
+### `POST /ask`
+
+**Request body (`AskRequest`):**
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `question` | string | required | The question to answer |
+| `collection` | string | `"default"` | Collection to search |
+| `k` | int | null | Max memories to retrieve |
+| `include_memories` | bool | `false` | Include retrieved memories in response |
+| `include_segments` | bool | `false` | Include source segments |
+| `include_docs` | bool | `false` | Include source documents |
+| `include_content` | bool | `true` | Include answer content |
+| `retriever` | string | null | Override retriever type |
+
+**Response (`AskResponse`, when job completes):**
+
+| Field | Type | Description |
+|---|---|---|
+| `question` | string | The original question |
+| `answer` | string | Grounded answer with citations |
+| `context_memories` | int | Number of memories used as context |
+| `context_chars` | int | Total characters of context |
+| `retrieval_steps` | int | Steps taken by the retriever |
+| `graph` | MemoryGraph | Memory relationship graph |
+| `segments` | list | Source segments (if requested) |
+| `docs` | list | Source documents (if requested) |
+
+### `POST /judge`
+
+**Request:** `question`, `expected_answer`, `generated_answer` (all strings)
+
+**Response:** `is_correct` (bool), `explanation` (string)
+
+## Retrieval
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/retrieve` | Retrieve relevant memories for a query |
+
+### `POST /retrieve`
+
+**Request body (`RetrieveRequest`):**
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `query` | string | required | Search query |
+| `collection` | string | `"default"` | Collection to search |
+| `k` | int | null | Max memories to return |
+| `include_graph` | bool | `false` | Include memory graph |
+| `retriever` | string | null | Override retriever type |
+
+**Response (`RetrieveResponse`):**
+
+| Field | Type | Description |
+|---|---|---|
+| `query` | string | The original query |
+| `memories` | list[RetrievedMemory] | Matched memories |
+| `steps_taken` | int | MDP steps executed |
+| `scanned_count` | int | Total memories scanned |
+| `graph` | MemoryGraph | Relationship graph (if requested) |
+
+**`RetrievedMemory`:** `memory_id`, `title`, `text`, `document_id`, `query_similarity`
+
+**`MemoryGraph`:** `nodes` (list of MemoryNode), `edges` (list of MemoryEdge)
+
+**`MemoryNode`:** `memory_id`, `title`, `text`, `document_id`, `document_name`, `parent_segment_id`, `cue_anchors`, `hierarchy_path`, `query_similarity`
+
+**`MemoryEdge`:** `source_id`, `target_id`, `relation` (sibling|shared_anchor|same_document|hierarchical), `weight`
+
+## Ingestion
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/ingest` | Upload a document for async ingestion (returns 202) |
+| `GET` | `/ingest/{job_id}` | Poll ingestion job status |
+
+### `POST /ingest`
+
+Multipart form upload. See [Ingestion](/agent-memory/ingestion) for the full field reference.
+
+**Response (`IngestAccepted`):** `job_id`, `status`, `queue_position`
+
+**Poll response (`IngestStatus`):** `job_id`, `status`, `stage`, `filename`, `records`, `segments`, `memories_added`, `memories_updated`, `queue_position`, `error`
+
+## Documents
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/documents` | List ingested documents (supports `limit`, `offset`, `search`) |
+| `GET` | `/documents/{record_id}/content` | Get document markdown content |
+| `DELETE` | `/documents/{record_id}` | Delete document + segments + memories |
+
+**Delete response:** `record_id`, `segments_deleted`, `memories_deleted`, `bm25_deleted`, `cue_anchors_deleted`
+
+## Collections
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/collections` | List all collection names |
+| `POST` | `/collections` | Create a collection (idempotent) |
+| `DELETE` | `/collections/{name}` | Delete collection + all data + cancel jobs |
+
+## Configuration
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/config` | Get current configuration |
+| `PATCH` | `/config` | Update config at runtime |
+| `POST` | `/config/providers` | Add/update a provider |
+
+## Storage
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/clean` | Clear all data from a collection |
+
+**Response (`CleanResponse`):** `records_cleared`, `segments_cleared`, `memories_cleared`, `bm25_cleared`, `cue_anchors_cleared`, `converted_cleared`
+
+## Connectors
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/connectors` | List all connectors with status |
+| `GET` | `/connectors/{id}/credentials` | Check credential status |
+| `POST` | `/connectors/{id}/credentials` | Upload credentials (multipart) |
+| `DELETE` | `/connectors/{id}/credentials` | Remove credentials |
+| `POST` | `/connectors/{id}/list` | List available sources |
+| `POST` | `/connectors/{id}/ingest` | Start connector ingestion (returns 202) |
+| `GET` | `/connectors/jobs/{job_id}` | Poll connector ingestion progress |
+| `POST` | `/connectors/canva/auth/start` | Start Canva OAuth PKCE flow |
+| `GET` | `/connectors/canva/callback` | Canva OAuth callback |
+
+**Connector ingest request:** `params` (dict), `collection` (string, default `"default"`)
+
+See [Connectors](/agent-memory/connectors) for detailed setup guides.
+
+## Maintenance
+
+| Method | Path | Description |
+|---|---|---|
+| `POST` | `/maintenance/backfill` | Backfill segments missing memories or cue anchors |
+| `GET` | `/maintenance/backfill/{job_id}` | Poll backfill status |
+| `GET` | `/maintenance/raw/metadata` | Raw data diagnostics |
+| `GET` | `/maintenance/raw/tree` | Raw data directory tree |
+| `POST` | `/maintenance/repair-raw` | Repair legacy raw files |
+| `GET` | `/maintenance/repair-raw/{job_id}` | Poll repair status |
+
+**Backfill request:** `collection` (optional), `dry_run` (bool, default `false`)
+
+Notion-specific aliases exist for `/maintenance/notion-raw/metadata`, `/maintenance/notion-raw/tree`, `/maintenance/repair-notion-raw`, and `/maintenance/repair-notion-raw/{job_id}`.
