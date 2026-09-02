@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "xFabric Docs",
+  "name": "Cielara Docs",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -14,57 +14,50 @@
         "group": "Getting Started",
         "pages": [
           "index",
-          "quickstart"
+          "quickstart",
+          "deployment"
         ]
       },
       {
-        "group": "Platform",
+        "group": "Product Features",
         "pages": [
-          "platform/index",
-          "platform/architecture",
-          "platform/authentication",
-          "platform/configuration",
-          "platform/mcp-server",
-          "platform/api-reference"
+          "analytics",
+          "pr-detail",
+          "world-model",
+
+          "ask-cielara",
+
+          "memory-explorer",
+
+          "impact"
         ]
       },
       {
-        "group": "Agent Fabric",
+        "group": "Setup & Configuration",
         "pages": [
-          "agent-fabric/index",
-          "agent-fabric/foresight",
-          "agent-fabric/simulations",
-          "agent-fabric/world-model",
-          "agent-fabric/deep-inquiry",
-          "agent-fabric/api-reference"
+          "connections",
+
+
+          "users-and-access",
+          "models",
+          "authentication"
         ]
       },
       {
-        "group": "Agent Memory",
+        "group": "How-to Guides",
         "pages": [
-          "agent-memory/index",
-          "agent-memory/quickstart",
-          "agent-memory/ingestion",
-          "agent-memory/retrieval",
-          "agent-memory/connectors",
-          "agent-memory/configuration",
-          "agent-memory/api-reference"
+          "guides/setup-connections",
+          "guides/code-review",
+          "guides/world-model-guide",
+          "guides/ask-cielara-guide",
+
+
+          "guides/admin-tasks"
         ]
       }
     ],
     "global": {
-      "anchors": [
-        {
-          "anchor": "API Reference",
-          "href": "/platform/api-reference",
-          "icon": "code"
-        },
-        {
-          "anchor": "GitHub",
-          "href": "https://github.com/xfabric-sec",
-          "icon": "github"
-        }
-      ]
+      "anchors": []
     }
   },
   "logo": {
@@ -72,24 +65,14 @@
     "dark": "/logo/dark.svg"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:support@cielara.ai"
-      }
-    ]
+    "links": []
   },
   "contextual": {
     "options": [
       "copy",
       "view",
-      "claude",
-      "mcp"
+      "claude"
     ]
   },
-  "footer": {
-    "socials": {
-      "github": "https://github.com/xfabric-sec"
-    }
-  }
+  "footer": {}
 }

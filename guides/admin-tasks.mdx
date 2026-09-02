@@ -1,0 +1,138 @@
+---
+title: "Admin tasks"
+description: "How to add users, configure LLM providers, set up SSO, and manage budgets."
+---
+
+All admin tasks require the Admin role. Admin-only pages appear in the **Configuration** group in the sidebar.
+
+## Adding a user
+
+1. Go to **Users & Access** in the sidebar.
+2. Click **Create**.
+3. Fill in the form:
+   - **Email Address**: the user's email (validated as a proper email format).
+   - **User Role**: click one of the role chips:
+     - **Admin**: full access to all features including configuration pages.
+     - **User**: access to Analytics, World Model, Ask Cielara, Deep Inquiry, Simulations, Memory Explorer, and Connections (viewing only).
+4. Click **Add User**.
+
+The user receives an invitation. They complete registration and set their password.
+
+### Editing a user
+
+1. Click a user in the list to open their profile.
+2. Change their role or account status:
+   - **Active**: the user can sign in.
+   - **Inactive**: the account is preserved but sign-in is blocked.
+3. Click **Update User**.
+
+<Warning>
+  If the user you're editing is the only admin, the Admin role is locked. Add another admin before changing their role.
+</Warning>
+
+## Configuring an LLM provider
+
+Cielara needs at least one LLM provider for AI features to work. Go to **Models** in the sidebar.
+
+### Step 1: Select a provider
+
+Choose from the **Primary LLM Provider** dropdown:
+
+| Provider | Description |
+|---|---|
+| OpenAI | GPT models via OpenAI API |
+| Microsoft Foundry | GPT or Claude models via Azure (with sub-option for GPT or Claude) |
+| Anthropic | Claude models via Anthropic API |
+| AWS Bedrock | Models via Amazon Bedrock |
+
+A summary card shows which models will be used for reasoning, coding, mini, and embedding, plus what credentials you need.
+
+Click **Next: Configure & Test**.
+
+### Step 2: Configure and test
+
+The form depends on which provider you selected:
+
+**OpenAI**:
+- **API Key**: paste your key (from platform.openai.com > API keys).
+- **Base URL** (optional): only change if using a proxy. Defaults to `https://api.openai.com/v1`.
+
+**Anthropic**:
+- **API Key**: paste your key (from console.anthropic.com > Settings > API keys).
+- **Base URL** (optional): defaults to `https://api.anthropic.com`.
+- **Cohere API Key**: required for embeddings (from dashboard.cohere.com > API Keys).
+
+**Microsoft Foundry (Azure OpenAI / GPT)**:
+- **Endpoint**: your Azure OpenAI endpoint (e.g., `https://my-aoai-resource.openai.azure.com/`). Must be HTTPS.
+- **API Key**: from Azure Portal > AI Foundry > Keys and Endpoint.
+- For each model category (Reasoning, Coding, Mini, Embedding): a **Deployment name** field. Enter the name from Azure Portal > AI Foundry > Deployments.
+
+**Microsoft Foundry (Azure Anthropic / Claude)**:
+- **Foundry Resource Name**: your AI Foundry resource name (e.g., `my-foundry-resource`).
+- **API Key**: from Azure Portal > AI Foundry > Keys and Endpoint.
+- For each model category: a **Deployment name** field.
+
+**AWS Bedrock**:
+- **Access Key ID**: your AWS access key.
+- **Secret Access Key**: your AWS secret key.
+- **AWS Region**: select from the dropdown (us-east-1, us-east-2, us-west-2, eu-west-1, eu-central-1, ap-southeast-1, ap-northeast-1). Must match where model access is enabled in Bedrock.
+
+Each model row shows a verification status: "Not yet verified" (gray) before testing, "Verifying..." with a spinner during the check, and "Verified, Xms" with a green checkmark on success. On failure, a red icon appears with a specific message: "Deployment not found", "Auth failed, check API key", "Model mismatch", "Unreachable", or "Rate limited."
+
+Click **Save & Continue** when all models verify.
+
+### Step 3: Budget (if enabled)
+
+Set spending limits:
+
+- **Monthly Limit (USD)**: minimum $1,000.
+- **Duration**: Daily, Weekly, Monthly 30d, or Monthly calendar.
+
+Per-provider budgets can be set if multiple providers are configured.
+
+### Step 4: Review & Activate (if enabled)
+
+Review the configuration summary and click **Activate**. If steps 3 and 4 are not feature-flagged, the provider auto-activates on save.
+
+## Setting up Google SSO
+
+1. Go to **Authentication** in the sidebar.
+2. Click the **Google** card.
+3. Follow the setup instructions at the top of the page:
+   - In Google Cloud Console, configure the OAuth consent screen (set User type to Internal).
+   - Create an OAuth client of type Web application.
+   - Copy the **Authorized redirect URI** shown on the Cielara page and add it to the OAuth client.
+4. Fill in the form:
+   - **Client ID**: paste from Google Cloud Console (format: `xxxxxxxx.apps.googleusercontent.com`).
+   - **Client Secret**: paste the client secret. If one is already stored, leave blank to keep it.
+   - **Workspace domain(s)**: type a domain (e.g., `example.com`) and press Enter. Only these domains can sign in. Add multiple by pressing Enter after each.
+   - **Allowed groups** (optional): Google group emails (e.g., `engineering@example.com`). When set, users must be a member of at least one group. Leave empty to allow everyone in the domain.
+   - **Allow signup**: toggle on to auto-create accounts on first Google sign-in.
+   - **Enable Google sign-in**: toggle on to activate SSO.
+5. Click **Save**.
+
+<Info>
+  Only one SSO method can be active at a time. If SAML is currently enabled, disable it before enabling Google SSO.
+</Info>
+
+## Setting up SAML SSO
+
+1. Go to **Authentication** in the sidebar.
+2. Click the **SAML** card.
+3. Follow the setup instructions:
+   - In your identity provider (Okta, Azure AD / Entra, OneLogin, Keycloak, etc.), create a SAML 2.0 application.
+   - Copy the **SP Entity ID** and **ACS URL** shown on the Cielara page and register them in the IdP.
+4. Fill in the form:
+   - **Display name**: a label for this provider (e.g., "Okta").
+   - **IdP metadata URL** (optional): if provided, blank fields below are auto-filled from the metadata on save.
+   - **Upload metadata XML** (optional): upload the IdP metadata file as an alternative to the URL.
+   - **IdP Entity ID**: the entity ID from your IdP.
+   - **SSO URL**: the single sign-on URL (must be HTTPS).
+   - **Single Logout URL** (optional): when set, signing out of Cielara also ends the IdP session.
+   - **IdP signing certificate (X.509)**: paste the PEM text or click **Upload certificate** to upload a .pem/.crt/.cer/.der file.
+   - **Email attribute** (optional): the assertion attribute carrying the user email, if your IdP doesn't send it as the NameID.
+   - **Allowed organizations** (optional): comma or space-separated SAML organization names. Users must be a member of at least one. Leave empty to allow everyone.
+   - **Organization attribute** (optional): the assertion attribute carrying organizations, if your IdP doesn't use `org`/`organization`.
+   - **Allow signup**: toggle on to auto-create accounts on first SSO sign-in.
+   - **Enable SAML sign-in**: toggle on to activate.
+5. Click **Save**.

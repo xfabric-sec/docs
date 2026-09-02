@@ -1,0 +1,39 @@
+---
+title: "Users & Access"
+description: "Manage users, roles, and permissions."
+---
+
+<Info>
+  This page is admin-only. It appears in the sidebar under the Configuration group.
+</Info>
+
+The Users & Access page lets admins manage who can use Cielara and what they can do.
+
+<Frame caption="The Users & Access page showing the user list with roles.">
+  <img src="/images/users-and-access.png" alt="Users and Access" />
+</Frame>
+
+## User list
+
+The main view shows all users in your organization. Each entry shows the user's name, email, role, and status.
+
+## Managing users
+
+Click "Create" to add a new user with their email and assigned role. Click an existing user to view their profile and change their role or details. To remove someone's access, delete their account from the profile view.
+
+## Roles
+
+Cielara has two built-in roles:
+
+| Role | Access |
+|---|---|
+| **Admin** | Full access to all features, including Configuration pages (Users & Access, Models, Authentication, Connections setup), Impact dashboard, and admin-only API endpoints. |
+| **User** | Access to Analytics, World Model, Ask Cielara, Deep Inquiry, Simulations, Memory Explorer, and Connections (viewing). Cannot manage users, configure LLM providers, or set up SSO. |
+
+## Permissions
+
+The Permissions sub-page (`/users/permissions`) provides granular permission management beyond the two built-in roles.
+
+## Roles sub-page
+
+The Roles sub-page (`/users/roles`) lets you view and manage role definitions.

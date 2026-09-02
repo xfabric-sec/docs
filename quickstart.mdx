@@ -1,42 +1,60 @@
 ---
 title: "Quickstart"
-description: "Get up and running with xFabric in minutes."
+description: "Create your account, connect a repository, and get your first code review."
 ---
 
-This guide walks you through setting up xFabric and connecting it to your first project.
+## Create your account
 
-## Prerequisites
+Your admin creates your account from the **Users & Access** page. You receive an invitation email with a registration link. Click the link, set your password, and your account is active.
 
-Before you begin, you need:
+If your organization uses SSO (Google Workspace or SAML), the registration page also offers the option to link your SSO identity during setup.
 
-- An xFabric account
-- Access to a Git repository you want to analyze
-- An API key (generated from your dashboard)
-
-## Get started
+## First login
 
 <Steps>
-  <Step title="Sign up">
-    Create your xFabric account and generate an API key from the dashboard.
+  <Step title="Enter your email">
+    Go to your Cielara URL and enter your email. Cielara checks which sign-in method applies to your domain. If SSO is configured, you're redirected to your identity provider. Otherwise, the password field appears.
   </Step>
-  <Step title="Connect a repository">
-    Link your GitHub repository to xFabric. This enables code review with Foresight and topology mapping with the World Model.
+  <Step title="Change your password">
+    On your very first login, you're asked to change the initial password and accept the terms of service.
   </Step>
-  <Step title="Run your first scan">
-    Trigger a code review or simulation from the dashboard, or let xFabric run automatically on your next pull request.
+  <Step title="Set up an LLM provider (admins only)">
+    If no LLM provider has been configured yet, Cielara redirects you to the [LLM provider setup wizard](/guides/admin-tasks#configuring-an-llm-provider) before you can access the dashboard.
   </Step>
 </Steps>
+
+## Connect a repository
+
+<Steps>
+  <Step title="Open Connections">
+    Click **Connections** in the sidebar. This is where all integrations live.
+  </Step>
+  <Step title="Add a source code connection">
+    Click the **+** button, select **GitHub** (or **Azure DevOps**) from the Source Code group, and follow the OAuth prompts to authorize Cielara on your organization. Select the repositories you want to connect.
+  </Step>
+  <Step title="Verify">
+    Your repositories appear in the Connections list. Cielara sets up webhooks automatically so it can respond to pull requests.
+  </Step>
+</Steps>
+
+## Configure an LLM provider
+
+Cielara needs an LLM provider to run code reviews and the AI assistant. Your admin configures this under **Models** in the sidebar. Once a provider is active, all AI features are available.
+
+## See your first code review
+
+Open a pull request on a connected repository. Cielara's Foresight engine picks it up automatically, reviews the diff in the context of the full codebase, and posts inline findings on the PR. You can also view the review in the **Analytics** dashboard.
 
 ## What's next?
 
 <CardGroup cols={3}>
-  <Card title="Platform overview" icon="server" href="/platform">
-    Learn about the core platform and API.
+  <Card title="Analytics" icon="chart-line" href="/analytics">
+    Your personal quality dashboard with antifragility scores and PR review history.
   </Card>
-  <Card title="Foresight code review" icon="magnifying-glass" href="/agent-fabric/foresight">
-    Set up AI-powered code review on your PRs.
+  <Card title="World Model" icon="globe" href="/world-model">
+    Explore your service topology as an interactive graph.
   </Card>
-  <Card title="Agent Memory" icon="brain" href="/agent-memory/quickstart">
-    Ingest documents and query your knowledge base.
+  <Card title="Ask Cielara" icon="message-bot" href="/ask-cielara">
+    Ask questions about your infrastructure in a chat interface.
   </Card>
 </CardGroup>

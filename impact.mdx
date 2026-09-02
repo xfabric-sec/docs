@@ -1,0 +1,58 @@
+---
+title: "Impact"
+description: "The org-wide leadership view: antifragility scores, quality trends, and ROI estimates across all repositories."
+---
+
+<Info>
+  Impact is an admin-only page. It appears in the sidebar under the Organization group.
+</Info>
+
+Impact is the org-wide counterpart to the personal [Analytics](/analytics) dashboard. Where Analytics shows your own PRs, Impact shows the full picture across all repositories and contributors. It is designed for engineering leaders who need to track quality trends and justify investment.
+
+<Frame caption="The Impact dashboard showing org-wide antifragility score, quality pillars, and ROI.">
+  <img src="/images/impact.png" alt="Impact dashboard" />
+</Frame>
+
+## Simple mode
+
+The default view at `/impact` shows a single org-wide antifragility score (0 to 100) in a gauge, the six quality pillars (Security, Reliability, Performance, Operability, Maintainability, Cost), four summary sentences describing the org's quality posture, and an ROI bar estimating the return from prevented risky PRs.
+
+Two drill-down panels sit below: one for the weakest repos (lowest antifragility scores) and one for the riskiest PRs (highest risk levels). Clicking either opens the advanced view with filters pre-set.
+
+A period toggle (7, 30, or 90 days) adjusts the time window.
+
+## Advanced mode
+
+Navigate to `/impact/advanced` (or click the "Advanced" button) for a full interactive dashboard:
+
+### Hero stats
+
+An antifragility gauge with pillar tooltip, plus five KPI boxes: Risky PR Rate, PRs Reviewed, Prevented, Depth, and Estimated ROI (dollar value).
+
+### Summary cards
+
+Three cards show product-level metrics: Cielara Code (tokens saved, time saved, enrichment rate), Ask Cielara (tokens saved, queries, World Model queries, Reasonara queries), and ROI (estimated dollar value for the selected period).
+
+### Charts
+
+A PR analysis chart plots total PRs vs. findings over time, with drag-select date range filtering. An antifragility trend chart shows the score over time with pillar breakdown on hover.
+
+### Severity breakdown
+
+A horizontal stacked bar (impact split) showing critical, high, medium, and low findings. Click a severity to filter the PR table.
+
+### Per-repo quality
+
+Antifragility scores broken down by repository. Click a repo to filter the table. Multi-select is supported.
+
+### PR table
+
+The same filterable, sortable, paginated table as the Analytics page, but scoped to the entire organization. Supports free-text search, repo filter, author filter, risk chips, date range, and pillar sorting.
+
+## How ROI is calculated
+
+The ROI estimate is based on prevented risky PRs, prevented high-risk PRs, RCA count, node count in the topology, and a labor rate constant. The numbers in simple and advanced mode always agree because they use the same data hooks.
+
+## Drill-down sub-pages
+
+Impact has additional sub-pages for ROI detail (`/impact/roi`), Cielara Code metrics (`/impact/cielara-code`), and Ask Cielara metrics (`/impact/ask-cielara`).

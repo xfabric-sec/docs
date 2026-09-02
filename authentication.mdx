@@ -1,0 +1,38 @@
+---
+title: "Authentication"
+description: "Configure sign-in methods and SSO for your organization."
+---
+
+<Info>
+  This page is admin-only. It appears in the sidebar under the Configuration group.
+</Info>
+
+The Authentication page lets admins configure how users sign into Cielara.
+
+<Frame caption="The Authentication page with Google and SAML sign-in method cards.">
+  <img src="/images/authentication.png" alt="Authentication settings" />
+</Frame>
+
+## Sign-in methods
+
+Cielara supports two authentication methods:
+
+### Email and password
+
+The default method. Users sign in with their email and a password set during registration or invitation.
+
+### Google Workspace SSO
+
+Cielara supports single sign-on through Google Workspace using OpenID Connect (OIDC). When SSO is enabled, users from your Google Workspace domain are redirected to Google's login page instead of entering a password.
+
+To configure Google SSO, navigate to **Authentication > Google** (`/admin/authentication/google`) and follow the setup steps.
+
+The OIDC flow uses PKCE (Proof Key for Code Exchange) to prevent authorization code interception, a browser-bound state parameter to prevent CSRF, and nonce replay protection.
+
+### SAML
+
+Cielara also supports SAML-based SSO for organizations that use identity providers other than Google. Configure SAML at **Authentication > SAML** (`/admin/authentication/saml`).
+
+## How login resolution works
+
+When a user enters their email on the login page, Cielara checks which authentication method applies to that email domain. If SSO is configured for the domain, the user is redirected to the identity provider. Otherwise, the standard email/password form appears.

@@ -1,0 +1,203 @@
+---
+title: "Setting up connections"
+description: "Step-by-step instructions for connecting cloud providers, source code, alerts, logs, secrets, and workplace tools."
+---
+
+All connections are managed from the **Connections** page in the sidebar. Click the **+** button to open the provider catalog, then select the provider you want to add.
+
+## Cloud providers
+
+### AWS
+
+1. In the provider catalog, select **Amazon Web Services**.
+2. Fill in the form:
+   - **AWS Account ID**: your 12-digit AWS account ID.
+   - **AWS Access Key**: the 16-20 character access key (uppercase alphanumeric).
+   - **AWS Secret Key**: the 40-64 character secret key.
+3. Click **Connect**.
+
+<Tip>
+  Use the **Quick Setup** panel (expandable at the top of the form) to download and run the `setup-cielara-scanner-aws.sh` script. It creates an IAM user with read-only permissions and outputs the credentials you need.
+</Tip>
+
+### GCP
+
+1. Select **Google Cloud** from the provider catalog.
+2. Fill in the form:
+   - **Project ID**: your GCP project ID (6-30 characters, lowercase letters and hyphens, must start with a letter).
+   - **Service Account Key**: click the file picker and upload your service account JSON key file.
+3. Click **Connect**.
+
+<Tip>
+  Run the `setup-cielara-scanner-gcp.sh` script from the Quick Setup panel. It creates a service account with the right permissions and downloads the key file for you.
+</Tip>
+
+### Azure
+
+1. Select **Microsoft Azure** from the provider catalog.
+2. Fill in the form:
+   - **Azure Subscription ID**: your subscription UUID.
+   - **Microsoft Entra Tenant ID**: your tenant UUID.
+   - **Service Principal Client ID**: the app registration client UUID.
+   - **Service Principal Client Secret**: the client secret (10-100 characters).
+3. Click **Connect**.
+
+## Source code
+
+### GitHub
+
+Connecting GitHub is a two-part process: first the organization credentials for code indexing, then an optional GitHub App for PR code review.
+
+**Part 1: Organization credentials**
+
+1. In the Connections page, open the Source Code section and select **GitHub**.
+2. Fill in:
+   - **GitHub Organization**: your org name (e.g., if your repos are at `github.com/acme-inc`, enter `acme-inc`).
+   - **Organization Personal Access Token**: a fine-grained PAT with read access. Click **Create org access token (PAT)** to open GitHub's token creation page scoped to your org.
+3. Click **Connect**.
+
+<Warning>
+  GitHub shows tokens only once. Copy it before leaving that page.
+</Warning>
+
+**Part 2: Foresight PR review (optional)**
+
+After connecting, a Foresight section appears below the credentials form:
+
+1. Click **Create GitHub App**. This opens GitHub and creates the app automatically from a manifest (no manual configuration needed). Authorize it when prompted.
+2. To enable personal GitHub sign-in for your team, paste the **GitHub App client secret** into the field and click **Save secret**.
+3. Under **Repositories**, select which repos Foresight should review. Use the autocomplete to search, check individual repos, or click **Select all**. Click **Save**.
+
+### Azure DevOps
+
+1. Select **Azure DevOps** from the provider catalog.
+2. Fill in:
+   - **Azure DevOps Organization**: your org name (e.g., for `dev.azure.com/acme-inc`, enter `acme-inc`).
+   - **Personal Access Token**: a PAT with scopes: Code (Read), Project and Team (Read), Service Hooks (Read & Manage), Member Entitlement Management (Read & Write).
+3. Click **Connect**.
+
+For Foresight PR review on Azure DevOps, expand the Foresight section after connecting and click **Grant access** to configure the review bot. Then select repositories and save.
+
+## Alerts
+
+### PagerDuty
+
+1. Open the Alerts section and select **PagerDuty**.
+2. Enter your **API Token** in the text field and click **Connect**.
+3. After connection, a service list appears. Check the services you want Cielara to monitor. The list shows each service's name, description, and status (active, critical, or disabled).
+   - Use **Select all** to monitor everything, or pick individual services.
+   - Click **Save Selection** to confirm, or **Skip (monitor all)** to watch everything without selecting.
+
+Only incidents from selected services trigger simulations and get ingested into the knowledge base.
+
+### AlertManager
+
+AlertManager uses a webhook model instead of credentials:
+
+1. Open the Alerts section. The webhook endpoint URL is displayed in a monospace code block. Click the copy button to grab it.
+2. Configure your AlertManager to send POST requests to this URL. Include a valid API key via `X-Api-Key` or `Authorization: Bearer <api_key>` header. Create an API key from the **API Keys** tab on the Connections page if you don't have one.
+3. Optionally, set the **Workload match property** field (e.g., `commonLabels.podName` or `alerts.annotations.podName`). This tells Cielara which field in the webhook payload maps to a workload's deployment name.
+4. Click **Save**.
+
+## Logs
+
+### Elasticsearch
+
+1. Open the Logs section and select **Elasticsearch**.
+2. Enter the **URL** of your Elasticsearch cluster (e.g., `https://my-es.example.com:9200`).
+3. Choose an authentication type from the 5-segment control: **Basic** (username and password), **API Key** (paste the key value), **Bearer** (paste the token), **Service Token** (paste the token), or **Cloud** (enter the Cloud ID and API key).
+4. Click **Connect**. The form tests the connection and shows "Connection verified" on success.
+
+### Dynatrace
+
+1. Select **Dynatrace** from the Logs section.
+2. Enter the **Base URL** of your Dynatrace environment (e.g., `https://abc12345.live.dynatrace.com`).
+3. Select the **Authentication type**:
+   - **OAuth (Grail)**: enter Client ID (e.g., `dt0s02.xxx`), Client Secret, and Account URN (e.g., `urn:dtaccount:xxx`).
+   - **API Token (Classic)**: paste your API token (e.g., `dt0c01.xxx`).
+4. Click **Connect**.
+
+## Secrets
+
+### HashiCorp Vault
+
+1. Open the Secrets section and select **HashiCorp Vault**.
+2. Fill in:
+   - **Vault Name**: a label for this connection (cannot be changed after creation).
+   - **Vault Address**: the URL of your Vault server (e.g., `https://vault.example.com`).
+   - **Role ID**: the AppRole role ID.
+   - **Secret ID**: the AppRole secret ID.
+3. Click **Connect**.
+
+## Workplace tools
+
+Workplace tools are set up through dedicated panels on the Connections page. Click a workplace tool name in the list, or use the tab shortcuts (`?tab=communications`, `?tab=ticketing`, `?tab=documentation`).
+
+### Slack
+
+1. Open the Communications tab (or click Slack in the workplace tools list).
+2. Follow the two-step guide:
+   - **Step 1**: Go to [api.slack.com/apps](https://api.slack.com/apps), click **Create New App > From a manifest**, select your workspace, and paste the app manifest (available in the expandable block with a copy button). Install the app to your workspace and authorize it.
+   - **Step 2**: From the app's OAuth & Permissions page, copy the **Bot User OAuth Token** (starts with `xoxb-`). Paste it into the **Bot Token** field and click **Save**.
+
+Cielara auto-discovers public channels the bot is in and ingests message history.
+
+### Jira
+
+1. Open the Ticketing tab (or click Jira).
+2. Get an API token from [Atlassian account API tokens](https://id.atlassian.com/manage-profile/security/api-tokens). Click **Create API token**, give it a label, and copy it.
+3. Fill in:
+   - **Jira Base URL**: your Jira instance URL (e.g., `https://yourorg.atlassian.net`).
+   - **Email Address**: the email associated with your Atlassian account.
+   - **API Token**: paste the token you just created.
+4. Click **Connect**. Cielara begins ingesting all Jira projects.
+
+### Confluence
+
+The setup is identical to Jira (same Atlassian API token):
+
+1. Open the Documentation tab (or click Confluence).
+2. Fill in:
+   - **Confluence Base URL**: your instance URL (e.g., `https://yourorg.atlassian.net`).
+   - **Email Address**: your Atlassian email.
+   - **API Token**: paste your Atlassian API token.
+3. Click **Connect**. Cielara begins ingesting all Confluence spaces.
+
+### Notion
+
+1. Open the Documentation tab (or click Notion).
+2. Follow the three-step guide:
+   - **Step 1**: Go to [notion.so/my-integrations](https://www.notion.so/my-integrations). Click **New integration**, name it, select your workspace, and click **Save**. Under Capabilities, enable **Read content**. Under the Secrets tab, click **Show**, then **Copy** the Internal Integration Secret.
+   - **Step 2**: In Notion, open each page or database you want to ingest. Click **Share > Invite**, search for your integration, and select it.
+   - **Step 3**: Paste the **Internal Integration Token** into the field and click **Connect**.
+
+<Warning>
+  If no pages are shared with the integration, ingestion succeeds but returns no content.
+</Warning>
+
+### Google Drive
+
+1. Open the Documentation tab (or click Google Drive).
+2. Follow the setup:
+   - In Google Cloud Console, create a service account (or use an existing one). Under Keys, click **Add Key > Create new key > JSON** and download the file.
+   - Share the Google Drive folder with the service account email (found in the JSON file). Grant Viewer access.
+   - Enable the Google Drive API in your Google Cloud project.
+3. Fill in:
+   - **Service Account JSON**: click **Upload JSON** and select the downloaded key file.
+   - **Google Drive Folder ID or URL**: paste either the raw folder ID or the full URL (e.g., `https://drive.google.com/drive/folders/1Bxi...`). Cielara auto-extracts the ID from full URLs.
+4. Click **Connect**. All Google Docs in the folder and its subfolders are ingested.
+
+### Canva
+
+1. Open the Documentation tab (or click Canva).
+2. In the [Canva Developer Portal](https://www.canva.com/developers/), create an integration and note the Client ID and Client Secret.
+3. Fill in:
+   - **Client ID**: from the Canva Developer Portal.
+   - **Client Secret**: from the same page.
+   - **Folder ID** (optional): restrict ingestion to a specific Canva folder. Leave blank to ingest all designs.
+4. Click **Connect with Canva**. A new browser tab opens to Canva's authorization page. Approve access.
+5. Back in Cielara, click **Check status** to confirm the connection completed.
+
+<Info>
+  Register the redirect URI shown on the form in your Canva Developer Portal under Authentication. It must match exactly.
+</Info>

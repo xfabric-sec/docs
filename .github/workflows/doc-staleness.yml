@@ -1,0 +1,159 @@
+name: Check doc staleness
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # Every Monday at 9:00 UTC
+  workflow_dispatch: # Manual trigger
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-staleness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout docs
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout core
+        uses: actions/checkout@v4
+        with:
+          repository: xfabric-sec/core
+          path: _source/core
+          fetch-depth: 0
+
+      - name: Checkout agent-fabric
+        uses: actions/checkout@v4
+        with:
+          repository: xfabric-sec/agent-fabric
+          path: _source/agent-fabric
+          fetch-depth: 0
+
+      - name: Checkout agent-memory
+        uses: actions/checkout@v4
+        with:
+          repository: xfabric-sec/agent-memory
+          path: _source/agent-memory
+          fetch-depth: 0
+
+      - name: Check for stale docs
+        id: check
+        run: |
+          pip install pyyaml > /dev/null 2>&1
+
+          python3 << 'PYTHON'
+          import yaml, subprocess, os, json
+          from datetime import datetime, timezone
+
+          def git_last_modified(repo_path, paths):
+              """Get the most recent commit date across the given paths."""
+              best = None
+              for p in paths:
+                  full = os.path.join(repo_path, p)
+                  if not os.path.exists(full):
+                      continue
+                  result = subprocess.run(
+                      ["git", "log", "-1", "--format=%aI", "--", p],
+                      cwd=repo_path, capture_output=True, text=True
+                  )
+                  date_str = result.stdout.strip()
+                  if date_str:
+                      dt = datetime.fromisoformat(date_str)
+                      if best is None or dt > best:
+                          best = dt
+              return best
+
+          def doc_last_modified(doc_file):
+              result = subprocess.run(
+                  ["git", "log", "-1", "--format=%aI", "--", doc_file],
+                  capture_output=True, text=True
+              )
+              date_str = result.stdout.strip()
+              return datetime.fromisoformat(date_str) if date_str else None
+
+          with open("doc-sources.yaml") as f:
+              config = yaml.safe_load(f)
+
+          repo_map = {
+              "core": "_source/core",
+              "agent-fabric": "_source/agent-fabric",
+              "agent-memory": "_source/agent-memory",
+          }
+
+          stale = []
+
+          for page, info in config.get("pages", {}).items():
+              sources = info.get("sources", [])
+              if not sources:
+                  continue
+
+              doc_date = doc_last_modified(page)
+              if doc_date is None:
+                  continue
+
+              newest_source = None
+              newest_path = None
+              newest_repo = None
+
+              for source in sources:
+                  repo_key = source["repo"]
+                  repo_path = repo_map.get(repo_key)
+                  if not repo_path:
+                      continue
+                  for p in source.get("paths", []):
+                      dt = git_last_modified(repo_path, [p])
+                      if dt and (newest_source is None or dt > newest_source):
+                          newest_source = dt
+                          newest_path = p
+                          newest_repo = repo_key
+
+              if newest_source and newest_source > doc_date:
+                  days = (newest_source - doc_date).days
+                  stale.append({
+                      "page": page,
+                      "description": info.get("description", ""),
+                      "doc_date": doc_date.strftime("%Y-%m-%d"),
+                      "source_date": newest_source.strftime("%Y-%m-%d"),
+                      "days_behind": days,
+                      "changed_repo": newest_repo,
+                      "changed_path": newest_path,
+                  })
+
+          stale.sort(key=lambda x: x["days_behind"], reverse=True)
+
+          with open(os.environ.get("GITHUB_OUTPUT", "/dev/null"), "a") as out:
+              out.write(f"stale_count={len(stale)}\n")
+
+          if stale:
+              body_lines = ["## Stale documentation report\n"]
+              body_lines.append(f"Found **{len(stale)}** doc page(s) where source code changed after the doc was last updated.\n")
+              body_lines.append("| Page | Days behind | Source repo | Changed path | Doc updated | Source updated |")
+              body_lines.append("|---|---|---|---|---|---|")
+              for s in stale:
+                  body_lines.append(
+                      f"| `{s['page']}` | {s['days_behind']} | {s['changed_repo']} | `{s['changed_path']}` | {s['doc_date']} | {s['source_date']} |"
+                  )
+              body_lines.append("\n<sub>Generated by doc-staleness workflow</sub>")
+              body = "\n".join(body_lines)
+
+              with open("staleness_report.md", "w") as f:
+                  f.write(body)
+
+              print(f"\n{len(stale)} stale doc(s) found:")
+              for s in stale:
+                  print(f"  {s['page']} — {s['days_behind']} days behind ({s['changed_repo']}/{s['changed_path']})")
+          else:
+              print("All docs are up to date.")
+          PYTHON
+
+      - name: Create or update issue
+        if: steps.check.outputs.stale_count != '0'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "Stale documentation detected"
+          content-filepath: staleness_report.md
+          labels: documentation,staleness
+          update-existing: true
