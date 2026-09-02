@@ -1,0 +1,136 @@
+---
+title: "Reasonara"
+description: "Ingest documents, ask questions, explore memories, and configure the knowledge base."
+---
+
+Reasonara is the admin interface for Cielara's knowledge base (Agent Memory). You can upload documents, manage collections, ask questions against your ingested content, and configure retrieval settings. Click **Reasonara** in the sidebar to open it.
+
+<Frame caption="The Reasonara page showing document upload, knowledge base table, data source cards, and the ask interface.">
+  <img src="/images/reasonara.png" alt="Reasonara" />
+</Frame>
+
+<Info>
+  Reasonara is feature-flagged and may not be visible in all deployments. When enabled, it appears in the sidebar under the Reasonara group with the description "Agent memory & knowledge."
+</Info>
+
+## Collections
+
+A collection dropdown at the top-left lets you organize knowledge into separate namespaces. The default collection is called "default." Your active collection is saved between sessions.
+
+To delete a collection, click the red trash icon next to the dropdown. This permanently removes the collection and all its documents, segments, and memories. The "default" collection cannot be deleted.
+
+## Stats
+
+Three cards at the top-right show counts for the active collection: Documents, Segments, and Memories. A gear icon next to the stats opens the [settings drawer](#settings).
+
+## Uploading documents
+
+1. Click the file picker labeled **Upload documents (MD, DOCX, CSV, PDF)**. You can select multiple files.
+2. Click **Ingest N file(s)**. The button changes to "Queuing..." while files are submitted.
+
+Each file shows a progress row with its name and a status chip:
+
+| Stage | Status label |
+|---|---|
+| Waiting | Queued |
+| Converting format | Normalizing |
+| Splitting into chunks | Segmenting |
+| Extracting knowledge | Extracting memories |
+| Duplicate detected | Already ingested |
+| Finished | Done, N memories |
+| Error | The error message |
+
+A progress bar runs under each row. Completed files disappear after 2 seconds; failed files stay visible for 6 seconds.
+
+## Knowledge base table
+
+Below the upload area, a table shows all documents in the active collection. Columns: Name, Data Source, Type, Segments, and Ingested (timestamp). Use the search field (240px, debounced) to filter by name. Click a row to preview the document's Markdown content in a dialog. Click the red trash icon on a row to delete that document and all its segments and memories.
+
+Data source labels map to friendly names: Google Drive, SharePoint, Canva, GitHub, Notion, Slack, Jira, Confluence, PagerDuty, or Upload.
+
+When the pipeline is busy (files queued or processing), the table auto-refreshes every 5 seconds.
+
+## Data sources
+
+Nine cards show the status of each connected data source: Google Drive, SharePoint, GitHub, Slack, Notion, Canva, Confluence, Jira, and PagerDuty. Each card shows whether the source is configured (green checkmark or gray icon), whether documents have been ingested, and status badges for doc count, syncing, and queued items.
+
+Click **+ Connect** on any card to go to the Connections page with the right tab pre-selected.
+
+## Asking questions
+
+Below a divider, the "Ask a Question" section lets you query your knowledge base.
+
+1. Type a question in the input field (placeholder: "e.g. What are the key findings in the uploaded documents?").
+2. Adjust the **Memories to retrieve** slider (1 to 20, default 5) to control how many memories the system fetches.
+3. Optionally check **Include Source Segments** to include the raw text chunks in the response.
+4. Click **Ask**. The button changes to "Thinking..." while the system works.
+
+The ask is asynchronous. If you navigate away and come back, a pending or completed result is restored from your session.
+
+### Results
+
+When the answer is ready, three sections appear:
+
+The **answer** renders as Markdown with summary chips showing the number of memories used, character count, and retrieval steps.
+
+Below the answer, two tabs show **Raw JSON** (the full API response) and **Graph View** (a visual graph of the retrieval context).
+
+An expandable **Retrieved Results** section shows three accordion groups: Retrieved Memories (title and full text), Source Segments (hierarchy path and content), and Source Documents (name, type chip, and truncated content).
+
+### Memory graph
+
+The Graph View tab renders an ECharts graph with four node layers arranged vertically:
+
+| Layer | Shape | Color | What it represents |
+|---|---|---|---|
+| Document | Rounded rectangle | Purple | Source documents |
+| Segment | Circle | Orange | Text chunks extracted from documents |
+| Memory | Circle | Yellow | Atomic facts extracted from segments |
+| Cue Anchor | Diamond | Cyan | Concept-level anchors for retrieval |
+
+Edges connect documents to segments, segments to memories, and memories to cue anchors. Additional edges show relationships between memories: shared anchors (dashed purple), siblings (gray), same-document links (dashed indigo), and hierarchical links (slate). Hovering a node highlights it and its direct neighbors.
+
+## Settings
+
+Click the gear icon next to the stats cards to open the settings drawer (360px, right-anchored). Five collapsible sections:
+
+### LLM Models (expanded by default)
+
+| Setting | Options |
+|---|---|
+| Agent Model | gpt-4.1, gpt-4.1-mini, gpt-4.1-nano, gpt-5.4-mini, gpt-5-nano |
+| QA Model | Same options as Agent Model |
+| QA Temperature | Slider, 0.0 to 1.0, step 0.1 |
+
+### Embedding
+
+| Setting | Options |
+|---|---|
+| Embedding Model | text-embedding-3-small, text-embedding-3-large |
+
+### Retrieval
+
+| Setting | Range |
+|---|---|
+| Budget Type | steps, chars, topk |
+| Max Steps | 1 to 20 |
+| Max Chars | 500 to 20,000 (step 500) |
+| Top K | 1 to 100 |
+
+### Hybrid Search
+
+| Setting | Type |
+|---|---|
+| Semantic Search | Toggle on/off |
+| BM25 Search | Toggle on/off |
+| Cue Anchors | Toggle on/off |
+| RRF k | 1 to 200 |
+
+### Segmentation
+
+| Setting | Range |
+|---|---|
+| Chunk Size | 200 to 10,000 (step 100) |
+| Overlap | 0 to 2,000 (step 50) |
+
+Click **Apply Settings** to save. Changes take effect for future queries and ingestions.
