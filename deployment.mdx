@@ -11,62 +11,37 @@ Cielara runs as a set of containerized services deployed on Kubernetes using a H
 
 | Requirement | Minimum |
 |---|---|
-| Kubernetes version | 1.27+ |
-| CPU | 4 vCPU |
-| Memory | 8 GB RAM |
+| Kubernetes version | 1.35+ |
+| Nodes | 2 nodes, each with 4 vCPU and 16 GB RAM |
 | Storage | 30 GB for PVCs |
 
 ### Backing services
 
-Cielara requires PostgreSQL (with pgvector) and RabbitMQ. The Helm chart manages both.
+Cielara requires a PostgreSQL server (with pgvector) and RabbitMQ. The Helm chart manages RabbitMQ. PostgreSQL requires a minimum of 1 vCPU and 4 GB RAM.
 
 ### License key
 
 A Keygen license key is required to pull container images from the private registry and to validate your installation. Contact Cielara to obtain a license.
 
-## Installing with Helm
+## Preparing your EKS cluster
 
-1. Create a namespace:
-   ```bash
-   kubectl create namespace cielara
-   ```
+```bash
+mkdir cielara-prepare-eks && cd cielara-prepare-eks
+# Download the generated main.tf from the Cielara deploy form into this folder.
 
-2. Create a `values.yaml` with your configuration:
-   ```yaml
-   licenseId: "<generate with uuidgen>"
-   imagePullSecret:
-     password: "<your Keygen license key>"
-   postgres:
-     password: "<choose a PostgreSQL password>"
-   ```
+aws sso login --profile <profile> && export AWS_PROFILE=<profile>
 
-3. Install the chart:
-   ```bash
-   helm install cielara oci://ghcr.io/xfabric-sec/charts/cielara \
-     -n cielara \
-     --version <VERSION> \
-     -f values.yaml \
-     --wait --timeout 10m
-   ```
+# Already prepared (script or lost state)? Use the deploy form's "already
+# prepared" toggle — the downloaded file carries migrate = true and the import blocks.
 
-The chart supports two GKE ingress modes: external (public internet with Google-managed TLS) and internal (VPC-only, HTTP).
+terraform init
+terraform plan     # migrating: only imports + the marker additions, 0 destroy
+terraform apply
+terraform plan     # must print: No changes.
+# handback: cielara-creds.json -> Cielara deploy form (or `terraform output -raw role_arn`)
+```
 
-## Services
-
-A Cielara deployment runs these containers:
-
-| Service | Port | What it does |
-|---|---|---|
-| migrations | (exits after run) | Applies database schema changes on startup |
-| admin-backend | 8100 | Authentication, user management, license validation |
-| insights-backend | 8080 | Core API, cloud scanning, graph, simulations, PR tracking |
-| llm-gateway | 4000 | LiteLLM proxy to your configured LLM providers |
-| github-gateway | 8081 | GitHub webhook handler for PR events |
-| agent-fabric | 3001 | AI agents: code review, simulations, World Model |
-| agent-memory | 8001 | Knowledge base: document ingestion, retrieval, Q&A |
-| mcp-server | 8888 | MCP server for AI coding tool integration |
-| insights-web | 3100 | The web frontend (Next.js) |
-| insights-rabbitmq | 5672 | RabbitMQ message queue |
+For full documentation, see the [Terraform module registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-eks/aws/latest).
 
 ## After deployment
 
@@ -76,4 +51,4 @@ Once the services are running:
 2. Log in with the `ADMIN_EMAIL` and `ADMIN_PASSWORD` you configured. You'll be prompted to change the password on first login.
 3. Accept the terms of service.
 4. Complete the [LLM provider setup wizard](/guides/admin-tasks#configuring-an-llm-provider).
-5. Set up your first [connections](/guides/setup-connections) (GitHub, cloud providers, workplace tools).
+5. Set up your first [connections](/connections) (GitHub, cloud providers, workplace tools).
