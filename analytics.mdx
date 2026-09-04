@@ -3,41 +3,41 @@ title: "Analytics"
 description: "Your personal code quality dashboard with antifragility scores, PR findings, severity breakdowns, and trends."
 ---
 
-The Analytics page is your personal quality dashboard. It shows your own pull request data, scoped to your linked GitHub or Azure DevOps identity. Open it by clicking **Analytics** in the sidebar.
+The Analytics page is your personal quality dashboard. The page shows your own pull request data, scoped to your linked GitHub or Azure DevOps identity. Open the dashboard by clicking **Analytics** in the sidebar.
 
-<Frame caption="The Analytics dashboard showing antifragility score, PR analysis chart, impact split, and recent pull requests.">
+<Frame>
   <img src="/images/analytics.png" alt="Analytics dashboard" />
 </Frame>
 
 If you haven't linked your GitHub account yet, the dashboard is empty. A banner at the top prompts you to connect your GitHub account so Cielara can match PRs to your identity.
 
-## Period selector
+## Period Selector
 
 A floating toggle in the top corner lets you switch the time window: **7 days**, **30 days**, or **90 days**. Changing the period updates every chart, stat, and table on the page.
 
-## Antifragility score
+## Antifragility Score
 
 The top of the page shows a circular gauge with your antifragility score (0 to 100), color-coded by health. Hover or click the gauge to see the breakdown across six pillars: Security, Reliability, Performance, Operability, Maintainability, and Cost. Clicking a pillar sorts the PR table below by that dimension.
 
 Below the gauge, a summary sentence describes your code quality in plain language, for example: "Your code quality is excellent. Cielara flagged 12% of the 47 PRs it reviewed as risky before they merged."
 
-## Hero stats
+## Hero Stats
 
 Four stats appear in a row below the score: Risky PR Rate (percentage of PRs flagged as risky), PRs Reviewed (count for the selected period), Prevented (non-low-risk PRs caught before merge), and Depth (how deeply Cielara analyzed each PR). Hover any label for a glossary tooltip.
 
-## Summary cards
+## Summary Cards
 
 Two cards below the hero stats show usage metrics for other Cielara products. The Cielara Code card shows skill calls, response bytes, and coding agent count, with a link to the Cielara Code analytics page. The Ask Cielara card shows tokens saved, query count, World Model queries, and Reasonara queries, linking to Ask Cielara analytics.
 
-## PR analysis chart
+## PR Analysis Chart
 
 A time-series line chart plots two series: total PRs (blue) and findings (green fill). You can click a date to filter the PR table below to that day, or drag to select a date range. A clipboard button copies the chart data.
 
-## Sidebar panels
+## Sidebar Panels
 
 Three panels sit to the right of the chart. The antifragility trend is a line chart showing your score over time, with pillar tooltips on hover. The impact split is a horizontal stacked bar showing the distribution of findings by severity (critical, high, medium, low), with percentage-change arrows; click a severity to filter the table. The antifragility-by-repo panel shows per-repository quality scores; click a repo to filter the table, and you can select multiple repos.
 
-## Recent PRs table
+## Recent PRs Table
 
 A filterable, sortable, paginated table of your reviewed PRs. Filters include free-text search, repository multi-select, author dropdown, risk level chips, and date range (set from the chart). You can also toggle between "actionable" (risky) and "all" PRs.
 

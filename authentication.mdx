@@ -9,15 +9,15 @@ description: "Configure sign-in methods and SSO for your organization."
 
 The Authentication page lets admins configure how users sign into Cielara.
 
-<Frame caption="The Authentication page with Google and SAML sign-in method cards.">
+<Frame>
   <img src="/images/authentication.png" alt="Authentication settings" />
 </Frame>
 
-## Sign-in methods
+## Sign-in Methods
 
 Cielara supports two authentication methods:
 
-### Email and password
+### Email and Password
 
 The default method. Users sign in with their email and a password set during registration or invitation.
 
@@ -33,6 +33,6 @@ The OIDC flow uses PKCE (Proof Key for Code Exchange) to prevent authorization c
 
 Cielara also supports SAML-based SSO for organizations that use identity providers other than Google. Configure SAML at **Authentication > SAML** (`/admin/authentication/saml`).
 
-## How login resolution works
+## How Login Resolution Works
 
 When a user enters their email on the login page, Cielara checks which authentication method applies to that email domain. If SSO is configured for the domain, the user is redirected to the identity provider. Otherwise, the standard email/password form appears.

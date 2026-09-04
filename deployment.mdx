@@ -1,54 +1,76 @@
 ---
 title: "Deployment"
-description: "How to deploy Cielara on Kubernetes with Helm."
+description: "Sign up for Cielara and deploy it into your cloud environment."
 ---
 
-Cielara runs as a set of containerized services deployed on Kubernetes using a Helm chart.
+Cielara is deployed into your own cloud environment. You control where your data lives; Cielara handles the installation and updates.
 
-## Requirements
+## Sign Up
 
-### Infrastructure
+Go to [cielara.ai](https://staging.cielara-dev.net/signup) and click the sign-up link. Enter your details and verify your email. Once your account is created, you receive a 30-day trial license and access to the Cielara dashboard.
 
-| Requirement | Minimum |
-|---|---|
-| Kubernetes version | 1.35+ |
-| Nodes | 2 nodes, each with 4 vCPU and 16 GB RAM |
-| Storage | 30 GB for PVCs |
+## Supported Cloud Providers
 
-### Backing services
+| Provider | Cluster Type | Terraform Prepare Module |
+|---|---|---|
+| **AWS** | EKS | [cielara-prepare-eks](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-eks/aws/latest) |
+| **GCP** | GKE | [cielara-prepare-gke](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-gke/google/latest) |
+| **Azure** | AKS | [cielara-prepare-aks](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-aks/azurerm/latest) |
 
-Cielara requires a PostgreSQL server (with pgvector) and RabbitMQ. The Helm chart manages RabbitMQ. PostgreSQL requires a minimum of 1 vCPU and 4 GB RAM.
+## Deployment Flow
 
-### License key
+<Steps>
+  <Step title="Sign up">
+    Go to [cielara.ai](https://staging.cielara-dev.net/signup) and click the sign-up link. Enter your details and verify your email. Once your account is created, you receive a 30-day trial license and access to the Cielara dashboard.
+  </Step>
+  <Step title="Open the deploy form">
+    Log in to the Cielara dashboard and navigate to **Deployments**. Click the deploy form to start a new deployment.
+  </Step>
+  <Step title="Select your cloud provider">
+    Choose your cloud provider: AWS (EKS), GCP (GKE), or Azure (AKS). The form updates to show the fields required for your provider.
 
-A Keygen license key is required to pull container images from the private registry and to validate your installation. Contact Cielara to obtain a license.
+    For a field-by-field walkthrough of each provider's form, see the setup guide for your platform:
+    - [Deploy on GKE](/guides/deploy-gke)
+    - [Deploy on EKS](/guides/deploy-eks)
+    - [Deploy on AKS](/guides/deploy-aks)
+  </Step>
+  <Step title="Prepare your cloud environment">
+    Download the generated Terraform file from the deploy form and run it against your cloud account. The module creates the resources Cielara needs to deploy into (cluster, networking, IAM roles).
 
-## Preparing your EKS cluster
+    ```bash
+    terraform init
+    terraform plan
+    terraform apply
+    ```
+
+    Upload the output credentials back to the deploy form when prompted. For detailed Terraform configuration options, see the module documentation for your provider in the table above.
+  </Step>
+  <Step title="Deploy">
+    Click **Deploy** in the deploy form. Cielara installs into your cluster automatically. No manual steps required.
+  </Step>
+  <Step title="Verify">
+    When the deployment completes, the deploy form provides your Cielara URL. Open it in your browser to confirm the installation is running.
+  </Step>
+</Steps>
+
+## Already Prepared Your Environment?
+
+If you've previously run the Terraform prepare step, toggle **Already prepared** in the deploy form. The downloaded Terraform file includes import blocks so Terraform can adopt your existing resources without recreating them.
 
 ```bash
-mkdir cielara-prepare-eks && cd cielara-prepare-eks
-# Download the generated main.tf from the Cielara deploy form into this folder.
-
-aws sso login --profile <profile> && export AWS_PROFILE=<profile>
-
-# Already prepared (script or lost state)? Use the deploy form's "already
-# prepared" toggle — the downloaded file carries migrate = true and the import blocks.
-
 terraform init
-terraform plan     # migrating: only imports + the marker additions, 0 destroy
+terraform plan     # should show only imports, 0 destroy
 terraform apply
-terraform plan     # must print: No changes.
-# handback: cielara-creds.json -> Cielara deploy form (or `terraform output -raw role_arn`)
+terraform plan     # should print: No changes.
 ```
 
-For full documentation, see the [Terraform module registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-eks/aws/latest).
+## After Deployment
 
-## After deployment
+Once Cielara is running:
 
-Once the services are running:
+1. Log in with the admin credentials you set during signup. You'll be prompted to change your password on first login.
+2. Accept the terms of service.
+3. Complete the [LLM provider setup wizard](/quickstart#configure-an-llm-provider) so AI features are available.
+4. Set up your first [connections](/connections) — repositories, cloud providers, and workplace tools.
 
-1. Open the frontend URL in your browser.
-2. Log in with the `ADMIN_EMAIL` and `ADMIN_PASSWORD` you configured. You'll be prompted to change the password on first login.
-3. Accept the terms of service.
-4. Complete the [LLM provider setup wizard](/guides/admin-tasks#configuring-an-llm-provider).
-5. Set up your first [connections](/connections) (GitHub, cloud providers, workplace tools).
+See the [Quickstart](/quickstart) for a walkthrough of your first login and code review.

@@ -3,41 +3,41 @@ title: "Ask Cielara"
 description: "An AI assistant that queries your topology, searches your knowledge base, runs simulations, and reviews code from a chat interface."
 ---
 
-Ask Cielara is Cielara's AI assistant. It has access to your service topology, knowledge base, incidents, simulations, and code repositories. You can ask questions in natural language, and it reasons through multi-step investigations to produce answers.
+Ask Cielara is Cielara's AI assistant. The assistant has access to your service topology, knowledge base, incidents, simulations, and code repositories. You can ask questions in natural language, and it reasons through multi-step investigations to produce answers.
 
-<Frame caption="The Ask Cielara workspace with sessions list, chat panel, and canvas column.">
+<Frame>
   <img src="/images/ask-cielara.png" alt="Ask Cielara workspace" />
 </Frame>
 
-## Where to find it
+## Where to Find It
 
 Ask Cielara appears in two forms. The floating panel is available on every page of the dashboard as a collapsible right-side panel, a draggable floating window, or a full-width expanded view; toggle between these with the view picker in the header. The workspace page (navigate to `/ask-cielara`) gives you a dedicated three-column layout.
 
 On mobile, the panel opens as a full-screen overlay.
 
-## Workspace layout
+## Workspace Layout
 
-The workspace has three columns. The left column (260px, collapsible, Alt+S) holds your chat sessions grouped by time (Pinned, Today, This Week, Earlier) with controls to create, pin, search, and delete sessions. The center column is the chat interface with the active conversation. The right column (480px, collapsible, Alt+C) is a canvas pane that displays Mermaid diagrams and investigation reports produced by the assistant. It auto-opens when the first canvas item arrives.
+The workspace has three columns. The left column (260px, collapsible, Alt+S) holds your chat sessions grouped by time (Pinned, Today, This Week, Earlier) with controls to create, pin, search, and delete sessions. The center column is the chat interface with the active conversation. The right column (480px, collapsible, Alt+C) is a canvas pane that displays Mermaid diagrams and investigation reports produced by the assistant. The canvas pane auto-opens when the first canvas item arrives.
 
 ## Chatting
 
 Type a question in the input field at the bottom. The assistant streams its response, showing a "Thinking..." indicator and a pulsing progress bar while working.
 
-### Message rendering
+### Message Rendering
 
 Your messages appear as colored bubbles aligned to the right. Assistant messages are left-aligned and rendered as blocks of interleaved text, tool calls, and embeds. Text blocks support full Markdown (tables, code blocks with copy button, headings, blockquotes, lists). Tool call blocks are expandable and show step-by-step agent actions with running/done/error status icons, argument display, and output preview. Embed blocks can be navigation buttons, Mermaid diagram pointers, investigation pointers, or full iframe embeds of the Memory Explorer, World Model, and Simulations pages.
 
 Below each response, layer chips (color-coded tags) show which ontology layers the agent accessed (intent, persona, logic, policy, topology, runtime, auth). Suggestion chips offer follow-up questions, color-coded by source (graph, memory, code).
 
-### Starter suggestions
+### Starter Suggestions
 
 When you open a new session, the assistant shows generated starter suggestions so you don't have to think of a first question. These are categorized by source type.
 
-## Pinning context with @-mentions
+## Pinning Context with @-Mentions
 
 Type **@** in the input field to open a context picker. You can pin pages (Production World Model, Ontology Explorer, Incidents, Simulations, Memory Explorer, and others), services (workloads configured for RCA), incidents from your alert system, stored simulation runs, or prior chat sessions. Pinned items stay attached until you remove them, and the assistant considers them when answering.
 
-## Effort levels
+## Effort Levels
 
 Use the slash command `/effort` followed by a level to control how deeply the assistant reasons:
 
@@ -54,6 +54,6 @@ Higher effort levels let the agent take more reasoning steps, which produces mor
 
 Long conversations can be summarized to save context space. Click the **Compact** button in the session header. Older messages are archived with an expandable summary notice, and the conversation continues with the summary as context.
 
-## Background tasks
+## Background Tasks
 
 When the assistant triggers long-running operations (code reviews, simulations), a background tasks bar appears at the bottom showing running tasks with elapsed time and completion status.

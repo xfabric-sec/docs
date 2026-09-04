@@ -1,0 +1,57 @@
+---
+title: "Deploy on EKS"
+description: "Field-by-field guide to deploying Cielara on Amazon Elastic Kubernetes Service."
+---
+
+This guide walks through every field in the Cielara deploy form when you select **AWS (EKS)** as your cloud provider. See the [Deployment](/deployment) page for the overall flow.
+
+## Required Fields
+
+| Field | Description |
+|---|---|
+| **AWS Account ID** | Your 12-digit AWS account ID. Find it in the AWS Console under your account name in the top-right corner, or run `aws sts get-caller-identity`. |
+| **Region** | The AWS region where your EKS cluster will be created (e.g., `us-east-1`, `eu-west-1`). Choose the region closest to your team or where your data residency requirements apply. |
+| **AWS Profile** | The named AWS CLI profile to use for authentication. Run `aws sso login --profile <profile>` before running Terraform. |
+| **Availability Zones** | The availability zones within your selected region for the cluster (e.g., `us-east-1a`, `us-east-1b`). At least two are recommended for high availability. |
+
+## Network Settings
+
+By default, Cielara creates the required networking resources. If you want to use existing networking, expand the **Network Settings** section in the deploy form and provide the following:
+
+| Field | Required | Description |
+|---|---|---|
+| **VPC ID** | Yes | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
+| **EKS Subnets** | Yes | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+
+<Note>
+  If you leave the network settings empty, Cielara provisions a new VPC and subnets automatically during the Terraform prepare step.
+</Note>
+
+## Node Pool Machine Types
+
+These settings control the compute resources for your EKS cluster. They affect both performance and cost.
+
+| Field | Description |
+|---|---|
+| **Instance type** | The EC2 instance type for your node pool. The default (`r6i.xlarge`) works for most deployments. If you're scanning a large number of repositories (300+), consider upgrading to `r6i.2xlarge` or `r7i.2xlarge`. |
+| **Capacity type** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
+
+### Sizing guidance
+
+| Scale | Repositories | Recommended instance type |
+|---|---|---|
+| Small | Up to 50 | `r6i.xlarge` |
+| Medium | 50–300 | `r6i.xlarge` |
+| Large | 300+ | `r6i.2xlarge` or `r7i.2xlarge` |
+
+## Next Steps
+
+After filling in the form:
+
+1. Download the generated Terraform file.
+2. Run `aws sso login --profile <profile>` and `export AWS_PROFILE=<profile>`.
+3. Run `terraform init`, `terraform plan`, and `terraform apply`.
+4. Upload the output credentials back to the deploy form.
+5. Click **Deploy** to start the installation.
+
+For full Terraform module documentation, see [cielara-prepare-eks on the Terraform Registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-eks/aws/latest).
