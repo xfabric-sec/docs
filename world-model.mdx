@@ -5,7 +5,7 @@ description: "An interactive topology graph of your services, dependencies, and 
 
 The World Model is a continuously updated graph of your services and how they connect. Click **World Model** in the sidebar to open the page.
 
-The page renders a full-screen interactive canvas. Services appear as card-shaped nodes (not circles) inside nested cluster and namespace containers, with animated flow dots traveling along edges to show call direction.
+The page renders a full-screen interactive canvas. Services appear as card-shaped nodes inside nested cluster and namespace containers, with animated flow dots traveling along edges to show call direction.
 
 <Frame>
   <img src="/images/world-model.png" alt="World Model topology view" />
@@ -55,11 +55,6 @@ Node types with dedicated views include workloads, deployments, pods, service ac
 Right-click any node and select "Ask Cielara" to open the AI assistant with a pre-built prompt that includes the node's name, kind, layer, repository, languages, cluster, namespace, and up to five relationships. The assistant answers in context.
 
 Ask Cielara can also embed the World Model view inline in a chat conversation via an iframe (using `?embed=1`).
-
-## URL Parameters
-
-- `?focus={nodeId}`: opens the graph focused on a specific node (used by cross-page links from Foresight and Incidents).
-- `?favorites=1`: opens the graph filtered to your starred nodes only.
 
 ## Navigation
 

@@ -3,7 +3,7 @@ title: "Deploy on GKE"
 description: "Field-by-field guide to deploying Cielara on Google Kubernetes Engine."
 ---
 
-This guide walks through every field in the Cielara deploy form when you select **GCP (GKE)** as your cloud provider. See the [Deployment](/deployment) page for the overall flow.
+This guide walks through every field in the Cielara deploy form when you select **GCP** as your cloud provider. See the [Deployment](/deployment) page for the overall flow.
 
 ## Required Fields
 
@@ -21,26 +21,23 @@ By default, Cielara creates the required networking resources. If you want to us
 | **VPC** | Yes | The self-link or name of your existing VPC network. |
 | **GKE Subnet** | Yes | The self-link or name of the subnet where GKE nodes will run. Must be in the selected region. |
 
-<Note>
-  If you leave the network settings empty, Cielara provisions a new VPC and subnet automatically during the Terraform prepare step.
-</Note>
-
 ## Node Pool Machine Types
 
-These settings control the compute resources for your GKE cluster. They affect both performance and cost.
-
-| Field | Description |
-|---|---|
-| **Machine type** | The GCE instance type for your node pool. It's recommended to select the default node type `n2-highmem-4`. The node type can also be changed after deployment to optimize performance, as needed. |
-| **Provisioning model** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
+These settings control the compute resources for your GKE cluster. They affect both performance and cost. The recommended machine type depends on how many source code repositories your organization manages — more repositories require more memory and CPU for scanning and analysis.
 
 ### Sizing guidance
 
-| Scale | Repositories | Recommended machine type |
+| Scale | Source Code Repositories | Recommended machine type |
 |---|---|---|
-| Small | Up to 50 | `n2-highmem-4` |
-| Medium | 50–300 | `n2-highmem-4` |
+| Small–Medium | Up to 300 | `n2-highmem-4` |
 | Large | 300+ | `n2-highmem-8` or `c3-highmem-8` |
+
+### Fields
+
+| Field | Description |
+|---|---|
+| **Machine type** | The GCE instance type for your node pool. See the sizing guidance above to choose the right type for your organization. |
+| **Provisioning model** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
 
 ## Next Steps
 

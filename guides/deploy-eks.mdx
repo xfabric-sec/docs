@@ -23,26 +23,23 @@ By default, Cielara creates the required networking resources. If you want to us
 | **VPC ID** | Yes | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
 | **EKS Subnets** | Yes | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
 
-<Note>
-  If you leave the network settings empty, Cielara provisions a new VPC and subnets automatically during the Terraform prepare step.
-</Note>
-
 ## Node Pool Machine Types
 
-These settings control the compute resources for your EKS cluster. They affect both performance and cost.
-
-| Field | Description |
-|---|---|
-| **Instance type** | The EC2 instance type for your node pool. The default (`r6i.xlarge`) works for most deployments. If you're scanning a large number of repositories (300+), consider upgrading to `r6i.2xlarge` or `r7i.2xlarge`. |
-| **Capacity type** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
+These settings control the compute resources for your EKS cluster. They affect both performance and cost. The recommended instance type depends on how many source code repositories your organization manages — more repositories require more memory and CPU for scanning and analysis.
 
 ### Sizing guidance
 
-| Scale | Repositories | Recommended instance type |
+| Scale | Source Code Repositories | Recommended instance type |
 |---|---|---|
-| Small | Up to 50 | `r6i.xlarge` |
-| Medium | 50–300 | `r6i.xlarge` |
+| Small–Medium | Up to 300 | `r6i.xlarge` |
 | Large | 300+ | `r6i.2xlarge` or `r7i.2xlarge` |
+
+### Fields
+
+| Field | Description |
+|---|---|
+| **Instance type** | The EC2 instance type for your node pool. See the sizing guidance above to choose the right type for your organization. |
+| **Capacity type** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
 
 ## Next Steps
 

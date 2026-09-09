@@ -5,23 +5,11 @@ description: "Sign up for Cielara and deploy it into your cloud environment."
 
 Cielara is deployed into your own cloud environment. You control where your data lives; Cielara handles the installation and updates.
 
-## Self Sign Up
-
-Go to [cielara.ai](https://console.cielara.ai/signup) and click the self sign-up link. Enter your details and verify your email. Once your account is created, you receive a 30-day trial license and access to the Cielara dashboard.
-
-## Supported Cloud Providers
-
-| Provider | Cluster Type | Terraform Prepare Module |
-|---|---|---|
-| **AWS** | EKS | [cielara-prepare-eks](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-eks/aws/latest) |
-| **GCP** | GKE | [cielara-prepare-gke](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-gke/google/latest) |
-| **Azure** | AKS | [cielara-prepare-aks](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-aks/azurerm/latest) |
-
 ## Deployment Flow
 
 <Steps>
   <Step title="Sign up for a Cielara account">
-    Go to [cielara.ai](https://staging.cielara-dev.net/signup) and click the self sign-up link. Enter your details and verify your email. Once your account is created, you will receive a 30-day trial license and access to the Cielara dashboard.
+    Go to [cielara.ai](https://console.cielara.ai/signup) and click the self sign-up link. Enter your details and verify your email. Once your account is created, you will receive a 30-day trial license and access to the Cielara dashboard.
   </Step>
   <Step title="Open the deploy form">
     Log in to the Cielara dashboard and navigate to **Deployments**. Click the deploy form to start a new deployment.
@@ -30,9 +18,9 @@ Go to [cielara.ai](https://console.cielara.ai/signup) and click the self sign-up
     Choose your cloud provider: AWS, GCP, or Azure. The form updates to show the fields required for your provider.
 
     For a field-by-field walkthrough of each provider's form, see the setup guide for your platform:
-    - [Deploy on GKE](/guides/deploy-gke)
-    - [Deploy on EKS](/guides/deploy-eks)
-    - [Deploy on AKS](/guides/deploy-aks)
+    - [Deploy on GCP](/guides/deploy-gke)
+    - [Deploy on AWS](/guides/deploy-eks)
+    - [Deploy on Azure](/guides/deploy-aks)
   </Step>
   <Step title="Prepare your cloud environment">
     Download the generated Terraform file from the deploy form and run it against your cloud account. The module creates the resources Cielara needs to deploy into (cluster, networking, IAM roles).
@@ -43,7 +31,7 @@ Go to [cielara.ai](https://console.cielara.ai/signup) and click the self sign-up
     terraform apply
     ```
 
-    Upload the output credentials back to the deploy form when prompted. For detailed Terraform configuration options, see the module documentation for your provider in the table above.
+    Upload the output credentials back to the deploy form when prompted. For detailed Terraform configuration options, see the setup guide for your provider.
   </Step>
   <Step title="Deploy">
     Click **Deploy** in the deploy form. Cielara installs into your cluster automatically. No manual steps required.
@@ -61,7 +49,6 @@ If you've previously run the Terraform prepare step, toggle **Already prepared**
 terraform init
 terraform plan     # should show only imports, 0 destroy
 terraform apply
-terraform plan     # should print: No changes.
 ```
 
 ## After Deployment
