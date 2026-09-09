@@ -14,24 +14,146 @@ Cielara is deployed into your own cloud environment. You control where your data
   <Step title="Open the deploy form">
     Log in to the Cielara dashboard and navigate to **Deployments**. Click the deploy form to start a new deployment.
   </Step>
-  <Step title="Select your cloud provider">
+  <Step title="Select your cloud provider and fill in the form">
     Choose your cloud provider: AWS, GCP, or Azure. The form updates to show the fields required for your provider.
 
-    For a field-by-field walkthrough of each provider's form, see the setup guide for your platform:
-    - [Deploy on GCP](/guides/deploy-gke)
-    - [Deploy on AWS](/guides/deploy-eks)
-    - [Deploy on Azure](/guides/deploy-aks)
+    <Tabs>
+      <Tab title="AWS">
+        ### Required Fields
+
+        | Field | Description |
+        |---|---|
+        | **AWS Account ID** | Your 12-digit AWS account ID. Find it in the AWS Console under your account name in the top-right corner, or run `aws sts get-caller-identity`. |
+        | **Region** | The AWS region where your EKS cluster will be created (e.g., `us-east-1`, `eu-west-1`). Choose the region closest to your team or where your data residency requirements apply. |
+        | **AWS Profile** | The named AWS CLI profile to use for authentication. Run `aws sso login --profile <profile>` before running Terraform. |
+        | **Availability Zones** | The availability zones within your selected region for the cluster (e.g., `us-east-1a`, `us-east-1b`). At least two are recommended for high availability. |
+
+        ### Network Settings
+
+        By default, Cielara creates the required networking resources. If you want to use existing networking, expand the **Network Settings** section and provide the following:
+
+        | Field | Required | Description |
+        |---|---|---|
+        | **VPC ID** | Yes | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
+        | **EKS Subnets** | Yes | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+
+        ### Node Pool Machine Types
+
+        The recommended instance type depends on how many source code repositories your organization manages — more repositories require more memory and CPU for scanning and analysis.
+
+        | Scale | Source Code Repositories | Recommended instance type |
+        |---|---|---|
+        | Small–Medium | Up to 300 | `r6i.xlarge` |
+        | Large | 300+ | `r6i.2xlarge` or `r7i.2xlarge` |
+
+        | Field | Description |
+        |---|---|
+        | **Instance type** | The EC2 instance type for your node pool. See the sizing guidance above to choose the right type for your organization. |
+        | **Capacity type** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
+      </Tab>
+      <Tab title="GCP">
+        ### Required Fields
+
+        | Field | Description |
+        |---|---|
+        | **Project ID** | Your Google Cloud project ID. Find it in the GCP Console under **Project info** on the dashboard, or run `gcloud config get-value project`. |
+        | **Region** | The GCP region where your GKE cluster will be created (e.g., `us-central1`, `europe-west1`). Choose the region closest to your team or where your data residency requirements apply. |
+
+        ### Network Settings
+
+        By default, Cielara creates the required networking resources. If you want to use existing networking, expand the **Network Settings** section and provide the following:
+
+        | Field | Required | Description |
+        |---|---|---|
+        | **VPC** | Yes | The self-link or name of your existing VPC network. |
+        | **GKE Subnet** | Yes | The self-link or name of the subnet where GKE nodes will run. Must be in the selected region. |
+
+        ### Node Pool Machine Types
+
+        The recommended machine type depends on how many source code repositories your organization manages — more repositories require more memory and CPU for scanning and analysis.
+
+        | Scale | Source Code Repositories | Recommended machine type |
+        |---|---|---|
+        | Small–Medium | Up to 300 | `n2-highmem-4` |
+        | Large | 300+ | `n2-highmem-8` or `c3-highmem-8` |
+
+        | Field | Description |
+        |---|---|
+        | **Machine type** | The GCE instance type for your node pool. See the sizing guidance above to choose the right type for your organization. |
+        | **Provisioning model** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
+      </Tab>
+      <Tab title="Azure">
+        ### Required Fields
+
+        | Field | Description |
+        |---|---|
+        | **Subscription ID** | Your Azure subscription ID. Find it in the Azure Portal under **Subscriptions**, or run `az account show --query id -o tsv`. |
+        | **Resource Group** | The Azure resource group where AKS resources will be created. You can use an existing resource group or let the Terraform prepare step create one. |
+        | **Region** | The Azure region where your AKS cluster will be created (e.g., `eastus`, `westeurope`). Choose the region closest to your team or where your data residency requirements apply. |
+        | **Tenant ID** | Your Microsoft Entra ID tenant ID. Find it in the Azure Portal under **Microsoft Entra ID > Overview**, or run `az account show --query tenantId -o tsv`. |
+
+        ### Network Settings
+
+        By default, Cielara creates the required networking resources. If you want to use existing networking, expand the **Network Settings** section and provide the following:
+
+        | Field | Required | Description |
+        |---|---|---|
+        | **VNet ID** | Yes | The resource ID of your existing virtual network. |
+        | **AKS Subnet** | Yes | The resource ID of the subnet where AKS nodes will run. Must be in the selected region. |
+
+        ### Node Pool Machine Types
+
+        The recommended VM size depends on how many source code repositories your organization manages — more repositories require more memory and CPU for scanning and analysis.
+
+        | Scale | Source Code Repositories | Recommended VM size |
+        |---|---|---|
+        | Small–Medium | Up to 300 | `Standard_E4s_v5` |
+        | Large | 300+ | `Standard_E8s_v5` or `Standard_E16s_v5` |
+
+        | Field | Description |
+        |---|---|
+        | **VM size** | The Azure VM size for your node pool. See the sizing guidance above to choose the right size for your organization. |
+        | **Priority** | Choose **Regular** or **Spot**. Spot instances are approximately 40% cheaper but may be evicted during high-demand periods. Regular is recommended for production deployments. |
+      </Tab>
+    </Tabs>
   </Step>
   <Step title="Prepare your cloud environment">
     Download the generated Terraform file from the deploy form and run it against your cloud account. The module creates the resources Cielara needs to deploy into (cluster, networking, IAM roles).
 
-    ```bash
-    terraform init
-    terraform plan
-    terraform apply
-    ```
+    <Tabs>
+      <Tab title="AWS">
+        ```bash
+        aws sso login --profile <profile>
+        export AWS_PROFILE=<profile>
+        terraform init
+        terraform plan
+        terraform apply
+        ```
 
-    Upload the output credentials back to the deploy form when prompted. For detailed Terraform configuration options, see the setup guide for your provider.
+        For full Terraform module documentation, see [cielara-prepare-eks on the Terraform Registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-eks/aws/latest).
+      </Tab>
+      <Tab title="GCP">
+        ```bash
+        terraform init
+        terraform plan
+        terraform apply
+        ```
+
+        For full Terraform module documentation, see [cielara-prepare-gke on the Terraform Registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-gke/google/latest).
+      </Tab>
+      <Tab title="Azure">
+        ```bash
+        az login
+        terraform init
+        terraform plan
+        terraform apply
+        ```
+
+        For full Terraform module documentation, see [cielara-prepare-aks on the Terraform Registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-aks/azurerm/latest).
+      </Tab>
+    </Tabs>
+
+    Upload the output credentials back to the deploy form when prompted.
   </Step>
   <Step title="Deploy">
     Click **Deploy** in the deploy form. Cielara installs into your cluster automatically. No manual steps required.

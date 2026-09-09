@@ -44,9 +44,6 @@
       {
         "group": "How-to Guides",
         "pages": [
-          "guides/deploy-gke",
-          "guides/deploy-eks",
-          "guides/deploy-aks",
           "guides/setup-connections",
           "guides/code-review",
           "guides/world-model-guide",
