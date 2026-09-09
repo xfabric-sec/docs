@@ -31,7 +31,7 @@ These settings control the compute resources for your GKE cluster. They affect b
 
 | Field | Description |
 |---|---|
-| **Machine type** | The GCE instance type for your node pool. The default (`n2-highmem-4`) works for most deployments. If you're scanning a large number of repositories (300+), consider upgrading to `n2-highmem-8` or `c3-highmem-8`. |
+| **Machine type** | The GCE instance type for your node pool. It's recommended to select the default node type `n2-highmem-4`. The node type can also be changed after deployment to optimize performance, as needed. |
 | **Provisioning model** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
 
 ### Sizing guidance
