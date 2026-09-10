@@ -30,50 +30,57 @@ Cielara is deployed into your own cloud environment. You control where your data
 
         ### Network Settings
 
-        Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/aws/vpc) Terraform module before running the prepare step. The module creates a VPC, private and public subnets across two availability zones, NAT gateway(s), and route tables.
+        Expand **Network Settings** in the deploy form and provide your VPC and subnet IDs.
 
-        **1. Clone and configure:**
+        <Tabs>
+          <Tab title="Terraform module (Recommended)">
+            Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/aws/vpc) Terraform module. The module creates a VPC, private and public subnets across two availability zones, NAT gateway(s), and route tables.
 
-        ```bash
-        git clone git@github.com:causal-dynamics-lab/terraform.git
-        cd terraform/cielara-enterprise-cloud-network/aws/vpc
-        cp terraform.tfvars.example terraform.tfvars
-        ```
+            **1. Clone and configure:**
 
-        Edit `terraform.tfvars`:
+            ```bash
+            git clone git@github.com:causal-dynamics-lab/terraform.git
+            cd terraform/cielara-enterprise-cloud-network/aws/vpc
+            cp terraform.tfvars.example terraform.tfvars
+            ```
 
-        ```hcl
-        region = "us-east-1"
-        # vpc_cidr           = "10.2.0.0/20"   # default; change if it overlaps
-        # availability_zones = ["us-east-1a", "us-east-1b"]  # default: first 2 AZs
-        # ha_nat             = false            # true = one NAT gateway per AZ
-        ```
+            Edit `terraform.tfvars`:
 
-        **2. Apply:**
+            ```hcl
+            region = "us-east-1"
+            # vpc_cidr           = "10.2.0.0/20"   # default; change if it overlaps
+            # availability_zones = ["us-east-1a", "us-east-1b"]  # default: first 2 AZs
+            # ha_nat             = false            # true = one NAT gateway per AZ
+            ```
 
-        ```bash
-        terraform init
-        terraform plan
-        terraform apply
-        ```
+            **2. Apply:**
 
-        **3. Hand back to Cielara:** expand **Network Settings** in the deploy form and fill in the values from the handback output:
+            ```bash
+            terraform init
+            terraform plan
+            terraform apply
+            ```
 
-        ```bash
-        terraform output -raw handback
-        ```
+            **3. Hand back to Cielara:** paste the handback values into the deploy form:
 
-        | Deploy form field | Handback key |
-        |---|---|
-        | **VPC ID** | `vpc_id` |
-        | **EKS Subnets** | `private_subnet_ids` |
+            ```bash
+            terraform output -raw handback
+            ```
 
-        If you already have networking that meets Cielara's requirements, you can skip the module and provide your resource IDs directly:
+            | Deploy form field | Handback key |
+            |---|---|
+            | **VPC ID** | `vpc_id` |
+            | **EKS Subnets** | `private_subnet_ids` |
+          </Tab>
+          <Tab title="Existing networking">
+            If you already have networking that meets Cielara's requirements, provide your resource IDs directly:
 
-        | Field | Description |
-        |---|---|
-        | **VPC ID** | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
-        | **EKS Subnets** | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+            | Field | Description |
+            |---|---|
+            | **VPC ID** | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
+            | **EKS Subnets** | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+          </Tab>
+        </Tabs>
 
         ### Node Pool Machine Types
 
@@ -99,52 +106,59 @@ Cielara is deployed into your own cloud environment. You control where your data
 
         ### Network Settings
 
-        Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/gcp/vpc) Terraform module before running the prepare step. The module creates a custom-mode VPC, a regional subnet with secondary ranges for pods and services, and a Cloud NAT with a static egress IP.
+        Expand **Network Settings** in the deploy form and provide your VPC and subnet details.
 
-        **1. Clone and configure:**
+        <Tabs>
+          <Tab title="Terraform module (Recommended)">
+            Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/gcp/vpc) Terraform module. The module creates a custom-mode VPC, a regional subnet with secondary ranges for pods and services, and a Cloud NAT with a static egress IP.
 
-        ```bash
-        git clone git@github.com:causal-dynamics-lab/terraform.git
-        cd terraform/cielara-enterprise-cloud-network/gcp/vpc
-        cp terraform.tfvars.example terraform.tfvars
-        ```
+            **1. Clone and configure:**
 
-        Edit `terraform.tfvars`:
+            ```bash
+            git clone git@github.com:causal-dynamics-lab/terraform.git
+            cd terraform/cielara-enterprise-cloud-network/gcp/vpc
+            cp terraform.tfvars.example terraform.tfvars
+            ```
 
-        ```hcl
-        project_id = "my-gcp-project"
-        region     = "us-central1"
-        # gke_subnet_cidr = "10.10.0.0/20"  # default; change if it overlaps
-        # pods_cidr       = "10.11.0.0/16"   # secondary range for pods
-        # services_cidr   = "10.12.0.0/20"   # secondary range for services
-        ```
+            Edit `terraform.tfvars`:
 
-        **2. Apply:**
+            ```hcl
+            project_id = "my-gcp-project"
+            region     = "us-central1"
+            # gke_subnet_cidr = "10.10.0.0/20"  # default; change if it overlaps
+            # pods_cidr       = "10.11.0.0/16"   # secondary range for pods
+            # services_cidr   = "10.12.0.0/20"   # secondary range for services
+            ```
 
-        ```bash
-        gcloud auth application-default login
-        terraform init
-        terraform plan
-        terraform apply
-        ```
+            **2. Apply:**
 
-        **3. Hand back to Cielara:** expand **Network Settings** in the deploy form and fill in the values from the handback output:
+            ```bash
+            gcloud auth application-default login
+            terraform init
+            terraform plan
+            terraform apply
+            ```
 
-        ```bash
-        terraform output -raw handback
-        ```
+            **3. Hand back to Cielara:** paste the handback values into the deploy form:
 
-        | Deploy form field | Handback key |
-        |---|---|
-        | **VPC** | `vpc_self_link` |
-        | **GKE Subnet** | `gke_subnet_self_link` |
+            ```bash
+            terraform output -raw handback
+            ```
 
-        If you already have networking that meets Cielara's requirements, you can skip the module and provide your resource IDs directly:
+            | Deploy form field | Handback key |
+            |---|---|
+            | **VPC** | `vpc_self_link` |
+            | **GKE Subnet** | `gke_subnet_self_link` |
+          </Tab>
+          <Tab title="Existing networking">
+            If you already have networking that meets Cielara's requirements, provide your resource IDs directly:
 
-        | Field | Description |
-        |---|---|
-        | **VPC** | The self-link or name of your existing VPC network. |
-        | **GKE Subnet** | The self-link or name of the subnet where GKE nodes will run. Must be in the selected region. |
+            | Field | Description |
+            |---|---|
+            | **VPC** | The self-link or name of your existing VPC network. |
+            | **GKE Subnet** | The self-link or name of the subnet where GKE nodes will run. Must be in the selected region. |
+          </Tab>
+        </Tabs>
 
         ### Node Pool Machine Types
 
@@ -172,52 +186,59 @@ Cielara is deployed into your own cloud environment. You control where your data
 
         ### Network Settings
 
-        Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/azure/vnet) Terraform module before running the prepare step. The module creates a VNet, subnets for system nodes, user nodes, app gateway, Postgres, API server, and private endpoints, plus a NAT gateway.
+        Expand **Network Settings** in the deploy form and provide your VNet and subnet details.
 
-        **1. Clone and configure:**
+        <Tabs>
+          <Tab title="Terraform module (Recommended)">
+            Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/azure/vnet) Terraform module. The module creates a VNet, subnets for system nodes, user nodes, app gateway, Postgres, API server, and private endpoints, plus a NAT gateway.
 
-        ```bash
-        git clone git@github.com:causal-dynamics-lab/terraform.git
-        cd terraform/cielara-enterprise-cloud-network/azure/vnet
-        cp terraform.tfvars.example terraform.tfvars
-        ```
+            **1. Clone and configure:**
 
-        Edit `terraform.tfvars`:
+            ```bash
+            git clone git@github.com:causal-dynamics-lab/terraform.git
+            cd terraform/cielara-enterprise-cloud-network/azure/vnet
+            cp terraform.tfvars.example terraform.tfvars
+            ```
 
-        ```hcl
-        subscription_id     = "00000000-0000-0000-0000-000000000000"
-        tenant_id           = "00000000-0000-0000-0000-000000000000"
-        resource_group_name = "my-cielara-rg"
-        location            = "eastus2"
-        # vnet_cidr         = "10.2.0.0/20"   # default; change if it overlaps
-        ```
+            Edit `terraform.tfvars`:
 
-        **2. Apply:**
+            ```hcl
+            subscription_id     = "00000000-0000-0000-0000-000000000000"
+            tenant_id           = "00000000-0000-0000-0000-000000000000"
+            resource_group_name = "my-cielara-rg"
+            location            = "eastus2"
+            # vnet_cidr         = "10.2.0.0/20"   # default; change if it overlaps
+            ```
 
-        ```bash
-        az login
-        terraform init
-        terraform plan
-        terraform apply
-        ```
+            **2. Apply:**
 
-        **3. Hand back to Cielara:** expand **Network Settings** in the deploy form and fill in the values from the handback output:
+            ```bash
+            az login
+            terraform init
+            terraform plan
+            terraform apply
+            ```
 
-        ```bash
-        terraform output -raw handback
-        ```
+            **3. Hand back to Cielara:** paste the handback values into the deploy form:
 
-        | Deploy form field | Handback key |
-        |---|---|
-        | **VNet ID** | `vnet_name` |
-        | **AKS Subnet** | `user_subnet_name` |
+            ```bash
+            terraform output -raw handback
+            ```
 
-        If you already have networking that meets Cielara's requirements, you can skip the module and provide your resource IDs directly:
+            | Deploy form field | Handback key |
+            |---|---|
+            | **VNet ID** | `vnet_name` |
+            | **AKS Subnet** | `user_subnet_name` |
+          </Tab>
+          <Tab title="Existing networking">
+            If you already have networking that meets Cielara's requirements, provide your resource IDs directly:
 
-        | Field | Description |
-        |---|---|
-        | **VNet ID** | The resource ID of your existing virtual network. |
-        | **AKS Subnet** | The resource ID of the subnet where AKS nodes will run. Must be in the selected region. |
+            | Field | Description |
+            |---|---|
+            | **VNet ID** | The resource ID of your existing virtual network. |
+            | **AKS Subnet** | The resource ID of the subnet where AKS nodes will run. Must be in the selected region. |
+          </Tab>
+        </Tabs>
 
         ### Node Pool Machine Types
 

@@ -16,52 +16,57 @@ This guide walks through every field in the Cielara deploy form when you select 
 
 ## Network Settings
 
-Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/aws/vpc) Terraform module before running the prepare step. The module creates a VPC, private and public subnets across two availability zones, NAT gateway(s), and route tables.
+Expand **Network Settings** in the deploy form and provide your VPC and subnet IDs.
 
-### 1. Clone and configure
+<Tabs>
+  <Tab title="Terraform module (Recommended)">
+    Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/aws/vpc) Terraform module. The module creates a VPC, private and public subnets across two availability zones, NAT gateway(s), and route tables.
 
-```bash
-git clone git@github.com:causal-dynamics-lab/terraform.git
-cd terraform/cielara-enterprise-cloud-network/aws/vpc
-cp terraform.tfvars.example terraform.tfvars
-```
+    **1. Clone and configure:**
 
-Edit `terraform.tfvars`:
+    ```bash
+    git clone git@github.com:causal-dynamics-lab/terraform.git
+    cd terraform/cielara-enterprise-cloud-network/aws/vpc
+    cp terraform.tfvars.example terraform.tfvars
+    ```
 
-```hcl
-region = "us-east-1"
-# vpc_cidr           = "10.2.0.0/20"   # default; change if it overlaps your network
-# availability_zones = ["us-east-1a", "us-east-1b"]  # default: auto-selects first 2 AZs
-# ha_nat             = false            # set true for one NAT gateway per AZ
-```
+    Edit `terraform.tfvars`:
 
-### 2. Apply
+    ```hcl
+    region = "us-east-1"
+    # vpc_cidr           = "10.2.0.0/20"   # default; change if it overlaps your network
+    # availability_zones = ["us-east-1a", "us-east-1b"]  # default: auto-selects first 2 AZs
+    # ha_nat             = false            # set true for one NAT gateway per AZ
+    ```
 
-```bash
-terraform init
-terraform plan
-terraform apply
-```
+    **2. Apply:**
 
-### 3. Hand back to Cielara
+    ```bash
+    terraform init
+    terraform plan
+    terraform apply
+    ```
 
-Expand **Network Settings** in the deploy form and fill in the values from the handback output:
+    **3. Hand back to Cielara:** paste the handback values into the deploy form:
 
-```bash
-terraform output -raw handback
-```
+    ```bash
+    terraform output -raw handback
+    ```
 
-| Deploy form field | Handback key |
-|---|---|
-| **VPC ID** | `vpc_id` |
-| **EKS Subnets** | `private_subnet_ids` |
+    | Deploy form field | Handback key |
+    |---|---|
+    | **VPC ID** | `vpc_id` |
+    | **EKS Subnets** | `private_subnet_ids` |
+  </Tab>
+  <Tab title="Existing networking">
+    If you already have networking that meets Cielara's requirements, provide your resource IDs directly:
 
-If you already have networking that meets Cielara's requirements, you can skip the module and provide your resource IDs directly in the **Network Settings** section of the deploy form:
-
-| Field | Description |
-|---|---|
-| **VPC ID** | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
-| **EKS Subnets** | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+    | Field | Description |
+    |---|---|
+    | **VPC ID** | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
+    | **EKS Subnets** | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+  </Tab>
+</Tabs>
 
 ## Node Pool Machine Types
 
