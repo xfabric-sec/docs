@@ -30,12 +30,43 @@ Cielara is deployed into your own cloud environment. You control where your data
 
         ### Network Settings
 
-        By default, Cielara creates the required networking resources. If you want to use existing networking, expand the **Network Settings** section and provide the following:
+        Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/aws/vpc) Terraform module before running the prepare step. The module creates a VPC, private and public subnets across two availability zones, NAT gateway(s), and route tables.
 
-        | Field | Required | Description |
-        |---|---|---|
-        | **VPC ID** | Yes | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
-        | **EKS Subnets** | Yes | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+        **1. Clone and configure:**
+
+        ```bash
+        git clone git@github.com:causal-dynamics-lab/terraform.git
+        cd terraform/cielara-enterprise-cloud-network/aws/vpc
+        cp terraform.tfvars.example terraform.tfvars
+        ```
+
+        Edit `terraform.tfvars`:
+
+        ```hcl
+        region = "us-east-1"
+        # vpc_cidr           = "10.2.0.0/20"   # default; change if it overlaps
+        # availability_zones = ["us-east-1a", "us-east-1b"]  # default: first 2 AZs
+        # ha_nat             = false            # true = one NAT gateway per AZ
+        ```
+
+        **2. Apply:**
+
+        ```bash
+        terraform init
+        terraform plan
+        terraform apply
+        ```
+
+        **3. Hand back to Cielara:** expand **Network Settings** in the deploy form and fill in the values from the handback output:
+
+        ```bash
+        terraform output -raw handback
+        ```
+
+        | Deploy form field | Handback key |
+        |---|---|
+        | **VPC ID** | `vpc_id` |
+        | **EKS Subnets** | `private_subnet_ids` |
 
         ### Node Pool Machine Types
 
@@ -61,12 +92,45 @@ Cielara is deployed into your own cloud environment. You control where your data
 
         ### Network Settings
 
-        By default, Cielara creates the required networking resources. If you want to use existing networking, expand the **Network Settings** section and provide the following:
+        Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/gcp/vpc) Terraform module before running the prepare step. The module creates a custom-mode VPC, a regional subnet with secondary ranges for pods and services, and a Cloud NAT with a static egress IP.
 
-        | Field | Required | Description |
-        |---|---|---|
-        | **VPC** | Yes | The self-link or name of your existing VPC network. |
-        | **GKE Subnet** | Yes | The self-link or name of the subnet where GKE nodes will run. Must be in the selected region. |
+        **1. Clone and configure:**
+
+        ```bash
+        git clone git@github.com:causal-dynamics-lab/terraform.git
+        cd terraform/cielara-enterprise-cloud-network/gcp/vpc
+        cp terraform.tfvars.example terraform.tfvars
+        ```
+
+        Edit `terraform.tfvars`:
+
+        ```hcl
+        project_id = "my-gcp-project"
+        region     = "us-central1"
+        # gke_subnet_cidr = "10.10.0.0/20"  # default; change if it overlaps
+        # pods_cidr       = "10.11.0.0/16"   # secondary range for pods
+        # services_cidr   = "10.12.0.0/20"   # secondary range for services
+        ```
+
+        **2. Apply:**
+
+        ```bash
+        gcloud auth application-default login
+        terraform init
+        terraform plan
+        terraform apply
+        ```
+
+        **3. Hand back to Cielara:** expand **Network Settings** in the deploy form and fill in the values from the handback output:
+
+        ```bash
+        terraform output -raw handback
+        ```
+
+        | Deploy form field | Handback key |
+        |---|---|
+        | **VPC** | `vpc_self_link` |
+        | **GKE Subnet** | `gke_subnet_self_link` |
 
         ### Node Pool Machine Types
 
@@ -94,12 +158,45 @@ Cielara is deployed into your own cloud environment. You control where your data
 
         ### Network Settings
 
-        By default, Cielara creates the required networking resources. If you want to use existing networking, expand the **Network Settings** section and provide the following:
+        Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/azure/vnet) Terraform module before running the prepare step. The module creates a VNet, subnets for system nodes, user nodes, app gateway, Postgres, API server, and private endpoints, plus a NAT gateway.
 
-        | Field | Required | Description |
-        |---|---|---|
-        | **VNet ID** | Yes | The resource ID of your existing virtual network. |
-        | **AKS Subnet** | Yes | The resource ID of the subnet where AKS nodes will run. Must be in the selected region. |
+        **1. Clone and configure:**
+
+        ```bash
+        git clone git@github.com:causal-dynamics-lab/terraform.git
+        cd terraform/cielara-enterprise-cloud-network/azure/vnet
+        cp terraform.tfvars.example terraform.tfvars
+        ```
+
+        Edit `terraform.tfvars`:
+
+        ```hcl
+        subscription_id     = "00000000-0000-0000-0000-000000000000"
+        tenant_id           = "00000000-0000-0000-0000-000000000000"
+        resource_group_name = "my-cielara-rg"
+        location            = "eastus2"
+        # vnet_cidr         = "10.2.0.0/20"   # default; change if it overlaps
+        ```
+
+        **2. Apply:**
+
+        ```bash
+        az login
+        terraform init
+        terraform plan
+        terraform apply
+        ```
+
+        **3. Hand back to Cielara:** expand **Network Settings** in the deploy form and fill in the values from the handback output:
+
+        ```bash
+        terraform output -raw handback
+        ```
+
+        | Deploy form field | Handback key |
+        |---|---|
+        | **VNet ID** | `vnet_name` |
+        | **AKS Subnet** | `user_subnet_name` |
 
         ### Node Pool Machine Types
 
@@ -118,7 +215,7 @@ Cielara is deployed into your own cloud environment. You control where your data
     </Tabs>
   </Step>
   <Step title="Prepare your cloud environment">
-    Download the generated Terraform file from the deploy form and run it against your cloud account. The module creates the resources Cielara needs to deploy into (cluster, networking, IAM roles).
+    Download the generated Terraform file from the deploy form and run it against your cloud account. The module creates the Kubernetes cluster, IAM roles, and other resources Cielara needs — deployed into the network you provisioned in the previous step.
 
     <Tabs>
       <Tab title="AWS">
