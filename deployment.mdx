@@ -68,6 +68,13 @@ Cielara is deployed into your own cloud environment. You control where your data
         | **VPC ID** | `vpc_id` |
         | **EKS Subnets** | `private_subnet_ids` |
 
+        If you already have networking that meets Cielara's requirements, you can skip the module and provide your resource IDs directly:
+
+        | Field | Description |
+        |---|---|
+        | **VPC ID** | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
+        | **EKS Subnets** | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+
         ### Node Pool Machine Types
 
         The recommended instance type depends on how many source code repositories your organization manages — more repositories require more memory and CPU for scanning and analysis.
@@ -131,6 +138,13 @@ Cielara is deployed into your own cloud environment. You control where your data
         |---|---|
         | **VPC** | `vpc_self_link` |
         | **GKE Subnet** | `gke_subnet_self_link` |
+
+        If you already have networking that meets Cielara's requirements, you can skip the module and provide your resource IDs directly:
+
+        | Field | Description |
+        |---|---|
+        | **VPC** | The self-link or name of your existing VPC network. |
+        | **GKE Subnet** | The self-link or name of the subnet where GKE nodes will run. Must be in the selected region. |
 
         ### Node Pool Machine Types
 
@@ -197,6 +211,13 @@ Cielara is deployed into your own cloud environment. You control where your data
         |---|---|
         | **VNet ID** | `vnet_name` |
         | **AKS Subnet** | `user_subnet_name` |
+
+        If you already have networking that meets Cielara's requirements, you can skip the module and provide your resource IDs directly:
+
+        | Field | Description |
+        |---|---|
+        | **VNet ID** | The resource ID of your existing virtual network. |
+        | **AKS Subnet** | The resource ID of the subnet where AKS nodes will run. Must be in the selected region. |
 
         ### Node Pool Machine Types
 

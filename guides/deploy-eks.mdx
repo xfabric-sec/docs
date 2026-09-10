@@ -56,6 +56,13 @@ terraform output -raw handback
 | **VPC ID** | `vpc_id` |
 | **EKS Subnets** | `private_subnet_ids` |
 
+If you already have networking that meets Cielara's requirements, you can skip the module and provide your resource IDs directly in the **Network Settings** section of the deploy form:
+
+| Field | Description |
+|---|---|
+| **VPC ID** | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
+| **EKS Subnets** | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+
 ## Node Pool Machine Types
 
 These settings control the compute resources for your EKS cluster. They affect both performance and cost. The recommended instance type depends on how many source code repositories your organization manages — more repositories require more memory and CPU for scanning and analysis.
