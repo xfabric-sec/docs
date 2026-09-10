@@ -1,69 +1,40 @@
 ---
 title: "Exploring the World Model"
-description: "How to navigate the topology, focus on services, trace dependencies, and manage document mappings."
+description: "How to find a service, trace its dependencies, and ask questions about your topology."
 ---
 
-## Navigating the topology
+This guide covers common tasks in the World Model. For what the graph shows and how it's laid out, see the [World Model reference](/world-model).
 
-Click **World Model** in the sidebar. The full-screen canvas shows your services as card-shaped nodes inside nested cluster and namespace containers.
+## Finding a service
 
-### Basic navigation
+Click **World Model** in the sidebar, then use the search bar at the top of the canvas to type a service name. The graph zooms to the matching node and highlights it.
 
-Pan by clicking and dragging the background. Zoom with the scroll wheel or a pinch gesture; zoom controls in the bottom-left corner offer in, out, and fit-view buttons. Click a node to select it and slide open the detail panel (360px) on the right, showing properties, connections, and external links. Click the background to deselect.
-
-### Finding a specific service
-
-Use the workload finder (search bar at the top of the canvas) to type a service name. The graph zooms to and highlights the matching node.
-
-You can also use the URL parameter `?focus={nodeId}` to link directly to a focused node. Other pages (Foresight, Incidents) use this to link into the topology.
+Pan by dragging the background and zoom with the scroll wheel. The controls in the bottom-left corner include a fit-view button that frames the whole graph again.
 
 ## Focusing on a service's neighborhood
 
-Right-click a node and select **Focus**. The graph filters to show only nodes within N hops of the selected service. A depth slider lets you expand or contract the neighborhood.
+Right-click a node and select **Focus**. The graph hides everything except nodes within a few hops of that service, and a depth slider lets you widen or narrow the neighborhood.
 
-To return to the full view, click the reset button that appears, or right-click and select **Reset view**.
+To go back to the full graph, click the reset button that appears, or right-click and select **Reset view**.
 
 ## Tracing dependencies
 
-Hover over a node to highlight it and all its connected edges. Everything else dims, so you can see the dependency paths clearly. Animated flow dots travel along edges to show call direction.
+Hover a node to highlight it and its edges while everything else dims. Flow dots travel along each edge in the direction of the call.
 
-Click an edge to select it and see the relationship type (calls, depends-on, reads-from, etc.) in the detail panel.
+Click an edge to see its relationship type in the detail panel: calls, depends-on, reads-from, and so on.
 
-For cross-container relationships (e.g., a service in one cluster calling a service in another), bundled lines appear between container borders. Hover a bundle to see the count and type breakdown.
+When a service in one cluster calls a service in another, the connection appears as a bundled line between container borders. Hover the bundle to see how many relationships it carries and of what type.
 
 ## Viewing service details
 
-Click a node to open the detail panel. For the full-page view, click **View full details** in the panel. The service detail page has four tabs:
-
-The Overview tab shows properties, connection summary, linked documents, PagerDuty services, and Jira issues. Connections lists outbound calls in a table. History shows PR review history from Foresight and incidents for this service. External links to GitHub, cloud console, and shows runtime details (Kubernetes pods, GCP VMs).
+Click a node to open the detail panel, then click **View full details** for the full-page view. Overview shows the service's properties along with its linked documents, PagerDuty services, and Jira issues. Connections lists its outbound calls. History shows past PR reviews from Foresight and any incidents involving the service.
 
 ## Asking questions about the topology
 
-Right-click any node and select **Ask Cielara**. The AI assistant opens with a pre-built prompt that includes the node's name, kind, layer, repo, languages, cluster, namespace, and up to five relationships. You can ask follow-up questions in the same conversation.
+Right-click any node and select **Ask Cielara**. The assistant opens with a prompt already describing that node and its relationships, so you can go straight to a follow-up question.
 
-You can also open the Ask Cielara panel from any page and type topology questions directly, such as "What services depend on the payments API?" or "Show me the blast radius if Redis goes down."
+You can also open Ask Cielara from any page and ask about the topology directly, for example "What services depend on the payments API?" or "Show me the blast radius if Redis goes down."
 
 ## Managing favorites
 
-Right-click a node and select **Favorite**, or click the star on its card. Favorited nodes are saved per-user. Open the graph with `?favorites=1` to see only your starred nodes.
-
-## Switching layouts
-
-Within containers, nodes default to a grid arrangement. The toolbar lets you switch to layered, tree, force, radial, or stress layouts. These run in a web worker so the UI stays responsive on large graphs.
-
-## Managing document mappings
-
-<Info>
-  Document mapping requires admin access and the auth layer feature flag. It appears as **WM Editing** in the sidebar.
-</Info>
-
-The World Model auto-links documents to workloads, but the mapping isn't always correct. To fix it:
-
-1. Click **WM Editing** in the sidebar.
-2. In the left panel, search for and select the workload you want to fix.
-3. The center panel shows its currently linked docs. The right panel shows all available files from Agent Memory, filterable by source (Notion, GitHub, Slack, Confluence).
-4. **To add a link**: select files in the right panel and drag them onto the center panel.
-5. **To remove a link**: select the document in the center panel and delete it.
-6. Changes persist immediately. Use the undo button to reverse recent additions.
-
-Click the eye icon on any document to preview its content with line numbers before linking it.
+Right-click a node and select **Favorite**, or click the star on its card. Favorites are saved per user, so your starred services stay marked across sessions.

@@ -10,7 +10,7 @@ All admin tasks require the Admin role. Admin-only pages appear in the **Configu
 1. Go to **Users & Access** in the sidebar.
 2. Click **Create**.
 3. Fill in the form:
-   - **Email Address**: the user's email (validated as a proper email format).
+   - **Email Address**: the user's email.
    - **User Role**: click one of the role chips:
      - **Admin**: full access to all features including configuration pages.
      - **User**: access to Analytics, World Model, Ask Cielara, Deep Inquiry, Simulations, Memory Explorer, and Connections (viewing only).
@@ -41,11 +41,11 @@ Choose from the **Primary LLM Provider** dropdown:
 | Provider | Description |
 |---|---|
 | OpenAI | GPT models via OpenAI API |
-| Microsoft Foundry | GPT or Claude models via Azure (with sub-option for GPT or Claude) |
+| Microsoft Foundry | GPT or Claude models via Azure |
 | Anthropic | Claude models via Anthropic API |
 | AWS Bedrock | Models via Amazon Bedrock |
 
-A summary card shows which models will be used for reasoning, coding, mini, and embedding, plus what credentials you need.
+A summary card shows which model Cielara will use for each job and what credentials you need to supply.
 
 Click **Next: Configure & Test**.
 
@@ -75,24 +75,22 @@ The form depends on which provider you selected:
 **AWS Bedrock**:
 - **Access Key ID**: your AWS access key.
 - **Secret Access Key**: your AWS secret key.
-- **AWS Region**: select from the dropdown (us-east-1, us-east-2, us-west-2, eu-west-1, eu-central-1, ap-southeast-1, ap-northeast-1). Must match where model access is enabled in Bedrock.
+- **AWS Region**: select the region where you enabled model access in Bedrock.
 
-Each model row shows a verification status: "Not yet verified" (gray) before testing, "Verifying..." with a spinner during the check, and "Verified, Xms" with a green checkmark on success. On failure, a red icon appears with a specific message: "Deployment not found", "Auth failed, check API key", "Model mismatch", "Unreachable", or "Rate limited."
+Cielara tests each model as you configure it. A row that fails tells you why, so you can tell a wrong API key from a missing deployment or a region without model access.
 
 Click **Save & Continue** when all models verify.
 
-### Step 3: Budget (if enabled)
+### Step 3: Set a budget
 
-Set spending limits:
+If your deployment has budgets enabled, set spending limits before activating:
 
 - **Monthly Limit (USD)**: minimum $1,000.
 - **Duration**: Daily, Weekly, Monthly 30d, or Monthly calendar.
 
-Per-provider budgets can be set if multiple providers are configured.
+When you have more than one provider configured, you can set a separate budget for each.
 
-### Step 4: Review & Activate (if enabled)
-
-Review the configuration summary and click **Activate**. If steps 3 and 4 are not feature-flagged, the provider auto-activates on save.
+Review the summary and click **Activate**. Otherwise the provider activates as soon as you save.
 
 ## Setting up Google SSO
 

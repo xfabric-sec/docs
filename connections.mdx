@@ -25,23 +25,17 @@ A type filter dropdown at the top lets you narrow the list to a specific group.
 
 ## Adding a connection
 
-Click the **+** button to open the provider catalog. Entries are organized by group, each with a short description: AWS (accounts, regions, resources), GCP (projects and folders), Azure (tenants and subscriptions), GitHub (organisations and repositories), Azure DevOps (repos and pipelines), PagerDuty (incidents and on-call), AlertManager (Prometheus alerts), Elasticsearch (log indices), Dynatrace (environment metrics and logs), HashiCorp Vault (clusters and namespaces), Slack (incident notifications), Jira (work items), Confluence (spaces and pages), Notion (runbooks and wikis), Canva (designs and presentations), and Google Drive (docs in a folder).
+Click the **+** button to open the provider catalog. Entries are organized by group, each with a short description: AWS, GCP, Azure, GitHub, Azure DevOps, PagerDuty, AlertManager, Elasticsearch, Dynatrace, HashiCorp Vault, Slack, Jira, Confluence, Notion, Canva, and Google Drive.
 
 Select a provider and follow its setup flow. Cloud and source code connections typically require OAuth or API credentials. Workplace tools each have their own configuration panel. See the [setup connections guide](/guides/setup-connections) for field-by-field instructions.
 
 ## Workplace tools
 
-Workplace integrations (Slack, Jira, Confluence, Notion, Canva, Google Drive) are singleton connections with dedicated setup panels. The Communications tab (`?tab=communications`) handles Slack. The Ticketing tab (`?tab=ticketing`) handles Jira. The Documentation tab (`?tab=documentation`) handles Confluence, Notion, Canva, and Google Drive; Confluence, Notion, Canva, and Google Drive also serve as knowledge base connectors, pulling documents into Agent Memory for the Memory Explorer and Ask Cielara.
-
-You can deep-link to an individual tool with `?tool=slack`, `?tool=jira`, `?tool=confluence`, etc.
+Workplace integrations are singleton connections with dedicated setup panels. The Communications tab handles Slack. The Ticketing tab handles Jira. The Documentation tab handles Confluence, Notion, Canva, and Google Drive, which also serve as knowledge base connectors, pulling documents into Agent Memory for the Memory Explorer and Ask Cielara.
 
 ## Additional panels
 
-The API Keys tab (`?tab=api-keys`) lets you create and manage API keys for programmatic access. The OAuth Clients tab (`?tab=oauth-clients`) lets you manage OAuth client configurations.
-
-## GitHub App callback
-
-When connecting GitHub, the OAuth flow redirects through `/connections/github-app-callback` to complete the authorization. This happens automatically during setup.
+The API Keys tab lets you create and manage API keys for programmatic access. The OAuth Clients tab lets you manage OAuth client configurations.
 
 ## Foresight settings
 
