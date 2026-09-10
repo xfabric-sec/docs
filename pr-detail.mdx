@@ -23,7 +23,7 @@ A list of commits (newest first) tracks how findings evolved across pushes. Each
 
 ### Actions panel
 
-At the bottom of the left column, four buttons link to related views. "Open in GitHub / Azure DevOps" takes you to the PR on the source control provider. "View simulation" takes you to the Simulations page if a topology simulation ran on this PR. "Ask Cielara" opens the AI assistant with a prompt about the selected finding (available once you select one). "View comment on GitHub" jumps to the bot's review comment for the selected finding.
+Four buttons at the bottom of the left column link out to related views: the pull request on GitHub or Azure DevOps, the topology simulation for this PR if one ran, Ask Cielara with a prompt about the finding you have selected, and the bot's review comment for that finding.
 
 ## Center column: findings list
 
@@ -41,11 +41,11 @@ At the bottom of the list, pillar scores show horizontal bars for each quality d
 
 Select a finding to see its full analysis. At the top, lifecycle info shows how long the finding has been open, which commit introduced it, and whether it's still present at HEAD. A qualifier line lists the severity, category, confidence, lifecycle status, and whether the finding blocks the merge.
 
-Below that, the title and description explain what the issue is and what could go wrong. A narrative section summarizes the finding's history across pushes in plain language. If a bot comment was posted on GitHub or Azure DevOps, it appears here with the avatar, file path, and line number.
+Below that, the title and description explain what the issue is and what could go wrong. A narrative section summarizes the finding's history across pushes in plain language. If a bot comment was posted on GitHub or Azure DevOps, it appears here with its file path and line number.
 
 The code context section shows the relevant code, syntax-highlighted with line numbers. The file path links to the file on GitHub at the reviewed commit. If exact lines aren't available, a PR diff fallback shows added, deleted, and context lines.
 
-A "Why it matters" section provides deeper analysis of the potential impact. If a related topology simulation case exists, the finding also shows the hypothesis, verdict (pass/fail), summary, blast radius as workload chips, and subgraph size.
+A "Why it matters" section provides deeper analysis of the potential impact. If a topology simulation covered this finding, you also see the hypothesis it tested, whether it passed or failed, and which workloads fall inside the blast radius.
 
 When a PR has zero findings and low risk, the detail column shows a green checkmark with "Clean PR: no findings across any pillar. This PR is ready to ship."
 

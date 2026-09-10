@@ -30,7 +30,7 @@ Nodes are color-coded by ontology layer (Logic, Topology, Runtime, Intent, Polic
 
 The graph uses a grouped layout: workloads are nested inside cluster and namespace container boxes. Cross-container relationships show as bundled lines between container borders. Hover a bundle to see the count and type breakdown.
 
-Within containers, you can switch card arrangement between grid (default), layered, tree, force, radial, and stress layouts. The non-grid options use ELK.js running in a web worker.
+Within containers, you can switch card arrangement between grid (default), layered, tree, force, radial, and stress layouts.
 
 ## Interacting with Nodes
 
@@ -46,13 +46,11 @@ Hover an edge to highlight it and both endpoints. Click an edge to select it and
 
 ## Service Detail Page
 
-Click "View full details" in a node's detail panel to open a dedicated page for that service. The detail page has four tabs. Overview shows properties, connection summary, linked documents, PagerDuty services, and Jira issues. Connections lists outbound calls in a table. History shows PR history from Foresight reviews and incidents associated with this service. External links to external systems and shows runtime details (Kubernetes pods, GCP VMs).
-
-Node types with dedicated views include workloads, deployments, pods, service accounts, namespaces, documents, design docs, data stores, external services, repositories, PagerDuty services, and auth entities.
+Click **View full details** in a node's detail panel to open a dedicated page for that service. Overview shows the service's properties along with its linked documents, PagerDuty services, and Jira issues. Connections lists its outbound calls. History shows past Foresight reviews and any incidents involving the service. A fourth tab collects links out to GitHub and your cloud console, along with runtime details such as Kubernetes pods and GCP VMs.
 
 ## Ask Cielara Integration
 
-Right-click any node and select "Ask Cielara" to open the AI assistant with a pre-built prompt that includes the node's name, kind, layer, repository, languages, cluster, namespace, and up to five relationships. The assistant answers in context.
+Right-click any node and select **Ask Cielara** to open the AI assistant with a prompt already describing that node and its relationships, so you can go straight to your question.
 
 Ask Cielara can also embed the World Model view inline in a chat conversation.
 

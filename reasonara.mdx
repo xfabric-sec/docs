@@ -40,7 +40,7 @@ Each file shows a progress row with its name and a status chip:
 | Finished | Done, N memories |
 | Error | The error message |
 
-A progress bar runs under each row. Completed files disappear after 2 seconds; failed files stay visible for 6 seconds.
+A progress bar runs under each row. Completed files clear on their own; failed ones stay up long enough to read the error.
 
 ## Knowledge Base Table
 
@@ -48,11 +48,11 @@ Below the upload area, a table shows all documents in the active collection. Col
 
 Data source labels map to friendly names: Google Drive, SharePoint, Canva, GitHub, Notion, Slack, Jira, Confluence, PagerDuty, or Upload.
 
-When the pipeline is busy (files queued or processing), the table auto-refreshes every 5 seconds.
+While files are still being ingested, the table refreshes on its own.
 
 ## Data Sources
 
-Nine cards show the status of each connected data source: Google Drive, SharePoint, GitHub, Slack, Notion, Canva, Confluence, Jira, and PagerDuty. Each card shows whether the source is configured (green checkmark or gray icon), whether documents have been ingested, and status badges for doc count, syncing, and queued items.
+A card for each connected data source shows whether it is configured, how many documents have been ingested from it, and whether a sync is currently running.
 
 Click **+ Connect** on any card to go to the Connections page with the right tab pre-selected.
 
@@ -60,10 +60,10 @@ Click **+ Connect** on any card to go to the Connections page with the right tab
 
 Below a divider, the "Ask a Question" section lets you query your knowledge base.
 
-1. Type a question in the input field (placeholder: "e.g. What are the key findings in the uploaded documents?").
-2. Adjust the **Memories to retrieve** slider (1 to 20, default 5) to control how many memories the system fetches.
-3. Optionally check **Include Source Segments** to include the raw text chunks in the response.
-4. Click **Ask**. The button changes to "Thinking..." while the system works.
+1. Type a question in the input field.
+2. Adjust the **Memories to retrieve** slider (1 to 20, default 5) to control how much context the answer draws on.
+3. Optionally check **Include Source Segments** to see the raw text the answer was built from.
+4. Click **Ask**.
 
 The ask is asynchronous. If you navigate away and come back, a pending or completed result is restored from your session.
 
@@ -71,30 +71,30 @@ The ask is asynchronous. If you navigate away and come back, a pending or comple
 
 When the answer is ready, three sections appear:
 
-The **answer** renders as Markdown with summary chips showing the number of memories used, character count, and retrieval steps.
+The **answer** renders as Markdown, with chips summarizing how many memories it drew on and how many retrieval steps it took.
 
-Below the answer, two tabs show **Raw JSON** (the full API response) and **Graph View** (a visual graph of the retrieval context).
+Below the answer, a **Graph View** tab shows the retrieval context visually, and a **Raw JSON** tab shows the full response for debugging.
 
-An expandable **Retrieved Results** section shows three accordion groups: Retrieved Memories (title and full text), Source Segments (hierarchy path and content), and Source Documents (name, type chip, and truncated content).
+An expandable **Retrieved Results** section lets you inspect what the answer was built from: the memories themselves, the segments they came from, and the source documents.
 
 ### Memory Graph
 
-The Graph View tab renders an ECharts graph with four node layers arranged vertically:
+The Graph View tab shows how an answer was assembled, in four layers:
 
-| Layer | Shape | Color | What it represents |
-|---|---|---|---|
-| Document | Rounded rectangle | Purple | Source documents |
-| Segment | Circle | Orange | Text chunks extracted from documents |
-| Memory | Circle | Yellow | Atomic facts extracted from segments |
-| Cue Anchor | Diamond | Cyan | Concept-level anchors for retrieval |
+| Layer | What it represents |
+|---|---|
+| Document | A source document you ingested |
+| Segment | A chunk of text split out of that document |
+| Memory | An individual fact extracted from a segment |
+| Cue anchor | A concept that memories are indexed against for retrieval |
 
-Edges connect documents to segments, segments to memories, and memories to cue anchors. Additional edges show relationships between memories: shared anchors (dashed purple), siblings (gray), same-document links (dashed indigo), and hierarchical links (slate). Hovering a node highlights it and its direct neighbors.
+Edges run down the layers, from documents to their segments to the memories extracted from them. Further edges link memories that share an anchor, sit in the same document, or are related hierarchically. Hover a node to highlight it and its immediate neighbors.
 
 ## Settings
 
 Click the gear icon next to the stats cards to open the settings drawer. It has five collapsible sections:
 
-### LLM Models (Expanded by Default)
+### LLM models
 
 | Setting | Options |
 |---|---|
@@ -110,27 +110,14 @@ Click the gear icon next to the stats cards to open the settings drawer. It has 
 
 ### Retrieval
 
-| Setting | Range |
-|---|---|
-| Budget Type | steps, chars, topk |
-| Max Steps | 1 to 20 |
-| Max Chars | 500 to 20,000 (step 500) |
-| Top K | 1 to 100 |
+Cap how much work a single query does. **Budget type** picks what you are limiting (reasoning steps, characters retrieved, or number of results), and **Max steps**, **Max chars**, and **Top K** set the ceiling for each. Raising these produces more thorough answers at the cost of speed.
 
-### Hybrid Search
+### Hybrid search
 
-| Setting | Type |
-|---|---|
-| Semantic Search | Toggle on/off |
-| BM25 Search | Toggle on/off |
-| Cue Anchors | Toggle on/off |
-| RRF k | 1 to 200 |
+Retrieval combines semantic search, keyword search, and cue anchors. Toggle each on or off, and use **RRF k** to control how heavily the combined ranking favors results that scored well in more than one method.
 
 ### Segmentation
 
-| Setting | Range |
-|---|---|
-| Chunk Size | 200 to 10,000 (step 100) |
-| Overlap | 0 to 2,000 (step 50) |
+**Chunk size** and **Overlap** control how documents are split before extraction. Larger chunks preserve more context per segment; more overlap reduces the chance a fact is cut in half at a boundary. Changing these only affects documents ingested afterwards.
 
 Click **Apply Settings** to save. Changes take effect for future queries and ingestions.

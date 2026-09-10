@@ -21,7 +21,7 @@ The left column shows your session history, grouped by time (Pinned, Today, This
 
 ## Asking questions
 
-Type your question in the input field and press Enter. The assistant streams its response in real time, showing a "Thinking..." indicator and a progress bar.
+Type your question in the input field and press Enter. The assistant streams its response as it works.
 
 When a new session is empty, the assistant shows starter suggestions. Click one to use it as your first question.
 
@@ -47,22 +47,15 @@ Pinned context stays attached until you remove it. The assistant considers these
 
 ## Adjusting effort levels
 
-Type `/effort` followed by a level to control how many reasoning steps the assistant takes:
-
-| Command | Steps | Best for |
-|---|---|---|
-| `/effort low` | 2 | Quick factual lookups |
-| `/effort medium` | 4 | Standard questions (default) |
-| `/effort high` | 8 | Complex investigations |
-| `/effort xhigh` | 16 | Deep multi-step research |
+Type `/effort` followed by `low`, `medium`, `high`, or `xhigh` to control how many reasoning steps the assistant takes. Use a low level for quick lookups and a high one for investigations that need to cross several systems. See [effort levels](/ask-cielara#effort-levels) for the step counts.
 
 Higher levels produce more thorough answers but take longer.
 
 ## Reading responses
 
-Responses are built from interleaved blocks. Text blocks render as Markdown with tables, code blocks (with a copy button), headings, and lists. Tool call blocks are expandable and show what the agent did step by step (queried the World Model, searched memories, etc.), with status (running, done, error), arguments, and output preview. Embed blocks are inline cards linking to other pages, Mermaid diagrams, investigation reports, or iframe views of Memory Explorer, World Model, and Simulations.
+Responses are built from three kinds of blocks. Text blocks render as Markdown. Tool call blocks show the steps the assistant took, such as querying the World Model or searching memories; expand one to see what it found. Embed blocks pull in a diagram, an investigation report, or a live view of another page.
 
-At the bottom of a response, layer chips (color-coded) show which ontology layers the agent accessed. Suggestion chips offer follow-up questions, color-coded by source (graph, memory, code). Click one to ask it.
+At the bottom of a response, layer chips show which parts of the model the assistant drew on. Suggestion chips offer follow-up questions; click one to ask it.
 
 ## Using the canvas
 

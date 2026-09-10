@@ -1,6 +1,6 @@
 ---
 title: "Ask Cielara"
-description: "An AI assistant that queries your topology, searches your knowledge base, runs simulations, and reviews code from a chat interface."
+description: "An AI assistant that queries your topology, searches your knowledge base, and reviews code from a chat interface."
 ---
 
 Ask Cielara is Cielara's AI assistant. The assistant has access to your service topology, knowledge base, incidents, simulations, and code repositories. You can ask questions in natural language, and it reasons through multi-step investigations to produce answers.
@@ -21,13 +21,13 @@ The workspace has three columns. The left column holds your chat sessions groupe
 
 ## Chatting
 
-Type a question in the input field at the bottom. The assistant streams its response, showing a "Thinking..." indicator and a pulsing progress bar while working.
+Type a question in the input field at the bottom. The assistant streams its response as it works, so you can see the answer take shape rather than waiting on a blank screen.
 
 ### Message Rendering
 
-Your messages appear as colored bubbles aligned to the right. Assistant messages are left-aligned and rendered as blocks of interleaved text, tool calls, and embeds. Text blocks support full Markdown (tables, code blocks with copy button, headings, blockquotes, lists). Tool call blocks are expandable and show step-by-step agent actions with running/done/error status icons, argument display, and output preview. Embed blocks can be navigation buttons, Mermaid diagram pointers, investigation pointers, or full iframe embeds of the Memory Explorer, World Model, and Simulations pages.
+An answer is built from three kinds of blocks. Text blocks render as Markdown, with tables, headings, lists, and code blocks you can copy. Tool call blocks show the steps the assistant took to reach its answer, such as querying the World Model or searching your memories; expand one to see what it looked at and what came back. Embed blocks pull other pages inline, so a topology answer can show you the relevant part of the World Model without leaving the conversation.
 
-Below each response, layer chips (color-coded tags) show which ontology layers the agent accessed (intent, persona, logic, policy, topology, runtime, auth). Suggestion chips offer follow-up questions, color-coded by source (graph, memory, code).
+Below each response, layer chips show which parts of the model the assistant drew on, and suggestion chips offer follow-up questions you can click to ask.
 
 ### Starter Suggestions
 

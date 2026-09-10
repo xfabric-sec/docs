@@ -28,7 +28,7 @@ Once saved, the provider appears in the configured list. You can activate or dea
 
 ## Setup status
 
-A setup status indicator (also visible to non-admin users at a read-only endpoint) shows whether any LLM provider is configured. Until a provider is active, AI features are unavailable.
+A status indicator shows whether any provider is configured. Until one is active, AI features are unavailable. Non-admins can see this status but cannot change it.
 
 ## Embedding configuration
 
@@ -40,4 +40,4 @@ The budget section lets admins set spending limits on LLM usage. Set a spending 
 
 ## Multiple providers
 
-You can configure multiple providers and switch between them. Cielara supports direct OpenAI, Azure OpenAI, and a LiteLLM gateway mode. Switching providers at runtime does not require restarting services.
+Cielara supports OpenAI, Anthropic, Microsoft Foundry, and AWS Bedrock. You can configure more than one and switch between them without downtime.

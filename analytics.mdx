@@ -23,19 +23,25 @@ Below the gauge, a summary sentence describes your code quality in plain languag
 
 ## Hero Stats
 
-Four stats appear in a row below the score: Risky PR Rate (percentage of PRs flagged as risky), PRs Reviewed (count for the selected period), Prevented (non-low-risk PRs caught before merge), and Depth (how deeply Cielara analyzed each PR). Hover any label for a glossary tooltip.
+Four stats appear in a row below the score: **Risky PR rate**, the share of your PRs flagged as risky; **PRs reviewed** for the selected period; **Prevented**, the count of risky PRs caught before they merged; and **Depth**, a measure of how much context Cielara pulled in while reviewing. Hover any label for its definition.
 
 ## Summary Cards
 
-Two cards below the hero stats show usage metrics for other Cielara products. The Cielara Code card shows skill calls, response bytes, and coding agent count, with a link to the Cielara Code analytics page. The Ask Cielara card shows tokens saved, query count, World Model queries, and Reasonara queries, linking to Ask Cielara analytics.
+Two cards below the hero stats show how much your team is using the rest of Cielara. One covers Cielara Code, the other Ask Cielara, and each links to its own analytics page.
 
 ## PR Analysis Chart
 
-A time-series line chart plots two series: total PRs (blue) and findings (green fill). You can click a date to filter the PR table below to that day, or drag to select a date range. A clipboard button copies the chart data.
+A time-series chart plots total PRs against findings, so you can see whether review volume and problem count move together. Click a date to filter the PR table below to that day, or drag to select a range.
 
 ## Sidebar Panels
 
-Three panels sit to the right of the chart. The antifragility trend is a line chart showing your score over time, with pillar tooltips on hover. The impact split is a horizontal stacked bar showing the distribution of findings by severity (critical, high, medium, low), with percentage-change arrows; click a severity to filter the table. The antifragility-by-repo panel shows per-repository quality scores; click a repo to filter the table, and you can select multiple repos.
+Three panels sit to the right of the chart.
+
+**Antifragility trend** plots your score over time, with the pillar breakdown on hover.
+
+**Impact split** is a stacked bar showing how your findings divide across critical, high, medium, and low severity, with arrows marking the change since the previous period. Click a severity to filter the table below.
+
+**Antifragility by repo** breaks the score down per repository. Click a repo to filter the table; select several to compare them.
 
 ## Recent PRs Table
 

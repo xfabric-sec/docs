@@ -12,8 +12,8 @@ All connections are managed from the **Connections** page in the sidebar. Click 
 1. In the provider catalog, select **Amazon Web Services**.
 2. Fill in the form:
    - **AWS Account ID**: your 12-digit AWS account ID.
-   - **AWS Access Key**: the 16-20 character access key (uppercase alphanumeric).
-   - **AWS Secret Key**: the 40-64 character secret key.
+   - **AWS Access Key**: the access key for a user with read-only permissions.
+   - **AWS Secret Key**: the matching secret key.
 3. Click **Connect**.
 
 <Tip>
@@ -24,7 +24,7 @@ All connections are managed from the **Connections** page in the sidebar. Click 
 
 1. Select **Google Cloud** from the provider catalog.
 2. Fill in the form:
-   - **Project ID**: your GCP project ID (6-30 characters, lowercase letters and hyphens, must start with a letter).
+   - **Project ID**: your GCP project ID.
    - **Service Account Key**: click the file picker and upload your service account JSON key file.
 3. Click **Connect**.
 
@@ -39,7 +39,7 @@ All connections are managed from the **Connections** page in the sidebar. Click 
    - **Azure Subscription ID**: your subscription UUID.
    - **Microsoft Entra Tenant ID**: your tenant UUID.
    - **Service Principal Client ID**: the app registration client UUID.
-   - **Service Principal Client Secret**: the client secret (10-100 characters).
+   - **Service Principal Client Secret**: the client secret from that app registration.
 3. Click **Connect**.
 
 ## Source code
@@ -105,7 +105,7 @@ AlertManager uses a webhook model instead of credentials:
 
 1. Open the Logs section and select **Elasticsearch**.
 2. Enter the **URL** of your Elasticsearch cluster (e.g., `https://my-es.example.com:9200`).
-3. Choose an authentication type from the 5-segment control: **Basic** (username and password), **API Key** (paste the key value), **Bearer** (paste the token), **Service Token** (paste the token), or **Cloud** (enter the Cloud ID and API key).
+3. Choose an authentication type: **Basic** (username and password), **API Key** (paste the key value), **Bearer** (paste the token), **Service Token** (paste the token), or **Cloud** (enter the Cloud ID and API key).
 4. Click **Connect**. The form tests the connection and shows "Connection verified" on success.
 
 ### Dynatrace

@@ -5,7 +5,7 @@ description: "Explore your knowledge base as an interactive graph of sources, do
 
 Memory Explorer visualizes your knowledge base as an interactive graph. Click **Memory Explorer** in the sidebar to open the page.
 
-The page shows a full-screen canvas (built on ReactFlow) where you search concepts or ask questions, and the results render as a navigable graph of sources, documents, and memories.
+Search for a concept or ask a question, and the results render on a full-screen canvas as a navigable graph of sources, documents, and memories.
 
 <Frame>
   <img src="/images/memory-explorer.png" alt="Memory Explorer" />
@@ -17,9 +17,9 @@ Three types of nodes appear:
 
 - Source nodes (round pills) represent data source types: GitHub, Slack, Jira, Confluence, PagerDuty, Google Drive, Notion, and Canva.
 - Document nodes (rectangular cards) are individual documents within each source, showing title, source type badge, age, relevance percentage, and memory count.
-- Memory nodes (left-accent-bordered cards) are extracted memories from documents, showing title and relevance.
+- Memory nodes are individual facts extracted from a document, showing the title and relevance.
 
-Edges connect sources to documents (`contains`), documents to memories (`extracted`), and documents to each other (`shared_context`, shown as dashed lines).
+Edges run from a source to the documents it contains, from a document to the memories extracted from it, and between documents that share context (shown as dashed lines).
 
 ## Layout options
 
@@ -48,8 +48,8 @@ You can set the result count to 5, 10, 20, or 50. After results load, the sideba
 
 Type a question about your documents (e.g., "What is our policy on incident escalation?") and click Ask. The system runs a two-phase flow:
 
-1. **Retrieving**: a pulsing icon with "Searching memory..." text while it finds relevant content.
-2. **Generating**: the answer streams in with a blinking cursor.
+1. **Retrieving**: Cielara searches your memories for relevant content.
+2. **Generating**: the answer streams in as it is written.
 
 The final answer renders as Markdown in a styled card. Below it, a "Sources used" section lists numbered clickable sources. Click a source to focus the graph on the corresponding node.
 
@@ -60,10 +60,6 @@ Both the search and ask flows populate the graph canvas with results.
 Click a node to open the detail panel on the right. For source nodes, the panel lists their documents. For document nodes, it shows type, age, relevance, memory list, related documents, and "View document" / "Ask about this" buttons. For memory nodes, it shows content text, parent document, and relevance.
 
 Right-click a node for a context menu: Focus, Hide this node, Explore from here, View document, Reset view. Hover a node to see a tooltip.
-
-## Idle state
-
-Before any search, the canvas shows a floating explore icon with a soft radial glow animation and ambient particle effects on a dotted background.
 
 ## Where documents come from
 
