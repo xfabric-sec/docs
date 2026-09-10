@@ -36,7 +36,7 @@ The toolbar also shows the node count, a reset-filter button, and a clear-graph 
 
 ## Sidebar: Explore and Ask
 
-The left sidebar (280px) has two tabs:
+The left sidebar has two tabs:
 
 ### Explore tab
 
@@ -57,18 +57,13 @@ Both the search and ask flows populate the graph canvas with results.
 
 ## Interacting with nodes
 
-Click a node to open the detail panel (400px, slides in from the right). For source nodes, the panel lists their documents. For document nodes, it shows type, age, relevance, memory list, related documents, and "View document" / "Ask about this" buttons. For memory nodes, it shows content text, parent document, and relevance.
+Click a node to open the detail panel on the right. For source nodes, the panel lists their documents. For document nodes, it shows type, age, relevance, memory list, related documents, and "View document" / "Ask about this" buttons. For memory nodes, it shows content text, parent document, and relevance.
 
 Right-click a node for a context menu: Focus, Hide this node, Explore from here, View document, Reset view. Hover a node to see a tooltip.
 
 ## Idle state
 
 Before any search, the canvas shows a floating explore icon with a soft radial glow animation and ambient particle effects on a dotted background.
-
-## URL parameters
-
-- `?q={query}`: triggers an auto-search on page load.
-- `?highlight={nodeId}` or `?highlight_path={path}`: highlights a specific node or path in the graph (used by cross-page links from Ask Cielara).
 
 ## Where documents come from
 

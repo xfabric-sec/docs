@@ -25,13 +25,13 @@ The default method. Users sign in with their email and a password set during reg
 
 Cielara supports single sign-on through Google Workspace using OpenID Connect (OIDC). When SSO is enabled, users from your Google Workspace domain are redirected to Google's login page instead of entering a password.
 
-To configure Google SSO, navigate to **Authentication > Google** (`/admin/authentication/google`) and follow the setup steps.
+To configure Google SSO, go to **Authentication > Google** and follow the setup steps.
 
 The OIDC flow uses PKCE (Proof Key for Code Exchange) to prevent authorization code interception, a browser-bound state parameter to prevent CSRF, and nonce replay protection.
 
 ### SAML
 
-Cielara also supports SAML-based SSO for organizations that use identity providers other than Google. Configure SAML at **Authentication > SAML** (`/admin/authentication/saml`).
+Cielara also supports SAML-based SSO for organizations that use identity providers other than Google. Configure SAML at **Authentication > SAML**.
 
 ## How Login Resolution Works
 
