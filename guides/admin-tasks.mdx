@@ -40,10 +40,8 @@ Choose from the **Primary LLM Provider** dropdown:
 
 | Provider | Description |
 |---|---|
-| OpenAI | GPT models via OpenAI API |
+| OpenAI | GPT models via the OpenAI API |
 | Microsoft Foundry | GPT or Claude models via Azure |
-| Anthropic | Claude models via Anthropic API |
-| AWS Bedrock | Models via Amazon Bedrock |
 
 A summary card shows which model Cielara will use for each job and what credentials you need to supply.
 
@@ -57,11 +55,6 @@ The form depends on which provider you selected:
 - **API Key**: paste your key (from platform.openai.com > API keys).
 - **Base URL** (optional): only change if using a proxy. Defaults to `https://api.openai.com/v1`.
 
-**Anthropic**:
-- **API Key**: paste your key (from console.anthropic.com > Settings > API keys).
-- **Base URL** (optional): defaults to `https://api.anthropic.com`.
-- **Cohere API Key**: required for embeddings (from dashboard.cohere.com > API Keys).
-
 **Microsoft Foundry (Azure OpenAI / GPT)**:
 - **Endpoint**: your Azure OpenAI endpoint (e.g., `https://my-aoai-resource.openai.azure.com/`). Must be HTTPS.
 - **API Key**: from Azure Portal > AI Foundry > Keys and Endpoint.
@@ -72,12 +65,7 @@ The form depends on which provider you selected:
 - **API Key**: from Azure Portal > AI Foundry > Keys and Endpoint.
 - For each model category: a **Deployment name** field.
 
-**AWS Bedrock**:
-- **Access Key ID**: your AWS access key.
-- **Secret Access Key**: your AWS secret key.
-- **AWS Region**: select the region where you enabled model access in Bedrock.
-
-Cielara tests each model as you configure it. A row that fails tells you why, so you can tell a wrong API key from a missing deployment or a region without model access.
+Cielara tests each model as you configure it. A row that fails tells you why, so you can tell a wrong API key from a missing deployment.
 
 Click **Save & Continue** when all models verify.
 
