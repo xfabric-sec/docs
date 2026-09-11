@@ -259,38 +259,20 @@ Cielara is deployed into your own cloud environment, so your data stays in infra
   <Step title="Prepare your cloud environment">
     Download the generated Terraform file from the deploy form and run it against your cloud account. The module creates the Kubernetes cluster, IAM roles, and other resources Cielara needs — deployed into the network you provisioned in the previous step.
 
-    <Tabs>
-      <Tab title="AWS">
-        ```bash
-        aws sso login --profile <profile>
-        export AWS_PROFILE=<profile>
-        terraform init
-        terraform plan
-        terraform apply
-        ```
+    Authenticate Terraform against your cloud account using whichever method suits your environment — local credentials, a service account, or a CI identity. See the authentication documentation for [AWS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration), [Google Cloud](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#authentication), or [Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#authenticating-to-azure). Then run:
 
-        For full Terraform module documentation, see [cielara-prepare-eks on the Terraform Registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-eks/aws/latest).
-      </Tab>
-      <Tab title="GCP">
-        ```bash
-        terraform init
-        terraform plan
-        terraform apply
-        ```
+    ```bash
+    terraform init
+    terraform apply
+    ```
 
-        For full Terraform module documentation, see [cielara-prepare-gke on the Terraform Registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-gke/google/latest).
-      </Tab>
-      <Tab title="Azure">
-        ```bash
-        az login
-        terraform init
-        terraform plan
-        terraform apply
-        ```
+    For full module documentation, see the Terraform Registry:
 
-        For full Terraform module documentation, see [cielara-prepare-aks on the Terraform Registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-aks/azurerm/latest).
-      </Tab>
-    </Tabs>
+    | Cloud | Module |
+    |---|---|
+    | AWS | [cielara-prepare-eks](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-eks/aws/latest) |
+    | GCP | [cielara-prepare-gke](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-gke/google/latest) |
+    | Azure | [cielara-prepare-aks](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-aks/azurerm/latest) |
 
     Upload the output credentials back to the deploy form when prompted.
   </Step>
@@ -301,24 +283,3 @@ Cielara is deployed into your own cloud environment, so your data stays in infra
     When the deployment completes, the deploy form provides your Cielara URL. Open it in your browser to confirm the installation is running.
   </Step>
 </Steps>
-
-## Already Prepared Your Environment?
-
-If you've previously run the Terraform prepare step, toggle **Already prepared** in the deploy form. The downloaded Terraform file includes import blocks so Terraform can adopt your existing resources without recreating them.
-
-```bash
-terraform init
-terraform plan     # should show only imports, 0 destroy
-terraform apply
-```
-
-## After Deployment
-
-Once Cielara is running:
-
-1. Log in with the admin credentials you set during signup. You'll be prompted to change your password on first login.
-2. Accept the terms of service.
-3. Complete the [LLM provider setup wizard](/guides/admin-tasks#configuring-an-llm-provider) so AI features are available.
-4. Set up your first [connections](/connections) — repositories, cloud providers, and workplace tools.
-
-See the [Quickstart](/quickstart) for a walkthrough of your first login and code review.

@@ -80,45 +80,6 @@ When you have more than one provider configured, you can set a separate budget f
 
 Review the summary and click **Activate**. Otherwise the provider activates as soon as you save.
 
-## Setting up Google SSO
+## Setting up SSO
 
-1. Go to **Authentication** in the sidebar.
-2. Click the **Google** card.
-3. Follow the setup instructions at the top of the page:
-   - In Google Cloud Console, configure the OAuth consent screen (set User type to Internal).
-   - Create an OAuth client of type Web application.
-   - Copy the **Authorized redirect URI** shown on the Cielara page and add it to the OAuth client.
-4. Fill in the form:
-   - **Client ID**: paste from Google Cloud Console (format: `xxxxxxxx.apps.googleusercontent.com`).
-   - **Client Secret**: paste the client secret. If one is already stored, leave blank to keep it.
-   - **Workspace domain(s)**: type a domain (e.g., `example.com`) and press Enter. Only these domains can sign in. Add multiple by pressing Enter after each.
-   - **Allowed groups** (optional): Google group emails (e.g., `engineering@example.com`). When set, users must be a member of at least one group. Leave empty to allow everyone in the domain.
-   - **Allow signup**: toggle on to auto-create accounts on first Google sign-in.
-   - **Enable Google sign-in**: toggle on to activate SSO.
-5. Click **Save**.
-
-<Info>
-  Only one SSO method can be active at a time. If SAML is currently enabled, disable it before enabling Google SSO.
-</Info>
-
-## Setting up SAML SSO
-
-1. Go to **Authentication** in the sidebar.
-2. Click the **SAML** card.
-3. Follow the setup instructions:
-   - In your identity provider (Okta, Azure AD / Entra, OneLogin, Keycloak, etc.), create a SAML 2.0 application.
-   - Copy the **SP Entity ID** and **ACS URL** shown on the Cielara page and register them in the IdP.
-4. Fill in the form:
-   - **Display name**: a label for this provider (e.g., "Okta").
-   - **IdP metadata URL** (optional): if provided, blank fields below are auto-filled from the metadata on save.
-   - **Upload metadata XML** (optional): upload the IdP metadata file as an alternative to the URL.
-   - **IdP Entity ID**: the entity ID from your IdP.
-   - **SSO URL**: the single sign-on URL (must be HTTPS).
-   - **Single Logout URL** (optional): when set, signing out of Cielara also ends the IdP session.
-   - **IdP signing certificate (X.509)**: paste the PEM text or click **Upload certificate** to upload a .pem/.crt/.cer/.der file.
-   - **Email attribute** (optional): the assertion attribute carrying the user email, if your IdP doesn't send it as the NameID.
-   - **Allowed organizations** (optional): comma or space-separated SAML organization names. Users must be a member of at least one. Leave empty to allow everyone.
-   - **Organization attribute** (optional): the assertion attribute carrying organizations, if your IdP doesn't use `org`/`organization`.
-   - **Allow signup**: toggle on to auto-create accounts on first SSO sign-in.
-   - **Enable SAML sign-in**: toggle on to activate.
-5. Click **Save**.
+Cielara supports single sign-on through Google Workspace or any SAML 2.0 identity provider. See [Authentication](/authentication) for the full setup steps, including the values you need to register with your provider.
