@@ -1,0 +1,285 @@
+---
+title: "Deployment"
+description: "Sign up for Cielara and deploy it into your cloud environment."
+---
+
+Cielara is deployed into your own cloud environment, so your data stays in infrastructure you own. Your 30-day trial starts as soon as you sign up, and the steps below take you from a new account to a running Cielara instance.
+
+## Deployment Flow
+
+<Steps>
+  <Step title="Sign up for a Cielara account">
+    Go to [cielara.ai](https://console.cielara.ai/signup) and sign up. Enter your details and verify your email. Once your account is created, you will receive a 30-day trial license and access to the Cielara dashboard.
+  </Step>
+  <Step title="Open the deploy form">
+    Log in to the Cielara dashboard and navigate to **Deployments**. Click the deploy form to start a new deployment.
+  </Step>
+  <Step title="Select your cloud provider and fill in the form">
+    Choose your cloud provider: AWS, GCP, or Azure. The form updates to show the fields required for your provider.
+
+    <Tabs>
+      <Tab title="AWS">
+        ### Required Fields
+
+        | Field | Description |
+        |---|---|
+        | **AWS Account ID** | Your 12-digit AWS account ID. Find it in the AWS Console under your account name in the top-right corner, or run `aws sts get-caller-identity`. |
+        | **Region** | The AWS region where your EKS cluster will be created (e.g., `us-east-1`, `eu-west-1`). Choose the region closest to your team or where your data residency requirements apply. |
+        | **AWS Profile** | The named AWS CLI profile to use for authentication. Run `aws sso login --profile <profile>` before running Terraform. |
+        | **Availability Zones** | The availability zones within your selected region for the cluster (e.g., `us-east-1a`, `us-east-1b`). At least two are recommended for high availability. |
+
+        ### Network Settings
+
+        Expand **Network Settings** in the deploy form and provide your VPC and subnet IDs.
+
+        <Tabs>
+          <Tab title="Terraform module (Recommended)">
+            Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/aws/vpc) Terraform module. The module creates a VPC, private and public subnets across two availability zones, NAT gateway(s), and route tables.
+
+            **1. Clone and configure:**
+
+            ```bash
+            git clone git@github.com:causal-dynamics-lab/terraform.git
+            cd terraform/cielara-enterprise-cloud-network/aws/vpc
+            cp terraform.tfvars.example terraform.tfvars
+            ```
+
+            Edit `terraform.tfvars`:
+
+            ```hcl
+            region = "us-east-1"
+            # vpc_cidr           = "10.2.0.0/20"   # default; change if it overlaps
+            # availability_zones = ["us-east-1a", "us-east-1b"]  # default: first 2 AZs
+            # ha_nat             = false            # true = one NAT gateway per AZ
+            ```
+
+            **2. Apply:**
+
+            ```bash
+            terraform init
+            terraform plan
+            terraform apply
+            ```
+
+            **3. Hand back to Cielara:** paste the handback values into the deploy form:
+
+            ```bash
+            terraform output -raw handback
+            ```
+
+            | Deploy form field | Handback key |
+            |---|---|
+            | **VPC ID** | `vpc_id` |
+            | **EKS Subnets** | `private_subnet_ids` |
+          </Tab>
+          <Tab title="Existing networking">
+            If you already have networking that meets Cielara's requirements, provide your resource IDs directly:
+
+            | Field | Description |
+            |---|---|
+            | **VPC ID** | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
+            | **EKS Subnets** | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+          </Tab>
+        </Tabs>
+
+        ### Node Pool Machine Types
+
+        The recommended instance type depends on how many repositories you have. More repositories need more memory and CPU to scan and analyze.
+
+        | Scale | Source Code Repositories | Recommended instance type |
+        |---|---|---|
+        | Small–Medium | Up to 300 | `r6i.xlarge` |
+        | Large | 300+ | `r6i.2xlarge` or `r7i.2xlarge` |
+
+        | Field | Description |
+        |---|---|
+        | **Instance type** | The EC2 instance type for your node pool. See the sizing guidance above to choose the right type for your organization. |
+        | **Capacity type** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
+      </Tab>
+      <Tab title="GCP">
+        ### Required Fields
+
+        | Field | Description |
+        |---|---|
+        | **Project ID** | Your Google Cloud project ID. Find it in the GCP Console under **Project info** on the dashboard, or run `gcloud config get-value project`. |
+        | **Region** | The GCP region where your GKE cluster will be created (e.g., `us-central1`, `europe-west1`). Choose the region closest to your team or where your data residency requirements apply. |
+
+        ### Network Settings
+
+        Expand **Network Settings** in the deploy form and provide your VPC and subnet details.
+
+        <Tabs>
+          <Tab title="Terraform module (Recommended)">
+            Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/gcp/vpc) Terraform module. The module creates a custom-mode VPC, a regional subnet with secondary ranges for pods and services, and a Cloud NAT with a static egress IP.
+
+            **1. Clone and configure:**
+
+            ```bash
+            git clone git@github.com:causal-dynamics-lab/terraform.git
+            cd terraform/cielara-enterprise-cloud-network/gcp/vpc
+            cp terraform.tfvars.example terraform.tfvars
+            ```
+
+            Edit `terraform.tfvars`:
+
+            ```hcl
+            project_id = "my-gcp-project"
+            region     = "us-central1"
+            # gke_subnet_cidr = "10.10.0.0/20"  # default; change if it overlaps
+            # pods_cidr       = "10.11.0.0/16"   # secondary range for pods
+            # services_cidr   = "10.12.0.0/20"   # secondary range for services
+            ```
+
+            **2. Apply:**
+
+            ```bash
+            gcloud auth application-default login
+            terraform init
+            terraform plan
+            terraform apply
+            ```
+
+            **3. Hand back to Cielara:** paste the handback values into the deploy form:
+
+            ```bash
+            terraform output -raw handback
+            ```
+
+            | Deploy form field | Handback key |
+            |---|---|
+            | **VPC** | `vpc_self_link` |
+            | **GKE Subnet** | `gke_subnet_self_link` |
+          </Tab>
+          <Tab title="Existing networking">
+            If you already have networking that meets Cielara's requirements, provide your resource IDs directly:
+
+            | Field | Description |
+            |---|---|
+            | **VPC** | The self-link or name of your existing VPC network. |
+            | **GKE Subnet** | The self-link or name of the subnet where GKE nodes will run. Must be in the selected region. |
+          </Tab>
+        </Tabs>
+
+        ### Node Pool Machine Types
+
+        The recommended machine type depends on how many repositories you have. More repositories need more memory and CPU to scan and analyze.
+
+        | Scale | Source Code Repositories | Recommended machine type |
+        |---|---|---|
+        | Small–Medium | Up to 300 | `n2-highmem-4` |
+        | Large | 300+ | `n2-highmem-8` or `c3-highmem-8` |
+
+        | Field | Description |
+        |---|---|
+        | **Machine type** | The GCE instance type for your node pool. See the sizing guidance above to choose the right type for your organization. |
+        | **Provisioning model** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
+      </Tab>
+      <Tab title="Azure">
+        ### Required Fields
+
+        | Field | Description |
+        |---|---|
+        | **Subscription ID** | Your Azure subscription ID. Find it in the Azure Portal under **Subscriptions**, or run `az account show --query id -o tsv`. |
+        | **Resource Group** | The Azure resource group where AKS resources will be created. You can use an existing resource group or let the Terraform prepare step create one. |
+        | **Region** | The Azure region where your AKS cluster will be created (e.g., `eastus`, `westeurope`). Choose the region closest to your team or where your data residency requirements apply. |
+        | **Tenant ID** | Your Microsoft Entra ID tenant ID. Find it in the Azure Portal under **Microsoft Entra ID > Overview**, or run `az account show --query tenantId -o tsv`. |
+
+        ### Network Settings
+
+        Expand **Network Settings** in the deploy form and provide your VNet and subnet details.
+
+        <Tabs>
+          <Tab title="Terraform module (Recommended)">
+            Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/azure/vnet) Terraform module. The module creates a VNet, subnets for system nodes, user nodes, app gateway, Postgres, API server, and private endpoints, plus a NAT gateway.
+
+            **1. Clone and configure:**
+
+            ```bash
+            git clone git@github.com:causal-dynamics-lab/terraform.git
+            cd terraform/cielara-enterprise-cloud-network/azure/vnet
+            cp terraform.tfvars.example terraform.tfvars
+            ```
+
+            Edit `terraform.tfvars`:
+
+            ```hcl
+            subscription_id     = "00000000-0000-0000-0000-000000000000"
+            tenant_id           = "00000000-0000-0000-0000-000000000000"
+            resource_group_name = "my-cielara-rg"
+            location            = "eastus2"
+            # vnet_cidr         = "10.2.0.0/20"   # default; change if it overlaps
+            ```
+
+            **2. Apply:**
+
+            ```bash
+            az login
+            terraform init
+            terraform plan
+            terraform apply
+            ```
+
+            **3. Hand back to Cielara:** paste the handback values into the deploy form:
+
+            ```bash
+            terraform output -raw handback
+            ```
+
+            | Deploy form field | Handback key |
+            |---|---|
+            | **VNet ID** | `vnet_name` |
+            | **AKS Subnet** | `user_subnet_name` |
+          </Tab>
+          <Tab title="Existing networking">
+            If you already have networking that meets Cielara's requirements, provide your resource IDs directly:
+
+            | Field | Description |
+            |---|---|
+            | **VNet ID** | The resource ID of your existing virtual network. |
+            | **AKS Subnet** | The resource ID of the subnet where AKS nodes will run. Must be in the selected region. |
+          </Tab>
+        </Tabs>
+
+        ### Node Pool Machine Types
+
+        The recommended VM size depends on how many repositories you have. More repositories need more memory and CPU to scan and analyze.
+
+        | Scale | Source Code Repositories | Recommended VM size |
+        |---|---|---|
+        | Small–Medium | Up to 300 | `Standard_E4s_v5` |
+        | Large | 300+ | `Standard_E8s_v5` or `Standard_E16s_v5` |
+
+        | Field | Description |
+        |---|---|
+        | **VM size** | The Azure VM size for your node pool. See the sizing guidance above to choose the right size for your organization. |
+        | **Priority** | Choose **Regular** or **Spot**. Spot instances are approximately 40% cheaper but may be evicted during high-demand periods. Regular is recommended for production deployments. |
+      </Tab>
+    </Tabs>
+  </Step>
+  <Step title="Prepare your cloud environment">
+    Download the generated Terraform file from the deploy form and run it against your cloud account. The module creates the Kubernetes cluster, IAM roles, and other resources Cielara needs — deployed into the network you provisioned in the previous step.
+
+    Authenticate Terraform against your cloud account using whichever method suits your environment — local credentials, a service account, or a CI identity. See the authentication documentation for [AWS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration), [Google Cloud](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#authentication), or [Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#authenticating-to-azure). Then run:
+
+    ```bash
+    terraform init
+    terraform apply
+    ```
+
+    For full module documentation, see the Terraform Registry:
+
+    | Cloud | Module |
+    |---|---|
+    | AWS | [cielara-prepare-eks](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-eks/aws/latest) |
+    | GCP | [cielara-prepare-gke](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-gke/google/latest) |
+    | Azure | [cielara-prepare-aks](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-aks/azurerm/latest) |
+
+    Upload the output credentials back to the deploy form when prompted.
+  </Step>
+  <Step title="Deploy">
+    Click **Deploy** in the deploy form. Cielara installs into your cluster automatically. No manual steps required.
+  </Step>
+  <Step title="Verify">
+    When the deployment completes, the deploy form provides your Cielara URL. Open it in your browser to confirm the installation is running.
+  </Step>
+</Steps>

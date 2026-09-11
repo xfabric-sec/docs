@@ -1,0 +1,54 @@
+---
+title: "Deploy on AKS"
+description: "Field-by-field guide to deploying Cielara on Azure Kubernetes Service."
+---
+
+This guide walks through every field in the Cielara deploy form when you select **Azure** as your cloud provider. See the [Deployment](/deployment) page for the overall flow.
+
+## Required Fields
+
+| Field | Description |
+|---|---|
+| **Subscription ID** | Your Azure subscription ID. Find it in the Azure Portal under **Subscriptions**, or run `az account show --query id -o tsv`. |
+| **Resource Group** | The Azure resource group where AKS resources will be created. You can use an existing resource group or let the Terraform prepare step create one. |
+| **Region** | The Azure region where your AKS cluster will be created (e.g., `eastus`, `westeurope`). Choose the region closest to your team or where your data residency requirements apply. |
+| **Tenant ID** | Your Microsoft Entra ID tenant ID. Find it in the Azure Portal under **Microsoft Entra ID > Overview**, or run `az account show --query tenantId -o tsv`. |
+
+## Network Settings
+
+By default, Cielara creates the required networking resources. If you want to use existing networking, expand the **Network Settings** section in the deploy form and provide the following:
+
+| Field | Required | Description |
+|---|---|---|
+| **VNet ID** | Yes | The resource ID of your existing virtual network. |
+| **AKS Subnet** | Yes | The resource ID of the subnet where AKS nodes will run. Must be in the selected region. |
+
+## Node Pool Machine Types
+
+These settings control the compute resources for your AKS cluster. They affect both performance and cost. The recommended VM size depends on how many source code repositories your organization manages — more repositories require more memory and CPU for scanning and analysis.
+
+### Sizing guidance
+
+| Scale | Source Code Repositories | Recommended VM size |
+|---|---|---|
+| Small–Medium | Up to 300 | `Standard_E4s_v5` |
+| Large | 300+ | `Standard_E8s_v5` or `Standard_E16s_v5` |
+
+### Fields
+
+| Field | Description |
+|---|---|
+| **VM size** | The Azure VM size for your node pool. See the sizing guidance above to choose the right size for your organization. |
+| **Priority** | Choose **Regular** or **Spot**. Spot instances are approximately 40% cheaper but may be evicted during high-demand periods. Regular is recommended for production deployments. |
+
+## Next Steps
+
+After filling in the form:
+
+1. Download the generated Terraform file.
+2. Run `az login` to authenticate with your Azure account.
+3. Run `terraform init`, `terraform plan`, and `terraform apply`.
+4. Upload the output credentials back to the deploy form.
+5. Click **Deploy** to start the installation.
+
+For full Terraform module documentation, see [cielara-prepare-aks on the Terraform Registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-aks/azurerm/latest).

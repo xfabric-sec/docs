@@ -1,0 +1,64 @@
+---
+title: "Memory Explorer"
+description: "Explore your knowledge base as an interactive graph of sources, documents, and extracted memories."
+---
+
+Memory Explorer visualizes your knowledge base as an interactive graph. Click **Memory Explorer** in the sidebar to open the page.
+
+Search for a concept or ask a question, and the results render on a full-screen canvas as a navigable graph of sources, documents, and memories.
+
+## Graph structure
+
+Three types of nodes appear:
+
+- Source nodes (round pills) represent data source types: GitHub, Slack, Jira, Confluence, PagerDuty, Google Drive, Notion, and Canva.
+- Document nodes (rectangular cards) are individual documents within each source, showing title, source type badge, age, relevance percentage, and memory count.
+- Memory nodes are individual facts extracted from a document, showing the title and relevance.
+
+Edges run from a source to the documents it contains, from a document to the memories extracted from it, and between documents that share context (shown as dashed lines).
+
+## Layout options
+
+A toolbar in the top-right corner lets you switch between four layout algorithms:
+
+| Layout | Description |
+|---|---|
+| Cluster | Hierarchical layered, top-down (default) |
+| Tree | Horizontal layered |
+| Force | Physics-based spread |
+| Stress | Minimizes edge crossings |
+
+The toolbar also shows the node count, a reset-filter button, and a clear-graph button.
+
+## Sidebar: Explore and Ask
+
+The left sidebar has two tabs:
+
+### Explore tab
+
+Type a concept or topic in the "Search concepts..." field and press Enter. The system queries the backend for relevant documents, memories, and their connections, then renders them as a graph.
+
+You can set the result count to 5, 10, 20, or 50. After results load, the sidebar shows a source breakdown with colored dots and counts per source type, plus a legend explaining node shapes.
+
+### Ask tab
+
+Type a question about your documents (e.g., "What is our policy on incident escalation?") and click Ask. The system runs a two-phase flow:
+
+1. **Retrieving**: Cielara searches your memories for relevant content.
+2. **Generating**: the answer streams in as it is written.
+
+The final answer renders as Markdown in a styled card. Below it, a "Sources used" section lists numbered clickable sources. Click a source to focus the graph on the corresponding node.
+
+Both the search and ask flows populate the graph canvas with results.
+
+## Interacting with nodes
+
+Click a node to open the detail panel on the right. For source nodes, the panel lists their documents. For document nodes, it shows type, age, relevance, memory list, related documents, and "View document" / "Ask about this" buttons. For memory nodes, it shows content text, parent document, and relevance.
+
+Right-click a node for a context menu: Focus, Hide this node, Explore from here, View document, Reset view. Hover a node to see a tooltip.
+
+## Where documents come from
+
+Memory Explorer is read-only. You cannot upload documents from this page. Documents are ingested through the **Connections** page (via connectors like Notion, Google Drive, Slack, Confluence, Canva) or through the Reasonara admin page (direct file upload for Markdown, PDF, DOCX, and CSV files).
+
+Memory Explorer always searches the default collection. Collection switching is done through the Reasonara admin interface.

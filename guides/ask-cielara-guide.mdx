@@ -1,0 +1,82 @@
+---
+title: "Using Ask Cielara"
+description: "How to chat with the AI assistant, pin context, adjust effort levels, and use the canvas."
+---
+
+## Starting a conversation
+
+Ask Cielara is available everywhere in the dashboard as a side panel.
+
+### From the side panel
+
+Look for the Ask Cielara button on the right side of the dashboard. Click it to open the panel. You can switch between three views using the view picker in the header:
+
+Panel docks to the right side of the dashboard. Floating is a draggable, resizable window you can position anywhere; size and position are saved between sessions. Expanded takes the full available width.
+
+### From the workspace
+
+Open the Ask Cielara workspace for a dedicated three-column layout:
+
+The left column shows your session history, grouped by time (Pinned, Today, This Week, Earlier). Toggle it with **Alt+S**. The center column is the chat. The right column is the canvas pane for diagrams and reports; toggle it with **Alt+C**.
+
+## Asking questions
+
+Type your question in the input field and press Enter. The assistant streams its response as it works.
+
+When a new session is empty, the assistant shows starter suggestions. Click one to use it as your first question.
+
+Example questions:
+- "What services depend on the payments API?"
+- "Show me the blast radius if Redis goes down"
+- "What is our incident escalation policy?"
+- "Run a code review on PR #42 in acme/backend"
+
+## Pinning context with @-mentions
+
+Type **@** in the input field to open the context picker. Select items to pin as context for the assistant:
+
+| Category | What you can pin |
+|---|---|
+| Pages | Production World Model, Ontology Explorer, Incidents, Simulations, Memory Explorer |
+| Services | Workloads configured for RCA |
+| Incidents | Active alerts from your alert system |
+| Simulations | Past or running simulation runs |
+| Conversations | Prior chat sessions |
+
+Pinned context stays attached until you remove it. The assistant considers these items when reasoning through your question.
+
+## Adjusting effort levels
+
+Type `/effort` followed by `low`, `medium`, `high`, or `xhigh` to control how many reasoning steps the assistant takes. Use a low level for quick lookups and a high one for investigations that need to cross several systems. See [effort levels](/ask-cielara#effort-levels) for the step counts.
+
+Higher levels produce more thorough answers but take longer.
+
+## Reading responses
+
+Responses are built from three kinds of blocks. Text blocks render as Markdown. Tool call blocks show the steps the assistant took, such as querying the World Model or searching memories; expand one to see what it found. Embed blocks pull in a diagram, an investigation report, or a live view of another page.
+
+At the bottom of a response, layer chips show which parts of the model the assistant drew on. Suggestion chips offer follow-up questions; click one to ask it.
+
+## Using the canvas
+
+In the workspace view, the right column shows a canvas pane. When the assistant produces a Mermaid diagram or an investigation report, it appears here automatically. The canvas stays visible as you continue chatting, so you can reference the diagram while asking follow-ups.
+
+Mermaid diagrams support pan, zoom, and SVG download.
+
+## Managing sessions
+
+### Creating a new session
+
+Click the **+** button in the session list (workspace) or the new-conversation button in the panel header.
+
+### Pinning a session
+
+In the workspace, right-click a session and select Pin. Pinned sessions appear at the top of the list.
+
+### Compacting a long conversation
+
+If a conversation grows long, click the **Compact** button in the session header. Older messages are summarized and archived. The conversation continues with the summary as context, freeing up space for more detailed responses.
+
+### Background tasks
+
+When the assistant triggers a long-running operation (like a code review or simulation), a background tasks bar appears at the bottom of the chat. It shows each task's name, elapsed time, and completion status. You can keep chatting while tasks run.

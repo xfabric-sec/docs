@@ -1,0 +1,61 @@
+---
+title: "Code review with Foresight"
+description: "How to set up automated code review, read findings, track PR debt, and manage policies."
+---
+
+## Setting up Foresight on a repository
+
+Foresight requires a GitHub (or Azure DevOps) connection with the optional GitHub App installed. If you haven't set this up yet, follow the [GitHub connection guide](/guides/setup-connections#github).
+
+Once the GitHub App is installed:
+
+1. Go to **Connections** in the sidebar.
+2. Open the GitHub connection and scroll to the Foresight section.
+3. In the **Repositories** autocomplete, search for the repo you want to enable. Check it, or click **Select all** to enable all repos.
+4. Click **Save**.
+
+Foresight now runs automatically on every new and updated pull request for the selected repos.
+
+## Reviewing your personal analytics
+
+Click **Analytics** in the sidebar to see your personal quality dashboard. The page shows your PRs only (scoped to your linked GitHub identity).
+
+1. Use the floating **period toggle** (top corner) to switch between 7, 30, or 90 days.
+2. Check your **antifragility score** in the circular gauge at the top. Hover the gauge to see the breakdown across six pillars: Security, Reliability, Performance, Operability, Maintainability, and Cost.
+3. Scroll to the **PR Analysis** chart to see total PRs vs. findings over time. Click a date to filter the table to that day, or drag to select a range.
+4. Use the **Impact split** bar to the right to filter by severity. Click a severity segment (critical, high, medium, low) to see only those findings in the table.
+5. Click a row in the **Recent PRs** table to open the PR detail view.
+
+If you haven't linked your GitHub account, the dashboard is empty until you do. See [Analytics](/analytics) for how to link it.
+
+## Reading a PR review
+
+From the Analytics table, click a PR row to open the three-column detail view.
+
+### Finding your way around
+
+The left column shows the PR title, overall score, recommendation (Approved / Approved with Risks / Requires Changes / Blocked), and commit history. Click a commit to see findings at that point in time.
+
+The center column lists findings grouped by lifecycle (new, fixed, carried over). A dropdown toggles between "showing all" and "showing open."
+
+The right column shows the selected finding in full: code context, explanation, bot comment, and simulation case (when available).
+
+### Understanding a finding
+
+Each finding shows a category (e.g., security, performance), severity (critical, high, medium, low), and confidence score (e.g., "Cielara 87%"). It also shows the finding's lifecycle: whether it's new, carried from a previous push, or fixed.
+
+Below that, the code context section displays the specific lines, syntax-highlighted with line numbers. The file path links to the file on GitHub at the reviewed commit. A "Why it matters" section explains what could go wrong, and when available, the bot comment includes a recommended fix.
+
+### Tracking changes across pushes
+
+Each commit in the left column shows a score delta (green for improvement, red for regression) and a label like "2 new, 1 fixed." This tells you whether the latest push improved or worsened the review.
+
+Findings are classified as "New at this push" (just appeared), "Fixed at this push" (resolved since the last push, grayed out), or "Carried over" (present since an earlier push and still unresolved).
+
+### Using Ask Cielara from a finding
+
+Select a finding in the center column, then click **Ask Cielara** in the actions panel (bottom of the left column). The AI assistant opens with a prompt about that specific finding, including its context, severity, and code.
+
+## Tracking shipped unresolved findings
+
+Foresight keeps a technical debt view for each repository, listing findings that were still open when their pull request merged. Findings are grouped by file, and each one links back to the pull request it came from.

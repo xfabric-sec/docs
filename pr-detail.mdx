@@ -1,0 +1,50 @@
+---
+title: "PR review detail"
+description: "The three-column view for reviewing Foresight code review findings on a pull request."
+---
+
+Click any PR row in the [Analytics](/analytics) table to open its detail view. This page gives you the full picture of Cielara's code review for a single pull request, organized as a three-column layout.
+
+On mobile, the three columns become three screens you swipe between.
+
+## Left column: review timeline
+
+The left column shows the PR title, its overall score (e.g., "72 / 100") color-coded by quality, and a recommendation label: **Approved**, **Approved with Risks**, **Requires Changes**, or **Blocked**.
+
+Below that, the PR state pill shows whether the PR is open, merged, or closed, along with its risk level.
+
+### Commit history
+
+A list of commits (newest first) tracks how findings evolved across pushes. Each entry shows the short SHA, score, score delta compared to the previous push (green for improvement, red for regression), and a label like "PR opened, 2 new" or "1 new, 1 fixed" or "3 carried." The latest commit is tagged **HEAD**. Click a commit to view that push's findings without reloading the page.
+
+### Actions panel
+
+Four buttons at the bottom of the left column link out to related views: the pull request on GitHub or Azure DevOps, the topology simulation for this PR if one ran, Ask Cielara with a prompt about the finding you have selected, and the bot's review comment for that finding.
+
+## Center column: findings list
+
+The center column lists all findings at the selected commit. A dropdown lets you filter between "showing all" and "showing open" (hides findings that were fixed).
+
+When push history is available, findings are grouped by lifecycle: new at this push (findings that appeared at this commit), fixed at this push (findings resolved since the last commit, grayed out), and carried over (findings from earlier pushes still present).
+
+Without push history, findings fall back to severity grouping (critical, high, medium, low) with colored counts.
+
+Each finding shows its title, severity, category (e.g., security), file location with line numbers, and a confidence score when available (e.g., "Cielara 87%"). Use the arrow keys to navigate between findings.
+
+At the bottom of the list, pillar scores show horizontal bars for each quality dimension at the current push, worst first.
+
+## Right column: finding detail
+
+Select a finding to see its full analysis. At the top, lifecycle info shows how long the finding has been open, which commit introduced it, and whether it's still present at HEAD. A qualifier line lists the severity, category, confidence, lifecycle status, and whether the finding blocks the merge.
+
+Below that, the title and description explain what the issue is and what could go wrong. A narrative section summarizes the finding's history across pushes in plain language. If a bot comment was posted on GitHub or Azure DevOps, it appears here with its file path and line number.
+
+The code context section shows the relevant code, syntax-highlighted with line numbers. The file path links to the file on GitHub at the reviewed commit. If exact lines aren't available, a PR diff fallback shows added, deleted, and context lines.
+
+A "Why it matters" section provides deeper analysis of the potential impact. If a topology simulation covered this finding, you also see the hypothesis it tested, whether it passed or failed, and which workloads fall inside the blast radius.
+
+When a PR has zero findings and low risk, the detail column shows a green checkmark with "Clean PR: no findings across any pillar. This PR is ready to ship."
+
+## Shipped unresolved
+
+Each repository has a technical debt view listing findings that were still unresolved when their PR merged, grouped by file. Each entry links back to the original PR and review run.

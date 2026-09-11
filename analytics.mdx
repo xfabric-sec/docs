@@ -1,0 +1,48 @@
+---
+title: "Analytics"
+description: "Your personal code quality dashboard with antifragility scores, PR findings, severity breakdowns, and trends."
+---
+
+The Analytics page is your personal quality dashboard. The page shows your own pull request data, scoped to your linked GitHub or Azure DevOps identity. Open the dashboard by clicking **Analytics** in the sidebar.
+
+If you haven't linked your GitHub account yet, the dashboard is empty. A banner at the top prompts you to connect your GitHub account so Cielara can match PRs to your identity. You can also link it from your profile: click your account icon in the top right and open **Profile**.
+
+## Period Selector
+
+A floating toggle in the top corner lets you switch the time window: **7 days**, **30 days**, or **90 days**. Changing the period updates every chart, stat, and table on the page.
+
+## Antifragility Score
+
+The top of the page shows a circular gauge with your antifragility score (0 to 100), color-coded by health. Hover or click the gauge to see the breakdown across six pillars: Security, Reliability, Performance, Operability, Maintainability, and Cost. Clicking a pillar sorts the PR table below by that dimension.
+
+Below the gauge, a summary sentence describes your code quality in plain language, for example: "Your code quality is excellent. Cielara flagged 12% of the 47 PRs it reviewed as risky before they merged."
+
+## Hero Stats
+
+Four stats appear in a row below the score: **Risky PR rate**, the share of your PRs flagged as risky; **PRs reviewed** for the selected period; **Prevented**, the count of risky PRs caught before they merged; and **Depth**, a measure of how much context Cielara pulled in while reviewing. Hover any label for its definition.
+
+## Summary Cards
+
+Two cards below the hero stats show how much your team is using the rest of Cielara. One covers Cielara Code, the other Ask Cielara, and each links to its own analytics page.
+
+## PR Analysis Chart
+
+A time-series chart plots total PRs against findings, so you can see whether review volume and problem count move together. Click a date to filter the PR table below to that day, or drag to select a range.
+
+## Sidebar Panels
+
+Three panels sit to the right of the chart.
+
+**Antifragility trend** plots your score over time, with the pillar breakdown on hover.
+
+**Impact split** is a stacked bar showing how your findings divide across critical, high, medium, and low severity, with arrows marking the change since the previous period. Click a severity to filter the table below.
+
+**Antifragility by repo** breaks the score down per repository. Click a repo to filter the table; select several to compare them.
+
+## Recent PRs Table
+
+A filterable, sortable, paginated table of your reviewed PRs. Filters include free-text search, repository multi-select, author dropdown, risk level chips, and date range (set from the chart). You can also toggle between "actionable" (risky) and "all" PRs.
+
+Each row shows the PR number, title, repo, risk level (color-coded dot), score, date, and a pillar breakdown tooltip. Click a row to open the [PR detail view](/pr-detail).
+
+All filters are cross-linked: clicking the impact split bar, a repo card, or a date on the chart updates the table, and vice versa.

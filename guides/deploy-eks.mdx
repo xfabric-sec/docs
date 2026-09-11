@@ -1,0 +1,99 @@
+---
+title: "Deploy on EKS"
+description: "Field-by-field guide to deploying Cielara on Amazon Elastic Kubernetes Service."
+---
+
+This guide walks through every field in the Cielara deploy form when you select **AWS** as your cloud provider. See the [Deployment](/deployment) page for the overall flow.
+
+## Required Fields
+
+| Field | Description |
+|---|---|
+| **AWS Account ID** | Your 12-digit AWS account ID. Find it in the AWS Console under your account name in the top-right corner, or run `aws sts get-caller-identity`. |
+| **Region** | The AWS region where your EKS cluster will be created (e.g., `us-east-1`, `eu-west-1`). Choose the region closest to your team or where your data residency requirements apply. |
+| **AWS Profile** | The named AWS CLI profile to use for authentication. Run `aws sso login --profile <profile>` before running Terraform. |
+| **Availability Zones** | The availability zones within your selected region for the cluster (e.g., `us-east-1a`, `us-east-1b`). At least two are recommended for high availability. |
+
+## Network Settings
+
+Expand **Network Settings** in the deploy form and provide your VPC and subnet IDs.
+
+<Tabs>
+  <Tab title="Terraform module (Recommended)">
+    Provision your networking using Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/aws/vpc) Terraform module. The module creates a VPC, private and public subnets across two availability zones, NAT gateway(s), and route tables.
+
+    **1. Clone and configure:**
+
+    ```bash
+    git clone git@github.com:causal-dynamics-lab/terraform.git
+    cd terraform/cielara-enterprise-cloud-network/aws/vpc
+    cp terraform.tfvars.example terraform.tfvars
+    ```
+
+    Edit `terraform.tfvars`:
+
+    ```hcl
+    region = "us-east-1"
+    # vpc_cidr           = "10.2.0.0/20"   # default; change if it overlaps your network
+    # availability_zones = ["us-east-1a", "us-east-1b"]  # default: auto-selects first 2 AZs
+    # ha_nat             = false            # set true for one NAT gateway per AZ
+    ```
+
+    **2. Apply:**
+
+    ```bash
+    terraform init
+    terraform plan
+    terraform apply
+    ```
+
+    **3. Hand back to Cielara:** paste the handback values into the deploy form:
+
+    ```bash
+    terraform output -raw handback
+    ```
+
+    | Deploy form field | Handback key |
+    |---|---|
+    | **VPC ID** | `vpc_id` |
+    | **EKS Subnets** | `private_subnet_ids` |
+  </Tab>
+  <Tab title="Existing networking">
+    If you already have networking that meets Cielara's requirements, provide your resource IDs directly:
+
+    | Field | Description |
+    |---|---|
+    | **VPC ID** | The ID of your existing VPC (e.g., `vpc-0abc123def456`). |
+    | **EKS Subnets** | The IDs of the subnets where EKS nodes will run. Provide at least two subnets in different availability zones. |
+  </Tab>
+</Tabs>
+
+## Node Pool Machine Types
+
+These settings control the compute resources for your EKS cluster. They affect both performance and cost. The recommended instance type depends on how many source code repositories your organization manages — more repositories require more memory and CPU for scanning and analysis.
+
+### Sizing guidance
+
+| Scale | Source Code Repositories | Recommended instance type |
+|---|---|---|
+| Small–Medium | Up to 300 | `r6i.xlarge` |
+| Large | 300+ | `r6i.2xlarge` or `r7i.2xlarge` |
+
+### Fields
+
+| Field | Description |
+|---|---|
+| **Instance type** | The EC2 instance type for your node pool. See the sizing guidance above to choose the right type for your organization. |
+| **Capacity type** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
+
+## Next Steps
+
+After filling in the form:
+
+1. Download the generated Terraform file.
+2. Run `aws sso login --profile <profile>` and `export AWS_PROFILE=<profile>`.
+3. Run `terraform init`, `terraform plan`, and `terraform apply`.
+4. Upload the output credentials back to the deploy form.
+5. Click **Deploy** to start the installation.
+
+For full Terraform module documentation, see [cielara-prepare-eks on the Terraform Registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-eks/aws/latest).

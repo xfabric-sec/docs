@@ -1,0 +1,39 @@
+---
+title: "Models"
+description: "Configure LLM providers for code review, simulations, the AI assistant, and knowledge base features."
+---
+
+<Info>
+  This page is admin-only. It appears in the sidebar under the Configuration group as **Models**.
+</Info>
+
+Cielara needs at least one LLM provider configured to run code reviews, simulations, the AI assistant, and knowledge base question answering. The Models page lets admins set up and manage these providers.
+
+## Provider catalog
+
+The page shows a catalog of available LLM providers. Select a provider to configure its credentials (API key, endpoint, etc.).
+
+## Configuring a provider
+
+1. Select a provider from the catalog
+2. Enter the required credentials
+3. Click **Test** to verify connectivity (Cielara sends a test request to the provider)
+4. Save the configuration
+
+Once saved, the provider appears in the configured list. You can activate or deactivate providers, and set which provider handles embedding separately from which handles completions.
+
+## Setup status
+
+A status indicator shows whether any provider is configured. Until one is active, AI features are unavailable. Non-admins can see this status but cannot change it.
+
+## Embedding configuration
+
+The embedding config section lets you choose the embedding model (e.g., text-embedding-3-small or text-embedding-3-large) used by the knowledge base for document indexing and semantic search.
+
+## Budget controls
+
+The budget section lets admins set spending limits on LLM usage. Set a spending cap for a time period under budget config, and review current spend, per-model breakdowns, and spend logs in the spend dashboard.
+
+## Multiple providers
+
+Cielara supports OpenAI and Microsoft Foundry. You can configure both and switch between them without downtime.

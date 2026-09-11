@@ -1,0 +1,55 @@
+---
+title: "Ask Cielara"
+description: "An AI assistant that queries your topology, searches your knowledge base, and reviews code from a chat interface."
+---
+
+Ask Cielara is Cielara's AI assistant. The assistant has access to your service topology, knowledge base, incidents, simulations, and code repositories. You can ask questions in natural language, and it reasons through multi-step investigations to produce answers.
+
+## Where to Find It
+
+Ask Cielara appears in two forms. The floating panel is available on every page of the dashboard as a collapsible right-side panel, a draggable floating window, or a full-width expanded view; toggle between these with the view picker in the header. The workspace page gives you a dedicated three-column layout.
+
+On mobile, the panel opens as a full-screen overlay.
+
+## Workspace Layout
+
+The workspace has three columns. The left column holds your chat sessions grouped by time (Pinned, Today, This Week, Earlier), with controls to create, pin, search, and delete them; collapse it with **Alt+S**. The center column is the chat interface with the active conversation. The right column is a canvas pane for Mermaid diagrams and investigation reports the assistant produces; collapse it with **Alt+C**. The canvas opens on its own as soon as the assistant produces something to show.
+
+## Chatting
+
+Type a question in the input field at the bottom. The assistant streams its response as it works, so you can see the answer take shape rather than waiting on a blank screen.
+
+### Message Rendering
+
+An answer is built from three kinds of blocks. Text blocks render as Markdown, with tables, headings, lists, and code blocks you can copy. Tool call blocks show the steps the assistant took to reach its answer, such as querying the World Model or searching your memories; expand one to see what it looked at and what came back. Embed blocks pull other pages inline, so a topology answer can show you the relevant part of the World Model without leaving the conversation.
+
+Below each response, layer chips show which parts of the model the assistant drew on, and suggestion chips offer follow-up questions you can click to ask.
+
+### Starter Suggestions
+
+When you open a new session, the assistant shows generated starter suggestions so you don't have to think of a first question. These are categorized by source type.
+
+## Pinning Context with @-Mentions
+
+Type **@** in the input field to open a context picker. You can pin pages (Production World Model, Ontology Explorer, Incidents, Simulations, Memory Explorer, and others), services (workloads configured for RCA), incidents from your alert system, stored simulation runs, or prior chat sessions. Pinned items stay attached until you remove them, and the assistant considers them when answering.
+
+## Effort Levels
+
+Use the slash command `/effort` followed by a level to control how deeply the assistant reasons:
+
+| Command | Steps | When to use |
+|---|---|---|
+| `/effort low` | 2 | Quick factual lookups |
+| `/effort medium` | 4 | Standard questions |
+| `/effort high` | 8 | Complex investigations |
+| `/effort xhigh` | 16 | Deep multi-step research |
+
+Higher effort levels let the agent take more reasoning steps, which produces more thorough answers but takes longer.
+
+## Compaction
+
+Long conversations can be summarized to save context space. Click the **Compact** button in the session header. Older messages are archived with an expandable summary notice, and the conversation continues with the summary as context.
+
+## Background Tasks
+
+When the assistant triggers long-running operations (code reviews, simulations), a background tasks bar appears at the bottom showing running tasks with elapsed time and completion status.

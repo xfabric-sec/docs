@@ -1,47 +1,56 @@
 ---
 title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+description: "Create your account, connect a repository, and get your first code review."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
+## Create Your Account
 
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+Your admin creates your account from the **Users & Access** page. You receive an invitation email with a registration link. Click the link, set your password, and your account is active.
 
-## Prerequisites
+If your organization uses SSO, the registration page offers **Continue with Google** or **Continue with SSO** instead, and activates your account through your identity provider.
 
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+## First Login
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
-
-    ```bash
-    npm install your-package
-    ```
+  <Step title="Enter your email">
+    Go to your Cielara URL and enter your email, then click **Next**. If your organization uses SSO, you're sent to your identity provider to sign in. Otherwise, the password field appears.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
-
-    ```bash
-    your-cli init
-    ```
+  <Step title="Change your password">
+    On your very first login, you're asked to change the initial password and accept the terms of service.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
-
-    ```bash
-    your-cli start
-    ```
+  <Step title="Set up an LLM provider (admins only)">
+    If no LLM provider has been configured yet, Cielara redirects you to the [LLM provider setup wizard](/guides/admin-tasks#configuring-an-llm-provider) before you can access the dashboard.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## Connect a Repository
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+<Steps>
+  <Step title="Open Connections">
+    Click **Connections** in the sidebar. This is where all integrations live.
+  </Step>
+  <Step title="Add a source code connection">
+    Click the **+ Connect** button, select **GitHub** (or **Azure DevOps**) from the Source Code group, and follow the OAuth prompts to authorize Cielara on your organization. Select the repositories you want to connect.
+  </Step>
+  <Step title="Verify">
+    Your repositories appear in the Connections list. Cielara sets up webhooks automatically to respond to pull requests.
+  </Step>
+</Steps>
+
+## See Your First Code Review
+
+Open a pull request on a connected repository. Cielara's Foresight engine picks up the pull request automatically, reviews the diff in the context of the full codebase, and posts inline findings on the PR. You can also view the review in the **Analytics** dashboard.
+
+## What's Next?
+
+<CardGroup cols={3}>
+  <Card title="Analytics" icon="chart-line" href="/analytics">
+    Your personal quality dashboard with antifragility scores and PR review history.
+  </Card>
+  <Card title="World Model" icon="globe" href="/world-model">
+    Explore your service topology as an interactive graph.
+  </Card>
+  <Card title="Ask Cielara" icon="message-bot" href="/ask-cielara">
+    Ask questions about your infrastructure in a chat interface.
+  </Card>
+</CardGroup>

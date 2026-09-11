@@ -1,0 +1,38 @@
+---
+title: "Connections"
+description: "Connect cloud providers, source code, alerts, logs, secrets, and workplace tools from a single page."
+---
+
+The Connections page is where all integrations live. Click **Connections** in the sidebar to open the page. The page uses a list-and-detail layout: a left pane shows your connections grouped by type, and a right pane shows details for the selected connection.
+
+A type filter dropdown at the top lets you narrow the list to a specific group.
+
+## Connection groups
+
+| Group | Providers | What they provide |
+|---|---|---|
+| **Cloud** | AWS, GCP, Azure | Accounts, regions, projects, subscriptions, resource discovery |
+| **Clusters** | Kubernetes, GKE, EKS, AKS | Cluster topology, namespaces, workloads, pods |
+| **Source code** | GitHub, Azure DevOps | Repository access, PR webhooks for Foresight code review |
+| **Logs** | Elasticsearch, Dynatrace | Log indices, environment metrics |
+| **Alerts** | PagerDuty, AlertManager | Incidents, on-call, Prometheus alerts |
+| **Secrets** | HashiCorp Vault | Cluster and namespace secrets |
+| **Workplace** | Slack, Jira, Confluence, Notion, Canva, Google Drive | Notifications, issue linking, documentation, knowledge base documents |
+
+## Adding a connection
+
+Click the **+ Connect** button to open the provider catalog. Entries are organized by group, each with a short description of what it pulls in. The catalog covers AWS, GCP, Azure, GitHub, Azure DevOps, PagerDuty, AlertManager, Elasticsearch, Dynatrace, HashiCorp Vault, Slack, Jira, Confluence, Notion, Canva, and Google Drive.
+
+Select a provider and follow its setup flow. Cloud and source code connections typically require OAuth or API credentials. Workplace tools each have their own configuration panel. See the [setup connections guide](/guides/setup-connections) for field-by-field instructions.
+
+## Workplace tools
+
+Workplace integrations are singleton connections with dedicated setup panels. The Communications tab handles Slack. The Ticketing tab handles Jira. The Documentation tab handles Confluence, Notion, Canva, and Google Drive, which also serve as knowledge base connectors, pulling documents into Agent Memory for the Memory Explorer and Ask Cielara.
+
+## Additional panels
+
+The API Keys tab lets you create and manage API keys for programmatic access. The OAuth Clients tab lets you manage OAuth client configurations.
+
+## Foresight settings
+
+The Connections page also shows a summary of your Foresight configuration: GitHub App status, personal GitHub sign-in availability, and the list of connected repositories. This appears in the source code connection detail view.

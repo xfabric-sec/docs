@@ -1,0 +1,51 @@
+---
+title: "Deploy on GKE"
+description: "Field-by-field guide to deploying Cielara on Google Kubernetes Engine."
+---
+
+This guide walks through every field in the Cielara deploy form when you select **GCP** as your cloud provider. See the [Deployment](/deployment) page for the overall flow.
+
+## Required Fields
+
+| Field | Description |
+|---|---|
+| **Project ID** | Your Google Cloud project ID. Find it in the GCP Console under **Project info** on the dashboard, or run `gcloud config get-value project`. |
+| **Region** | The GCP region where your GKE cluster will be created (e.g., `us-central1`, `europe-west1`). Choose the region closest to your team or where your data residency requirements apply. |
+
+## Network Settings
+
+By default, Cielara creates the required networking resources. If you want to use existing networking, expand the **Network Settings** section in the deploy form and provide the following:
+
+| Field | Required | Description |
+|---|---|---|
+| **VPC** | Yes | The self-link or name of your existing VPC network. |
+| **GKE Subnet** | Yes | The self-link or name of the subnet where GKE nodes will run. Must be in the selected region. |
+
+## Node Pool Machine Types
+
+These settings control the compute resources for your GKE cluster. They affect both performance and cost. The recommended machine type depends on how many source code repositories your organization manages — more repositories require more memory and CPU for scanning and analysis.
+
+### Sizing guidance
+
+| Scale | Source Code Repositories | Recommended machine type |
+|---|---|---|
+| Small–Medium | Up to 300 | `n2-highmem-4` |
+| Large | 300+ | `n2-highmem-8` or `c3-highmem-8` |
+
+### Fields
+
+| Field | Description |
+|---|---|
+| **Machine type** | The GCE instance type for your node pool. See the sizing guidance above to choose the right type for your organization. |
+| **Provisioning model** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
+
+## Next Steps
+
+After filling in the form:
+
+1. Download the generated Terraform file.
+2. Run `terraform init`, `terraform plan`, and `terraform apply` in your GCP environment.
+3. Upload the output credentials back to the deploy form.
+4. Click **Deploy** to start the installation.
+
+For full Terraform module documentation, see [cielara-prepare-gke on the Terraform Registry](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-gke/google/latest).
