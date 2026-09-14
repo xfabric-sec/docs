@@ -38,10 +38,6 @@ The form depends on which provider you selected:
   Microsoft Foundry requires you to deploy the models in Azure AI Foundry first. Cielara connects to deployments that already exist and cannot create them for you, so each **Deployment name** field below expects the name of a deployment you have made. See Microsoft's [deployments overview](https://learn.microsoft.com/en-us/azure/foundry/concepts/deployments-overview).
 </Note>
 
-<Tip>
-  The [`cielara-ai-foundry` Terraform module](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-ai-foundry) provisions the Foundry resource and the model deployments Cielara expects, and outputs the endpoint and API key for the fields below.
-</Tip>
-
 **Microsoft Foundry (Azure OpenAI / GPT)**:
 - **Endpoint**: your Azure OpenAI endpoint (e.g., `https://my-aoai-resource.openai.azure.com/`). Must be HTTPS.
 - **API Key**: from Azure Portal > AI Foundry > Keys and Endpoint.
