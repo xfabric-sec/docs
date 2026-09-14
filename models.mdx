@@ -34,28 +34,41 @@ The form depends on which provider you selected:
 - **API Key**: paste your key (from platform.openai.com > API keys).
 - **Base URL** (optional): only change if using a proxy. Defaults to `https://api.openai.com/v1`.
 
+<Note>
+  Microsoft Foundry requires you to deploy the models in Azure AI Foundry first. Cielara connects to deployments that already exist and cannot create them for you, so each **Deployment name** field below expects the name of a deployment you have made. See Microsoft's [deployments overview](https://learn.microsoft.com/en-us/azure/foundry/concepts/deployments-overview).
+</Note>
+
+<Tip>
+  The [`cielara-ai-foundry` Terraform module](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-ai-foundry) provisions the Foundry resource and the model deployments Cielara expects, and outputs the endpoint and API key for the fields below.
+</Tip>
+
 **Microsoft Foundry (Azure OpenAI / GPT)**:
 - **Endpoint**: your Azure OpenAI endpoint (e.g., `https://my-aoai-resource.openai.azure.com/`). Must be HTTPS.
 - **API Key**: from Azure Portal > AI Foundry > Keys and Endpoint.
 - For each model category (Reasoning, Coding, Mini, Embedding): a **Deployment name** field. Enter the name from Azure Portal > AI Foundry > Deployments.
 
+### Recommended Models
 
+Each category has a default, with alternatives you can select per category.
 
-Click **Save & Continue** when all models verify.
+**Azure OpenAI / GPT**:
 
-### Step 3: Set a budget
+| Category | Default | Alternatives |
+|---|---|---|
+| Reasoning | `gpt-5.6-luna` | `gpt-5.6-terra`, `gpt-5.6-sol` |
+| Coding | `gpt-5.6-luna` | `gpt-5.6-terra`, `gpt-5.6-sol` |
+| Mini | `gpt-5.6-luna` | none |
+| Embedding | `text-embedding-3-small` | `text-embedding-3-large` |
 
-If your deployment has budgets enabled, set spending limits before activating:
+Older GPT models (`gpt-5.5`, `gpt-5.3-codex`, `gpt-5.4-mini`) are retired. Cielara no longer offers them, though an existing configuration that still names one keeps working.
 
-- **Monthly Limit (USD)**: minimum $1,000.
-- **Duration**: Daily, Weekly, Monthly 30d, or Monthly calendar.
+Cielara resolves models by deployment name, so a deployment has to carry the same name as the model it serves. If it does not, that category's test fails even though the deployment exists.
 
-Review the summary and click **Activate**. If budgets are not enabled, the provider activates as soon as you save.
+Click **Save & Continue** when all models verify. The provider activates as soon as you save.
 
 ## Embedding configuration
 
 The embedding config section lets you choose the embedding model (e.g., text-embedding-3-small or text-embedding-3-large) used by the knowledge base for document indexing and semantic search.
-
 
 ## Multiple providers
 

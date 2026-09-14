@@ -1,9 +1,9 @@
 ---
 title: "Ask Cielara"
-description: "An AI assistant that queries your topology, searches your knowledge base, and reviews code from a chat interface."
+description: "An AI assistant that queries your topology and searches your knowledge base from a chat interface."
 ---
 
-Ask Cielara is Cielara's AI assistant. The assistant has access to your service topology, knowledge base, incidents, simulations, and code repositories. You can ask questions in natural language, and it reasons through multi-step investigations to produce answers.
+Ask Cielara is Cielara's AI assistant. The assistant has access to your service topology, knowledge base, incidents, and simulations. You can ask questions in natural language, and it reasons through multi-step investigations to produce answers.
 
 ## Where to Find It
 
@@ -13,7 +13,7 @@ On mobile, the panel opens as a full-screen overlay.
 
 ## Workspace Layout
 
-The workspace has three columns. The left column holds your chat sessions grouped by time (Pinned, Today, This Week, Earlier), with controls to create, pin, search, and delete them; collapse it with **Alt+S**. The center column is the chat interface with the active conversation. The right column is a canvas pane for Mermaid diagrams and investigation reports the assistant produces; collapse it with **Alt+C**. The canvas opens on its own as soon as the assistant produces something to show, and stays visible as you keep chatting, so you can reference a diagram while asking follow-ups. Mermaid diagrams support pan, zoom, and SVG download.
+The workspace has three columns. The left column holds your chat sessions grouped by time (Pinned, Today, This Week, Earlier), with controls to create, pin, search, and delete them. The center column is the chat interface with the active conversation. The right column is a canvas pane for Mermaid diagrams and investigation reports the assistant produces. The canvas opens on its own as soon as the assistant produces something to show, and stays visible as you keep chatting, so you can reference a diagram while asking follow-ups. Mermaid diagrams support pan, zoom, and SVG download.
 
 ## Chatting
 
@@ -24,7 +24,6 @@ Example questions:
 - "What services depend on the payments API?"
 - "Show me the blast radius if Redis goes down"
 - "What is our incident escalation policy?"
-- "Run a code review on PR #42 in acme/backend"
 
 ### Message Rendering
 
@@ -65,4 +64,4 @@ Long conversations can be summarized to save context space. Click the **Compact*
 
 ## Background Tasks
 
-When the assistant triggers long-running operations (code reviews, simulations), a background tasks bar appears at the bottom showing running tasks with elapsed time and completion status.
+When the assistant triggers long-running operations such as simulations, a background tasks bar appears at the bottom showing running tasks with elapsed time and completion status.

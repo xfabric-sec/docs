@@ -3,21 +3,27 @@ title: "Quickstart"
 description: "Create your account, connect a repository, and get your first code review."
 ---
 
-## Log in to your account
+## Log In to Your Account
 
 <Steps>
-  <Step title="Enter your email">
-    Go to your Cielara URL and enter your email, then click **Next**.
+  <Step title="Open your invitation email">
+    When an admin creates your account, Cielara emails you an invitation link. Click it.
   </Step>
-  <Step title="Change your password">
-    On your very first login, you're asked to change the initial password and accept the terms of service.
+  <Step title="Create your password">
+    The link opens the **Complete Signup** screen. Choose a password and confirm it. It needs at least 8 characters, including an uppercase letter, a lowercase letter, a number, and a special character. Cielara confirms with **Account Activated!** and sends you to the login page.
   </Step>
-  <Step title="Set up an LLM provider (admins only)">
-    If no LLM provider has been configured yet, Cielara redirects you to the [LLM provider setup wizard](/models#configuring-a-provider) before you can access the dashboard.
+  <Step title="Log in">
+    Go to your Cielara URL, enter your email address, then click **Next** and enter the password you just created.
+  </Step>
+  <Step title="Accept the terms">
+    The first time you reach the dashboard, a **Terms & Conditions** dialog opens over it. Read them and click **Accept**. You cannot use Cielara until you do.
+  </Step>
+  <Step title="Set up an LLM provider">
+    If no LLM provider has been configured yet, Cielara sends you to the [LLM provider setup wizard](/models#configuring-a-provider) before the dashboard becomes available. Only an admin can complete it.
   </Step>
 </Steps>
 
-## Connect a repository
+## Connect a Repository
 
 <Steps>
   <Step title="Open Connections">
@@ -31,11 +37,24 @@ description: "Create your account, connect a repository, and get your first code
   </Step>
 </Steps>
 
-## See your first code review
+## See Your First Code Review
 
 Open a pull request on a connected repository. Cielara's Foresight engine picks up the pull request automatically, reviews the diff in the context of the full codebase, and posts inline findings on the PR. You can also view the review in the **Analytics** dashboard.
 
-## What's next?
+## Finish Setting Up Connections
+
+A source code connection is all Foresight needs to review pull requests, but the rest of Cielara stays empty until you connect the systems it models. Return to **Connections** and add:
+
+- **Cloud** (AWS, GCP, Azure): discovers the accounts, regions, and resources that populate the World Model.
+- **Alerts** (PagerDuty, AlertManager): brings in incidents and on-call data, and lets incidents trigger simulations.
+- **Logs** (Elasticsearch, Dynatrace): adds log indices and environment metrics.
+- **Workplace** (Slack, Jira, Confluence, Notion, Canva, Google Drive): adds notifications, issue linking, and the documents behind the knowledge base.
+
+See [Connections](/connections) for the fields each provider needs.
+
+## What's Next?
+
+Once your connections are in place:
 
 <CardGroup cols={3}>
   <Card title="Analytics" icon="chart-line" href="/analytics">

@@ -26,17 +26,38 @@ Nodes are color-coded by ontology layer (Logic, Topology, Runtime, Intent, Polic
 
 The graph uses a grouped layout: workloads are nested inside cluster and namespace container boxes. Cross-container relationships show as bundled lines between container borders. Hover a bundle to see the count and type breakdown.
 
-Within containers, you can switch card arrangement between grid (default), layered, tree, force, radial, and stress layouts.
+Cards inside a box sit on a grid by default. To change how they are arranged, use the **Layout** picker in the **View** section of the side panel. The choice is not saved, so the graph returns to Grid when you reload the page.
+
+| Layout | How it arranges cards | Best for |
+|---|---|---|
+| **Grid** (default) | Rows and columns, ordered by layer, then kind, then name. Connections are ignored. | A predictable read of what is in a box. |
+| **Layered** | Top-down hierarchy. Cards with nothing pointing at them go on the top row, and each row below is one hop further down. | Following the direction a dependency runs. |
+| **Tree** | The same hierarchy turned to run left to right. | Long chains, which get too tall to read top-down. |
+| **Force** | A spring simulation. Connected cards pull together, unconnected ones push apart. | Spotting tightly coupled clusters inside a box. |
+| **Radial** | Rings around the most-connected card, with busier branches given a wider slice. | Seeing what surrounds one central card. |
+| **Stress** | Spacing where on-screen distance approximates the number of hops between cards. | Dense boxes, where the hierarchy layouts tangle. |
 
 ## Interacting with Nodes
 
 Click a node to select it and open the detail panel on the right. The panel shows the node's properties, layer, kind, health, connections (inbound and outbound with relationship types), and links to external systems (GitHub, cloud console, PagerDuty).
 
-Right-click a node to open a context menu with options: Focus (filter the graph to N-hop neighbors, with a depth slider), Hide, Expand/Collapse, Ask Cielara (opens the AI assistant with a prompt about this node), and Favorite.
+Right-click a node to open a context menu:
 
-Focus hides everything outside the selected node's neighborhood; use the depth slider to widen or narrow it. To return to the full graph, click the reset button that appears, or right-click and select **Reset view**.
+- **Ask Cielara about this**: opens Ask Cielara with a prompt already written, describing the node's kind, layer, repository, and its relationships on the graph.
+- **Add to favorites** / **Remove from favorites**: stars or unstars the node.
+- **Focus**: filters the graph to the node's neighborhood at the current depth.
+- **Hide this node**: removes the node from the canvas.
+- **Expand children**: brings the node's children and parents into view.
+- **Collapse children**: hides the node's children again.
+- **Collapse all**: collapses every expanded node on the canvas.
 
-Favorite a node from the context menu or by clicking the star on its card. Favorites are saved per user, so your starred services stay marked across sessions.
+Right-clicking a workload in the sidebar that is not yet drawn shows a single **Add to canvas** option instead.
+
+Focus hides everything outside the selected node's neighborhood. While a focus is active, a **Depth** slider appears at the top right of the canvas. It starts at 1 hop and goes up to the point where the whole connected neighborhood is covered, and the readout beside it shows how many nodes the current depth reaches. The context menu always focuses at whatever depth the slider is set to.
+
+To return to the full graph, click **Reset view** in the toolbar. It appears whenever something is hidden or filtered, and it clears hidden nodes, layer filters, the favorites filter, and the active focus.
+
+Favorite a node from the context menu or by clicking the star on its card. Favorites are stored per user on the server, so your starred nodes follow you across browsers and machines. Once you have at least one, a **Favorites** chip in the filter bar narrows the graph to your starred nodes and their direct neighbors. You can star up to 500 nodes.
 
 Hover a node to highlight it and its connected edges, dimming everything else. Click the doc badge on a node (e.g., "3 docs") to see a popover listing linked wiki documents. Drag a node to reposition it within its container.
 

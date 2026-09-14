@@ -120,7 +120,7 @@ pages:
           - admin-backend/internal/handlers/user.go
 
   models.mdx:
-    description: LLM provider configuration wizard and budgets
+    description: LLM provider configuration wizard
     sources:
       - repo: core
         paths:
