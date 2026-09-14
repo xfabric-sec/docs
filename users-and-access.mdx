@@ -13,9 +13,29 @@ The Users & Access page lets admins manage who can use Cielara and what they can
 
 The main view shows all users in your organization. Each entry shows the user's name, email, role, and status.
 
-## Managing Users
+## Adding a User
 
-Click "Create" to add a new user with their email and assigned role. Click an existing user to view their profile and change their role or details. To remove someone's access, delete their account from the profile view.
+1. Click **Create**.
+2. Fill in the form:
+   - **Email Address**: the user's email.
+   - **User Role**: click one of the role chips, **Admin** or **User**. See [Roles](#roles) for what each can reach.
+3. Click **Add User**.
+
+The user receives an invitation email with a registration link. They click it, set a password, and their account is active. If your organization uses SSO, the registration page sends them to your identity provider instead — see [Authentication](/authentication).
+
+## Editing a User
+
+1. Click a user in the list to open their profile.
+2. Change their role, or set their account status:
+   - **Active**: the user can sign in.
+   - **Inactive**: the account is preserved but sign-in is blocked.
+3. Click **Update User**.
+
+<Warning>
+  If the user you're editing is the only admin, the Admin role is locked. Add another admin before changing their role.
+</Warning>
+
+To remove someone's access permanently, delete their account from the profile view. Setting the account to **Inactive** blocks sign-in while preserving the account, and is reversible.
 
 ## Roles
 
@@ -24,4 +44,4 @@ Cielara has two built-in roles:
 | Role | Access |
 |---|---|
 | **Admin** | Full access to all features, including Configuration pages (Users & Access, Models, Authentication, Connections setup), Impact dashboard, and admin-only API endpoints. |
-| **User** | Access to Analytics, World Model, Ask Cielara, and the knowledge base, plus read-only access to Connections. Cannot manage users, configure LLM providers, or set up SSO. |
+| **User** | Access to Analytics, World Model, Ask Cielara, Deep Inquiry, Simulations, and the knowledge base, plus read-only access to Connections. Cannot manage users, configure LLM providers, or set up SSO. |

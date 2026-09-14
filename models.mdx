@@ -7,24 +7,55 @@ description: "Configure LLM providers for code review, simulations, the AI assis
   This page is admin-only. It appears in the sidebar under the Configuration group as **Models**.
 </Info>
 
-Cielara needs at least one LLM provider configured to run code reviews, simulations, the AI assistant, and knowledge base question answering. The Models page lets admins set up and manage these providers.
+Cielara needs at least one LLM provider configured to run code reviews, simulations, the AI assistant, and knowledge base question answering. Until a provider is active, AI features are unavailable. Non-admins can see the setup status but cannot change it.
 
-## Provider catalog
-
-The page shows a catalog of available LLM providers. Select a provider to configure its credentials (API key, endpoint, etc.).
+If no provider has been configured when an admin first signs in, Cielara redirects to this page before the dashboard becomes available.
 
 ## Configuring a provider
 
-1. Select a provider from the catalog
-2. Enter the required credentials
-3. Click **Test** to verify connectivity (Cielara sends a test request to the provider)
-4. Save the configuration
+### Step 1: Select a provider
 
-Once saved, the provider appears in the configured list. You can activate or deactivate providers, and set which provider handles embedding separately from which handles completions.
+Choose from the **Primary LLM Provider** dropdown:
 
-## Setup status
+| Provider | Description |
+|---|---|
+| OpenAI | GPT models via the OpenAI API |
+| Microsoft Foundry | GPT or Claude models via Azure |
 
-A status indicator shows whether any provider is configured. Until one is active, AI features are unavailable. Non-admins can see this status but cannot change it.
+A summary card shows which model Cielara will use for each job and what credentials you need to supply.
+
+Click **Next: Configure & Test**.
+
+### Step 2: Configure and test
+
+The form depends on which provider you selected:
+
+**OpenAI**:
+- **API Key**: paste your key (from platform.openai.com > API keys).
+- **Base URL** (optional): only change if using a proxy. Defaults to `https://api.openai.com/v1`.
+
+**Microsoft Foundry (Azure OpenAI / GPT)**:
+- **Endpoint**: your Azure OpenAI endpoint (e.g., `https://my-aoai-resource.openai.azure.com/`). Must be HTTPS.
+- **API Key**: from Azure Portal > AI Foundry > Keys and Endpoint.
+- For each model category (Reasoning, Coding, Mini, Embedding): a **Deployment name** field. Enter the name from Azure Portal > AI Foundry > Deployments.
+
+**Microsoft Foundry (Azure Anthropic / Claude)**:
+- **Foundry Resource Name**: your AI Foundry resource name (e.g., `my-foundry-resource`).
+- **API Key**: from Azure Portal > AI Foundry > Keys and Endpoint.
+- For each model category: a **Deployment name** field.
+
+Cielara tests each model as you configure it. A row that fails tells you why, so you can tell a wrong API key from a missing deployment.
+
+Click **Save & Continue** when all models verify.
+
+### Step 3: Set a budget
+
+If your deployment has budgets enabled, set spending limits before activating:
+
+- **Monthly Limit (USD)**: minimum $1,000.
+- **Duration**: Daily, Weekly, Monthly 30d, or Monthly calendar.
+
+Review the summary and click **Activate**. If budgets are not enabled, the provider activates as soon as you save.
 
 ## Embedding configuration
 
@@ -32,8 +63,8 @@ The embedding config section lets you choose the embedding model (e.g., text-emb
 
 ## Budget controls
 
-The budget section lets admins set spending limits on LLM usage. Set a spending cap for a time period under budget config, and review current spend, per-model breakdowns, and spend logs in the spend dashboard.
+Review current spend, per-model breakdowns, and spend logs in the spend dashboard. When you have more than one provider configured, you can set a separate budget for each.
 
 ## Multiple providers
 
-Cielara supports OpenAI and Microsoft Foundry. You can configure both and switch between them without downtime.
+Cielara supports OpenAI and Microsoft Foundry. You can configure both and switch between them without downtime. Configured providers appear in a list where you can activate or deactivate each one.

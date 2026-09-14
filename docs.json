@@ -45,12 +45,7 @@
         "group": "How-to Guides",
         "pages": [
           "guides/setup-connections",
-          "guides/code-review",
-          "guides/world-model-guide",
-          "guides/ask-cielara-guide",
-
-
-          "guides/admin-tasks"
+          "guides/ask-cielara-guide"
         ]
       }
     ],
