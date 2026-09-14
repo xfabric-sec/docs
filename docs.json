@@ -40,13 +40,6 @@
           "models",
           "authentication"
         ]
-      },
-      {
-        "group": "How-to Guides",
-        "pages": [
-          "guides/setup-connections",
-          "guides/ask-cielara-guide"
-        ]
       }
     ],
     "global": {
