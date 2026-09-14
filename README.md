@@ -1,55 +1,58 @@
-# Mintlify Starter Kit
+# Cielara documentation
 
-Use the starter kit to get your docs deployed and ready to customize.
+The source for the Cielara product documentation, published with [Mintlify](https://mintlify.com).
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+## Layout
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+Pages are MDX files with YAML frontmatter, at the repository root.
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+| File | Purpose |
+|---|---|
+| `docs.json` | Navigation, theme, and site config. A page is not live until it is listed here |
+| `doc-sources.yaml` | Maps each page to the source paths it documents, for the staleness check |
+| `AGENTS.md` | Terminology, style, and structure rules. Read this before writing |
+| `.mintignore` | Files excluded from the published site |
 
-## AI-assisted writing
+The navigation has three groups: Getting Started, Product Features, and Setup & Configuration.
 
-Set up your AI coding tool to work with Mintlify:
+## Local preview
+
+Install the Mintlify CLI:
 
 ```bash
-npx skills add https://mintlify.com/docs
-```
-
-This command installs Mintlify's documentation skill for your configured AI tools like Claude Code, Cursor, Windsurf, and others. The skill includes component reference, writing standards, and workflow guidance.
-
-See the [AI tools guides](/ai-tools) for tool-specific setup.
-
-## Development
-
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
-
-```
 npm i -g mint
 ```
 
-Run the following command at the root of your documentation, where your `docs.json` is located:
+Run it from the repository root, where `docs.json` lives:
 
-```
+```bash
 mint dev
 ```
 
-View your local preview at `http://localhost:3000`.
+The preview is at `http://localhost:3000`.
 
-## Publishing changes
+## Publishing
 
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
+Changes are deployed automatically when they land on the default branch, via the Mintlify GitHub app.
 
-## Need help?
+## Staleness check
 
-### Troubleshooting
+`.github/workflows/doc-staleness.yml` runs every Monday. It checks out the source repositories listed in `doc-sources.yaml` and compares the last commit date on each mapped path against the last commit date of the page documenting it. A page whose source moved more recently is flagged as possibly stale, and the workflow opens an issue.
 
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
+The check is only as good as the mapping. **When you add, merge, or delete a page, update `doc-sources.yaml` in the same change**, or the page silently stops being covered.
 
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
+Trigger a run manually from the Actions tab.
+
+## Writing
+
+Read `AGENTS.md` first. The short version:
+
+- One page per topic. Do not add a how-to guide that parallels a reference page
+- Sentence case headings, active voice, second person
+- Document failure modes, not just the happy path
+- Do not invent field names, error strings, or UI details you cannot verify
+
+## Troubleshooting
+
+- Dev server not starting: run `mint update` for the latest CLI
+- Page 404s locally: check it is listed in `docs.json` and that you are running from the repository root

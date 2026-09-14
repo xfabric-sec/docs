@@ -4,24 +4,36 @@
 # more recently, the doc may be stale.
 #
 # Paths are relative to each repo root.
+#
+# Every page listed here must exist, and every page in docs.json
+# should be listed here. Prune this file whenever pages are added,
+# merged, or removed, or the check silently stops covering them.
 
 repos:
   core: xfabric-sec/core
   agent-fabric: xfabric-sec/agent-fabric
-  agent-memory: xfabric-sec/agent-memory
 
 pages:
   index.mdx:
     description: Product introduction and feature overview
     sources: []  # Only stale if features are added/removed
 
+  deployment.mdx:
+    description: Cloud deploy form and Terraform prepare modules
+    sources:
+      - repo: core
+        paths:
+          - deployments/production/
+          - deployments/kubernetes/
+
   quickstart.mdx:
-    description: Sign-up and first-run flow
+    description: First login, connecting a repository, and first code review
     sources:
       - repo: core
         paths:
           - frontend/src/app/(auth)/
           - frontend/src/app/(dashboard)/setup/
+          - admin-backend/internal/handlers/auth.go
 
   analytics.mdx:
     description: Personal analytics dashboard (Foresight)
@@ -42,17 +54,8 @@ pages:
         paths:
           - apps/foresight/
 
-  policies.mdx:
-    description: Foresight policy management
-    sources:
-      - repo: core
-        paths:
-          - frontend/src/app/(dashboard)/policies/
-          - frontend/src/components/_app/policies/
-          - backend/internal/api/policy.go
-
   world-model.mdx:
-    description: Production World Model topology view
+    description: Production World Model topology view, including canvas search and focus
     sources:
       - repo: core
         paths:
@@ -62,75 +65,14 @@ pages:
         paths:
           - worldmodel/
 
-  document-mapping.mdx:
-    description: WM Editing / wiki-to-workload mapping
-    sources:
-      - repo: core
-        paths:
-          - frontend/src/components/wm-editing/
-      - repo: agent-fabric
-        paths:
-          - apps/wm_editing/
-
   ask-cielara.mdx:
-    description: Ask Cielara AI assistant
+    description: Ask Cielara AI assistant, including session management and the canvas
     sources:
       - repo: core
         paths:
           - frontend/src/app/(dashboard)/ask-cielara/
           - frontend/src/components/_app/ask-cielara/
           - backend/internal/ontology/
-
-  deep-inquiry.mdx:
-    description: Deep Inquiry audit and verification
-    sources:
-      - repo: core
-        paths:
-          - frontend/src/app/(dashboard)/deep-inquiry/
-          - frontend/src/components/deep-inquiry/
-      - repo: agent-fabric
-        paths:
-          - apps/deep_inquiry/
-
-  simulations.mdx:
-    description: Scenario, Foresight, and Incident simulations
-    sources:
-      - repo: core
-        paths:
-          - frontend/src/app/(dashboard)/simulations/
-          - frontend/src/components/_app/simulations/
-          - frontend/src/components/_app/simulation-analysis/
-          - backend/internal/simulation/
-      - repo: agent-fabric
-        paths:
-          - apps/simulations/
-
-  incidents.mdx:
-    description: Incidents and root cause analysis
-    sources:
-      - repo: core
-        paths:
-          - frontend/src/app/(dashboard)/incidents/
-          - frontend/src/components/_app/incidents/
-          - frontend/src/app/(dashboard)/(rca)/
-          - frontend/src/components/_app/rca/
-          - backend/internal/api/rca/
-      - repo: agent-fabric
-        paths:
-          - rca-agent/
-
-  memory-explorer.mdx:
-    description: Memory Explorer graph visualization
-    sources:
-      - repo: core
-        paths:
-          - frontend/src/app/(dashboard)/memory-explorer/
-          - frontend/src/components/memory-explorer/
-      - repo: agent-memory
-        paths:
-          - api/api.py
-          - api/explorer.py
-          - src/agent_memory/retrieval/
 
   impact.mdx:
     description: Org-wide Impact dashboard
@@ -140,7 +82,7 @@ pages:
           - frontend/src/app/(dashboard)/impact/
 
   connections.mdx:
-    description: Connections page (all integration types)
+    description: Connections page and per-provider setup for every integration type
     sources:
       - repo: core
         paths:
@@ -166,17 +108,8 @@ pages:
           - backend/internal/api/canva_integration.go
           - backend/internal/api/google_drive_integration.go
 
-  resource-list.mdx:
-    description: Cloud resource browser
-    sources:
-      - repo: core
-        paths:
-          - frontend/src/app/(dashboard)/resource-list/
-          - frontend/src/components/_app/resource-list/
-          - backend/internal/api/resource_list_api.go
-
   users-and-access.mdx:
-    description: User management, roles, permissions
+    description: User management, roles, permissions, and the invitation flow
     sources:
       - repo: core
         paths:
@@ -184,9 +117,10 @@ pages:
           - frontend/src/components/_app/users/
           - frontend/src/components/_app/roles/
           - frontend/src/components/_app/permissions/
+          - admin-backend/internal/handlers/user.go
 
   models.mdx:
-    description: LLM provider configuration
+    description: LLM provider configuration wizard and budgets
     sources:
       - repo: core
         paths:
@@ -203,51 +137,3 @@ pages:
           - frontend/src/app/(dashboard)/admin/authentication/
           - frontend/src/components/_app/auth/
           - backend/internal/api/oidc/
-
-  signing-up.mdx:
-    description: Account creation and signup flows
-    sources:
-      - repo: core
-        paths:
-          - frontend/src/app/(auth)/signup/
-          - frontend/src/app/(auth)/register/
-          - admin-backend/internal/handlers/user.go
-          - admin-backend/internal/handlers/auth.go
-
-  deployment.mdx:
-    description: VM and Kubernetes deployment
-    sources:
-      - repo: core
-        paths:
-          - deployments/production/
-          - deployments/kubernetes/
-
-  cielara-code.mdx:
-    description: Cielara Code CLI connector
-    sources:
-      - repo: core
-        paths:
-          - connector/
-          - mcp-server/
-          - frontend/src/app/(dashboard)/cielara-code/
-          - backend/internal/api/usage.go
-
-  api-reference.mdx:
-    description: Customer-facing REST API
-    sources:
-      - repo: core
-        paths:
-          - backend/internal/api/router.go
-          - backend/internal/simulation/handler.go
-          - backend/internal/api/rca/rca_router.go
-      - repo: agent-memory
-        paths:
-          - api/api.py
-
-  mcp-server.mdx:
-    description: MCP server setup and tools
-    sources:
-      - repo: core
-        paths:
-          - mcp-server/mcp_server/v2/server.py
-          - mcp-server/README.md
