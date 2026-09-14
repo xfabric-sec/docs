@@ -257,9 +257,9 @@ Cielara is deployed into your own cloud environment, so your data stays in infra
     </Tabs>
   </Step>
   <Step title="Prepare your cloud environment">
-    Download the generated Terraform file from the deploy form and run it against your cloud account. The module creates the Kubernetes cluster, IAM roles, and other resources Cielara needs — deployed into the network you provisioned in the previous step.
+    Download the generated Terraform file from the deploy form and run it against your cloud account. The module creates the Kubernetes cluster, IAM roles, and other resources Cielara needs to deploy into the network you provisioned in the previous step.
 
-    Authenticate Terraform against your cloud account using whichever method suits your environment — local credentials, a service account, or a CI identity. See the authentication documentation for [AWS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration), [Google Cloud](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#authentication), or [Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#authenticating-to-azure). Then run:
+    Authenticate Terraform against your cloud account using whichever method suits your environment whether it's local credentials, a service account, or a CI identity. See the authentication documentation for [AWS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration), [Google Cloud](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#authentication), or [Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#authenticating-to-azure). Then run:
 
     ```bash
     terraform init
