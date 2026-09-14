@@ -9,7 +9,7 @@ Cielara supports three sign-in methods:
 | --- | --- |
 | **Email and password** | The default. Users sign in with a password set during registration or invitation. |
 | **Google** | Single sign-on with a Google Workspace account, using OAuth. |
-| **SAML** | Single sign-on with any SAML 2.0 identity provider — Okta, Microsoft Entra ID, OneLogin, Keycloak, and others. |
+| **SAML** | Single sign-on with any SAML 2.0 identity provider such as Okta, Microsoft Entra ID, OneLogin, or Keycloak. |
 
 Only admins can configure authentication. Go to **Admin > Authentication** in the sidebar. The page shows a card for **Google** and a card for **SAML**, each labelled **Enabled** or **Not enabled**. Click a card to configure that method.
 
@@ -30,7 +30,7 @@ Only admins can configure authentication. Go to **Admin > Authentication** in th
     Go to **Admin > Authentication** and click the **Google** card.
   </Step>
   <Step title="Copy the redirect URI">
-    At the top of the page, the **Authorized redirect URI** box shows the exact value Google needs. Click the copy icon — the value must match byte for byte, so don't retype it.
+    At the top of the page, the **Authorized redirect URI** box shows the exact value Google needs. Click the copy icon. The value must match byte for byte, so don't retype it.
 
     It looks like `https://your-cielara-domain/api/iam/oidc/google/callback`.
   </Step>
@@ -45,15 +45,15 @@ Only admins can configure authentication. Go to **Admin > Authentication** in th
   <Step title="Fill in the form in Cielara">
     Back on the Google page in Cielara:
 
-    - **Client ID** — paste from Google. It looks like `xxxxxxxx.apps.googleusercontent.com`.
-    - **Client Secret** — paste from Google. If a secret is already stored, leave this blank to keep it.
-    - **Workspace domain(s)** — type a domain such as `example.com` and press Enter. Repeat for each domain. Only these Workspace domains can sign in.
-    - **Allowed groups (optional)** — Google group email addresses such as `engineering@example.com`. When set, a user must belong to at least one of these groups. Leave empty to allow everyone in the domains above.
+    - **Client ID**: paste from Google. It looks like `xxxxxxxx.apps.googleusercontent.com`.
+    - **Client Secret**: paste from Google. If a secret is already stored, leave this blank to keep it.
+    - **Workspace domain(s)**: type a domain such as `example.com` and press Enter. Repeat for each domain. Only these Workspace domains can sign in.
+    - **Allowed groups (optional)**: Google group email addresses such as `engineering@example.com`. When set, a user must belong to at least one of these groups. Leave empty to allow everyone in the domains above.
   </Step>
   <Step title="Enable and save">
     Turn on **Allow signup** if you want accounts created automatically on first sign-in, then turn on **Enable Google sign-in** and click **Save**.
 
-    Pressing Enter does not save the form — you have to click **Save**.
+    Pressing Enter does not save the form. You have to click **Save**.
   </Step>
 </Steps>
 
@@ -74,25 +74,25 @@ Only admins can configure authentication. Go to **Admin > Authentication** in th
   <Step title="Copy the service provider details">
     The panel at the top of the page shows two values with copy buttons:
 
-    - **SP Entity ID** — `https://your-cielara-domain/api/iam/saml/metadata`
-    - **ACS URL** — `https://your-cielara-domain/api/iam/saml/acs`, sometimes called the reply URL or assertion consumer service URL.
+    - **SP Entity ID**: `https://your-cielara-domain/api/iam/saml/metadata`
+    - **ACS URL**: `https://your-cielara-domain/api/iam/saml/acs`, sometimes called the reply URL or assertion consumer service URL.
   </Step>
   <Step title="Create a SAML application in your identity provider">
     Create a SAML 2.0 app and register the SP Entity ID and ACS URL you just copied. Cielara accepts assertions on the HTTP-POST binding.
 
-    Then collect from your IdP: the **entity ID**, the **SSO URL**, and the **signing certificate** — or just the metadata URL or metadata XML file, which contain all three.
+    Then collect from your IdP: the **entity ID**, the **SSO URL**, and the **signing certificate**. Alternatively, take the metadata URL or metadata XML file, which contain all three.
   </Step>
   <Step title="Fill in the form in Cielara">
-    - **Display name** — a label for this provider, for example `Okta`.
-    - **IdP metadata URL (optional)** — if you set this, any IdP field you leave blank below is filled in from the metadata when you save. The URL must be publicly reachable over HTTPS; for an internal-only IdP, upload the XML instead.
-    - **Upload metadata XML** — an alternative to the URL. Uploading clears the four IdP fields below so the uploaded document wins.
-    - **IdP Entity ID** — required.
-    - **SSO URL** — required, and must be an HTTPS URL.
-    - **Single Logout URL (optional)** — when set, signing out of Cielara also ends the IdP session.
-    - **IdP signing certificate (X.509)** — required. Paste the PEM text or click **Upload certificate**.
-    - **Email attribute (optional)** — the assertion attribute carrying the email address, if your IdP doesn't send it as the NameID.
-    - **Allowed organizations (optional)** — comma- or space-separated organization names. A user must be in at least one. Quote values containing spaces or commas, for example `"CN=Engineering,OU=Groups"`. Leave empty to allow everyone.
-    - **Organization attribute (optional)** — the assertion attribute carrying organizations, if your IdP doesn't send `org` or `organization`.
+    - **Display name**: a label for this provider, for example `Okta`.
+    - **IdP metadata URL (optional)**: if you set this, any IdP field you leave blank below is filled in from the metadata when you save. The URL must be publicly reachable over HTTPS; for an internal-only IdP, upload the XML instead.
+    - **Upload metadata XML**: an alternative to the URL. Uploading clears the four IdP fields below so the uploaded document wins.
+    - **IdP Entity ID**: required.
+    - **SSO URL**: required, and must be an HTTPS URL.
+    - **Single Logout URL (optional)**: when set, signing out of Cielara also ends the IdP session.
+    - **IdP signing certificate (X.509)**: required. Paste the PEM text or click **Upload certificate**.
+    - **Email attribute (optional)**: the assertion attribute carrying the email address, if your IdP doesn't send it as the NameID.
+    - **Allowed organizations (optional)**: comma- or space-separated organization names. A user must be in at least one. Quote values containing spaces or commas, for example `"CN=Engineering,OU=Groups"`. Leave empty to allow everyone.
+    - **Organization attribute (optional)**: the assertion attribute carrying organizations, if your IdP doesn't send `org` or `organization`.
   </Step>
   <Step title="Enable and save">
     Turn on **Allow signup** if you want accounts created automatically on first sign-in, then turn on **Enable SAML sign-in** and click **Save**.
@@ -102,13 +102,13 @@ Only admins can configure authentication. Go to **Admin > Authentication** in th
 <Warning>
   Restricting by organization only works if your IdP actually sends a group or organization claim. Many send none by default, and a missing claim denies every sign-in.
 
-  **Microsoft Entra ID**: in the enterprise app, go to **Single sign-on > Attributes & Claims**, add a **Groups** claim, and assign the group to the app. Set **Organization attribute** to the claim's full name, `http://schemas.microsoft.com/ws/2008/06/identity/claims/groups` — not the short "groups" label Entra displays.
+  **Microsoft Entra ID**: in the enterprise app, go to **Single sign-on > Attributes & Claims**, add a **Groups** claim, and assign the group to the app. Set **Organization attribute** to the claim's full name (`http://schemas.microsoft.com/ws/2008/06/identity/claims/groups`), not the short "groups" label Entra displays.
 
   **Google Workspace**: in the SAML app, add a **Group membership** attribute under SAML attribute mapping, list the groups, and enter the same app attribute name as the **Organization attribute**.
 </Warning>
 
 <Warning>
-  Changing the **IdP Entity ID** of a saved configuration unlinks every user from the old provider. They re-link on their next sign-in — but only if **Allow signup** is on. With it off, changing the entity ID locks everyone out.
+  Changing the **IdP Entity ID** of a saved configuration unlinks every user from the old provider. They re-link on their next sign-in, but only if **Allow signup** is on. With it off, changing the entity ID locks everyone out.
 </Warning>
 
 <Info>
@@ -126,8 +126,8 @@ When an SSO method is active:
 
 **Allow signup** controls provisioning and account linking together:
 
-- **On** — a user with no Cielara account gets one created on first sign-in, with the **User** role. An existing account whose email matches is linked to the SSO identity and keeps its password.
-- **Off** — only users who already have a linked SSO identity can sign in. Everyone else, including users who already have a Cielara account with a matching email, is refused with "No account exists for your email."
+- **On**: a user with no Cielara account gets one created on first sign-in, with the **User** role. An existing account whose email matches is linked to the SSO identity and keeps its password.
+- **Off**: only users who already have a linked SSO identity can sign in. Everyone else, including users who already have a Cielara account with a matching email, is refused with "No account exists for your email."
 
 ## Turning SSO off
 
@@ -141,7 +141,7 @@ Turn off **Enable Google sign-in** or **Enable SAML sign-in** and click **Save**
 | Your Google account is not in an allowed group. | The user isn't in any group listed under **Allowed groups**. |
 | Your account is not in an allowed organization. | The SAML assertion carried no organization matching **Allowed organizations**, or carried none at all. |
 | Your identity provider did not send an email address. | Set **Email attribute** to the assertion attribute that carries the email. |
-| Your identity provider response could not be verified. | The assertion failed signature or audience validation — usually a certificate or SP Entity ID mismatch. |
+| Your identity provider response could not be verified. | The assertion failed signature or audience validation, usually a certificate or SP Entity ID mismatch. |
 | No account exists for your email. | **Allow signup** is off and the user has no linked SSO identity. |
 | Your account is inactive. | The Cielara account has been deactivated. See [Users & Access](/users-and-access). |
 | Your sign-in session expired. | The sign-in took longer than 10 minutes, or the link was already used. Try again. |

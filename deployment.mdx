@@ -9,7 +9,7 @@ Cielara is deployed into your own cloud environment, so your data stays in infra
 
 <Steps>
   <Step title="Sign up for a Cielara account">
-    Go to [cielara.ai](https://console.cielara.ai/signup) and sign up. Enter your details and verify your email. Once your account is created, you will receive a 30-day trial license and access to the Cielara dashboard.
+    Go to [console.cielara.ai/signup](https://console.cielara.ai/signup) and sign up. Enter your details and verify your email. Once your account is created, you will receive a 30-day trial license and access to the Cielara dashboard.
   </Step>
   <Step title="Open the deploy form">
     Log in to the Cielara dashboard and navigate to **Deployments**. Click the deploy form to start a new deployment.
@@ -88,7 +88,7 @@ Cielara is deployed into your own cloud environment, so your data stays in infra
 
         | Scale | Source Code Repositories | Recommended instance type |
         |---|---|---|
-        | Small–Medium | Up to 300 | `r6i.xlarge` |
+        | Small to medium | Up to 300 | `r6i.xlarge` |
         | Large | 300+ | `r6i.2xlarge` or `r7i.2xlarge` |
 
         | Field | Description |
@@ -166,7 +166,7 @@ Cielara is deployed into your own cloud environment, so your data stays in infra
 
         | Scale | Source Code Repositories | Recommended machine type |
         |---|---|---|
-        | Small–Medium | Up to 300 | `n2-highmem-4` |
+        | Small to medium | Up to 300 | `n2-highmem-4` |
         | Large | 300+ | `n2-highmem-8` or `c3-highmem-8` |
 
         | Field | Description |
@@ -246,7 +246,7 @@ Cielara is deployed into your own cloud environment, so your data stays in infra
 
         | Scale | Source Code Repositories | Recommended VM size |
         |---|---|---|
-        | Small–Medium | Up to 300 | `Standard_E4s_v5` |
+        | Small to medium | Up to 300 | `Standard_E4s_v5` |
         | Large | 300+ | `Standard_E8s_v5` or `Standard_E16s_v5` |
 
         | Field | Description |
@@ -259,7 +259,7 @@ Cielara is deployed into your own cloud environment, so your data stays in infra
   <Step title="Prepare your cloud environment">
     Download the generated Terraform file from the deploy form and run it against your cloud account. The module creates the Kubernetes cluster, IAM roles, and other resources Cielara needs to deploy into the network you provisioned in the previous step.
 
-    Authenticate Terraform against your cloud account using whichever method suits your environment whether it's local credentials, a service account, or a CI identity. See the authentication documentation for [AWS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration), [Google Cloud](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#authentication), or [Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#authenticating-to-azure). Then run:
+    Authenticate Terraform against your cloud account using whichever method suits your environment, whether that is local credentials, a service account, or a CI identity. See the authentication documentation for [AWS](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration), [Google Cloud](https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/provider_reference#authentication), or [Azure](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#authenticating-to-azure). Then run:
 
     ```bash
     terraform init

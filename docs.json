@@ -24,9 +24,7 @@
           "analytics",
           "pr-detail",
           "world-model",
-
           "ask-cielara",
-
           "impact"
         ]
       },
@@ -34,8 +32,6 @@
         "group": "Setup & Configuration",
         "pages": [
           "connections",
-
-
           "users-and-access",
           "models",
           "authentication"
