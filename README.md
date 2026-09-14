@@ -48,7 +48,7 @@ Trigger a run manually from the Actions tab.
 Read `AGENTS.md` first. The short version:
 
 - One page per topic. Do not add a how-to guide that parallels a reference page
-- Sentence case headings, active voice, second person
+- Title Case headings, active voice, second person
 - Document failure modes, not just the happy path
 - Do not invent field names, error strings, or UI details you cannot verify
 

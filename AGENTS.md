@@ -25,7 +25,7 @@
 
 - Use active voice and second person ("you")
 - Keep sentences concise. One idea per sentence
-- Use sentence case for headings. Some older pages still use Title Case; fix them when you touch them, don't add more
+- Use Title Case for headings. Some pages still use sentence case; fix them when you touch them, don't add more
 - Bold for UI elements: Click **Settings**
 - Code formatting for file names, commands, paths, and code references
 - No em-dashes. Use a full stop, a comma, or parentheses
