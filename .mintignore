@@ -5,6 +5,3 @@
 # Draft content
 drafts/
 *.draft.mdx
-
-# CI and config files
-doc-sources.yaml

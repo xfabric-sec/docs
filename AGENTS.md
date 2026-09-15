@@ -5,7 +5,6 @@
 - The Cielara product documentation, built on [Mintlify](https://mintlify.com)
 - Pages are MDX files with YAML frontmatter
 - Navigation and theming live in `docs.json`. A page is not live until it is listed there
-- `doc-sources.yaml` maps each page to the source paths it documents, for the weekly staleness check in `.github/workflows/doc-staleness.yml`
 - Use the Mintlify MCP server, `https://mcp.mintlify.com`, to edit content and settings via MCP
 - Use the Mintlify docs MCP server, `https://www.mintlify.com/docs/mcp`, to query information about using Mintlify via MCP
 
@@ -36,7 +35,7 @@
 
 - **One page per topic.** Do not create a how-to guide that parallels a reference page; the two drift and readers cannot tell which is current. Task steps belong on the page that documents the feature
 - A separate page is only justified when it covers genuinely different material, not the same material at a different depth
-- When adding, merging, or deleting a page, update `docs.json` and `doc-sources.yaml` in the same change
+- When adding, merging, or deleting a page, update `docs.json` in the same change
 
 ## Content boundaries
 
