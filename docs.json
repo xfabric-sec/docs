@@ -9,32 +9,38 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "pages": [
+    "versions": [
       {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "deployment",
-          "quickstart"
-        ]
-      },
-      {
-        "group": "Product Features",
-        "pages": [
-          "analytics",
-          "pr-detail",
-          "world-model",
-          "ask-cielara",
-          "impact"
-        ]
-      },
-      {
-        "group": "Setup & Configuration",
-        "pages": [
-          "connections",
-          "users-and-access",
-          "models",
-          "authentication"
+        "version": "latest",
+        "default": true,
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "index",
+              "deployment",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Product Features",
+            "pages": [
+              "analytics",
+              "pr-detail",
+              "world-model",
+              "ask-cielara",
+              "impact"
+            ]
+          },
+          {
+            "group": "Setup & Configuration",
+            "pages": [
+              "connections",
+              "users-and-access",
+              "models",
+              "authentication"
+            ]
+          }
         ]
       }
     ],

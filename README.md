@@ -14,6 +14,16 @@ Pages are MDX files with YAML frontmatter, at the repository root.
 
 The navigation has three groups: Getting Started, Product Features, and Setup & Configuration.
 
+## Versions
+
+`docs.json` declares a single version, `latest`, under `navigation.versions`. Its pages live at the repository root, so page URLs have no version prefix (`/models`, not `/latest/models`).
+
+To cut a version when the product ships a release that needs its own docs:
+
+1. Copy the current root pages into a folder named for the release being frozen, for example `v1/`.
+2. Add a second entry to `navigation.versions` whose page paths point at that folder (`v1/models`, and so on).
+3. Leave `latest` at the root and keep `"default": true` on it, so the current docs keep their URLs and stay the landing version.
+
 ## Local preview
 
 Install the Mintlify CLI:

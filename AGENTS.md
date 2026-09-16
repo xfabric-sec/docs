@@ -36,6 +36,7 @@
 - **One page per topic.** Do not create a how-to guide that parallels a reference page; the two drift and readers cannot tell which is current. Task steps belong on the page that documents the feature
 - A separate page is only justified when it covers genuinely different material, not the same material at a different depth
 - When adding, merging, or deleting a page, update `docs.json` in the same change
+- The site is versioned. `docs.json` declares one version, `latest`, whose pages sit at the repository root. Add new pages to that version. Do not create a version folder without being asked; see `README.md` for how a version is cut
 
 ## Content boundaries
 
