@@ -45,18 +45,9 @@ The form depends on which provider you selected:
 
 ### Recommended Models
 
-Each category has a default, with alternatives you can select per category.
+Each category has a default, with alternatives you can select per category. The UI lists the models Cielara currently supports for the provider you selected, so use that list rather than a hardcoded model name.
 
-**Azure OpenAI / GPT**:
-
-| Category | Default | Alternatives |
-|---|---|---|
-| Reasoning | `gpt-5.6-luna` | `gpt-5.6-terra`, `gpt-5.6-sol` |
-| Coding | `gpt-5.6-luna` | `gpt-5.6-terra`, `gpt-5.6-sol` |
-| Mini | `gpt-5.6-luna` | none |
-| Embedding | `text-embedding-3-small` | `text-embedding-3-large` |
-
-Older GPT models (`gpt-5.5`, `gpt-5.3-codex`, `gpt-5.4-mini`) are retired. Cielara no longer offers them, though an existing configuration that still names one keeps working.
+Models that Cielara has retired no longer appear in the list, though an existing configuration that still names one keeps working.
 
 Cielara resolves models by deployment name, so a deployment has to carry the same name as the model it serves. If it does not, that category's test fails even though the deployment exists.
 
@@ -64,7 +55,7 @@ Click **Save & Continue** when all models verify. The provider activates as soon
 
 ## Embedding configuration
 
-The embedding config section lets you choose the embedding model (e.g., text-embedding-3-small or text-embedding-3-large) used by the knowledge base for document indexing and semantic search.
+The embedding config section lets you choose the embedding model used by the knowledge base for document indexing and semantic search.
 
 ## Multiple providers
 
