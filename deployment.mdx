@@ -162,17 +162,28 @@ Cielara is deployed into your own cloud environment, so your data stays in infra
 
         ### Node Pool Machine Types
 
-        The recommended machine type depends on how many repositories you have. More repositories need more memory and CPU to scan and analyze.
+        Cielara provisions two node pools. The **default pool** runs the platform services (API, scanners, FalkorDB, RabbitMQ). The **agent pool** runs the AI agents, which are memory-heavy. The recommended machine types depend on how many repositories you have. More repositories need more memory and CPU to scan and analyze.
 
-        | Scale | Source Code Repositories | Recommended machine type |
-        |---|---|---|
-        | Small to medium | Up to 300 | `n2-highmem-4` |
-        | Large | 300+ | `n2-highmem-8` or `c3-highmem-8` |
+        | Scale | Source Code Repositories | Default pool | Agent pool |
+        |---|---|---|---|
+        | Small to medium | Up to 300 | `n2-highmem-4` | `c4-highmem-4` (default) |
+        | Large | 300+ | `n2-highmem-8` or `n2-standard-8` (default) | `c4-highmem-8` or `n4-highmem-8` |
+
+        If you leave the fields empty, Cielara uses `n2-standard-8` for the default pool and `c4-highmem-4` for the agent pool.
+
+        <Info>
+        4th-generation machine families (`n4-*`, `c4-*`) attach Hyperdisk storage only. The agent pool picker lists only Hyperdisk-capable types, marked with a **Hyperdisk** chip. Cielara configures the matching storage classes automatically.
+        </Info>
+
+        <Warning>
+        Changing a machine type on a live deployment replaces the node pool: nodes drain and workloads reschedule. Expect a brief disruption.
+        </Warning>
 
         | Field | Description |
         |---|---|
-        | **Machine type** | The GCE instance type for your node pool. See the sizing guidance above to choose the right type for your organization. |
-        | **Provisioning model** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper but may become temporarily unavailable during high-demand periods. On-demand is recommended for production deployments. |
+        | **Default pool machine type** | The GCE instance type for the platform services pool. See the sizing guidance above. |
+        | **Agent pool machine type** | The GCE instance type for the AI agent pool. Hyperdisk-capable types only. |
+        | **Provisioning model** | Choose **On-demand** or **Spot**. Spot instances are approximately 40% cheaper, but Google can reclaim them with 30 seconds notice, and GKE has no on-demand fallback pool: if spot capacity dries up, pods wait until it returns. On-demand is recommended for production deployments. |
       </Tab>
       <Tab title="Azure">
         ### Required Fields
