@@ -78,7 +78,7 @@ This page mirrors the deploy form section by section. Names in bold are the labe
           <Accordion title="Network">
             Cielara creates the network unless you fill these fields in.
 
-            Under **Infrastructure**, the **Network** row reads **Cielara creates the VPC, subnet and NAT gateway**. Click **Use my own** to deploy into a network you already own; the row then reads **Using your own network** and the **Your deployment** panel lists it under **Changed from defaults**. To do so, fill in the fields from the handback of Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/gcp/vpc) Terraform module, or from your existing networking. The VPC and subnet fields go together: fill both or neither.
+            Under **Infrastructure**, the **Network** row reads **Cielara creates the VPC, subnet and NAT gateway**. Click **Use my own** to deploy into a network you already own; the row then reads **Using your own network** and the **Your deployment** panel lists it under **Changed from defaults**. To do so, fill in the fields from the handback of Cielara's [`cielara-network`](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-network/google/latest) Terraform module, or from your existing networking. The VPC and subnet fields go together: fill both or neither.
 
             | Field | Handback key | Description |
             |---|---|---|
@@ -89,22 +89,29 @@ This page mirrors the deploy form section by section. Names in bold are the labe
             | **NAT egress IP** | `nat_ip` | The network's static Cloud NAT egress IP. Required when the deployment uses managed RabbitMQ, because the broker firewall admits exactly this address. |
             | **Cloud SQL PSA range CIDR** | | The private services access range for Cloud SQL. Defaults to `10.96.0.0/16`. Change it only if that range collides with your network's address space. |
 
-            To provision the network with the module:
-
-            ```bash
-            git clone git@github.com:causal-dynamics-lab/terraform.git
-            cd terraform/cielara-enterprise-cloud-network/gcp/vpc
-            cp terraform.tfvars.example terraform.tfvars
-            ```
-
-            Edit `terraform.tfvars`:
+            To provision the network with the module, write a `main.tf` in an empty folder:
 
             ```hcl
-            project_id = "my-gcp-project"
-            region     = "us-central1"
-            # gke_subnet_cidr = "10.10.0.0/20"  # default; change if it overlaps
-            # pods_cidr       = "10.11.0.0/16"   # secondary range for pods
-            # services_cidr   = "10.12.0.0/20"   # secondary range for services
+            provider "google" {
+              project = "my-gcp-project"
+              region  = "us-central1"
+            }
+
+            module "cielara_network" {
+              source  = "causal-dynamics-lab/cielara-network/google"
+              version = "X.Y.Z" # pin the latest version shown on the registry page
+
+              project_id = "my-gcp-project"
+              region     = "us-central1" # the region you pick on the deploy form
+
+              # gke_subnet_cidr = "10.10.0.0/20" # default; change if it overlaps
+              # pods_cidr       = "10.11.0.0/16" # secondary range for pods
+              # services_cidr   = "10.12.0.0/20" # secondary range for services
+            }
+
+            output "handback" {
+              value = module.cielara_network.handback
+            }
             ```
 
             Then apply and print the values to paste into the form:
@@ -206,7 +213,7 @@ This page mirrors the deploy form section by section. Names in bold are the labe
           <Accordion title="Network">
             Cielara creates the network unless you fill these fields in.
 
-            Under **Infrastructure**, the **Network** row reads **Cielara creates the VPC, subnets and NAT gateway**. Click **Use my own** to deploy into a VPC you already own. To do so, fill in all five fields from the handback of Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/aws/vpc) Terraform module, or from your existing networking. The fields go together: fill all of them or none.
+            Under **Infrastructure**, the **Network** row reads **Cielara creates the VPC, subnets and NAT gateway**. Click **Use my own** to deploy into a VPC you already own. To do so, fill in all five fields from the handback of Cielara's [`cielara-network`](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-network/aws/latest) Terraform module, or from your existing networking. The fields go together: fill all of them or none.
 
             | Field | Handback key | Description |
             |---|---|---|
@@ -218,21 +225,27 @@ This page mirrors the deploy form section by section. Names in bold are the labe
 
             The two subnets of each pair must be different and in different availability zones.
 
-            To provision the network with the module:
-
-            ```bash
-            git clone git@github.com:causal-dynamics-lab/terraform.git
-            cd terraform/cielara-enterprise-cloud-network/aws/vpc
-            cp terraform.tfvars.example terraform.tfvars
-            ```
-
-            Edit `terraform.tfvars`:
+            To provision the network with the module, write a `main.tf` in an empty folder:
 
             ```hcl
-            region = "us-east-1"
-            # vpc_cidr           = "10.2.0.0/20"   # default; change if it overlaps
-            # availability_zones = ["us-east-1a", "us-east-1b"]  # default: first 2 AZs
-            # ha_nat             = false            # true = one NAT gateway per AZ
+            provider "aws" {
+              region = "us-east-1"
+            }
+
+            module "cielara_network" {
+              source  = "causal-dynamics-lab/cielara-network/aws"
+              version = "X.Y.Z" # pin the latest version shown on the registry page
+
+              region = "us-east-1" # must match the provider block
+
+              # vpc_cidr           = "10.2.0.0/20" # default; change if it overlaps
+              # availability_zones = ["us-east-1a", "us-east-1b"] # default: first 2 AZs
+              # ha_nat             = false # true = one NAT gateway per AZ
+            }
+
+            output "handback" {
+              value = module.cielara_network.handback
+            }
             ```
 
             Then apply and print the values to paste into the form:
@@ -333,7 +346,7 @@ This page mirrors the deploy form section by section. Names in bold are the labe
           <Accordion title="Network">
             Cielara creates the network unless you fill these fields in.
 
-            Under **Infrastructure**, the **Network** row reads **Cielara creates the VNet, subnets and NAT gateway**. Click **Use my own** to deploy into a virtual network you already own. To do so, provision it with Cielara's [enterprise cloud network](https://github.com/causal-dynamics-lab/terraform/tree/main/cielara-enterprise-cloud-network/azure/vnet) Terraform module or use your existing networking, then fill in the section. Once any field here is filled, every field is required except **VNet CIDR block**.
+            Under **Infrastructure**, the **Network** row reads **Cielara creates the VNet, subnets and NAT gateway**. Click **Use my own** to deploy into a virtual network you already own. To do so, provision it with Cielara's [`cielara-network`](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-network/azurerm/latest) Terraform module or use your existing networking, then fill in the section. Once any field here is filled, every field is required except **VNet CIDR block**.
 
             | Field | Description |
             |---|---|
@@ -346,22 +359,27 @@ This page mirrors the deploy form section by section. Names in bold are the labe
             | **User subnet name** | The subnet for the user node pool. |
             | **NAT gateway name** | The NAT gateway attached to the node subnets. |
 
-            To provision the network with the module:
-
-            ```bash
-            git clone git@github.com:causal-dynamics-lab/terraform.git
-            cd terraform/cielara-enterprise-cloud-network/azure/vnet
-            cp terraform.tfvars.example terraform.tfvars
-            ```
-
-            Edit `terraform.tfvars`:
+            To provision the network with the module, write a `main.tf` in an empty folder. The resource group must already exist. The module adopts it and never creates or deletes it.
 
             ```hcl
-            subscription_id     = "00000000-0000-0000-0000-000000000000"
-            tenant_id           = "00000000-0000-0000-0000-000000000000"
-            resource_group_name = "my-cielara-rg"
-            location            = "eastus2"
-            # vnet_cidr         = "10.2.0.0/20"   # default; change if it overlaps
+            provider "azurerm" {
+              features {}
+              subscription_id = "00000000-0000-0000-0000-000000000000"
+            }
+
+            module "cielara_network" {
+              source  = "causal-dynamics-lab/cielara-network/azurerm"
+              version = "X.Y.Z" # pin the latest version shown on the registry page
+
+              resource_group_name = "my-cielara-rg" # must already exist
+              location            = "eastus2"       # the resource group's region
+
+              # vnet_cidr = "10.2.0.0/20" # default; change if it overlaps
+            }
+
+            output "handback" {
+              value = module.cielara_network.handback
+            }
             ```
 
             Then apply and print the values to paste into the form:
@@ -436,3 +454,11 @@ The `main.tf` you download pins a release of Cielara's prepare module for your c
 | Azure | [cielara-prepare-aks](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-prepare-aks/azurerm/latest) |
 
 The form links to the exact version it pinned under **View module docs on the Terraform registry**.
+
+If you bring your own network, the module that provisions it is published separately. Pin an exact version rather than tracking the latest:
+
+| Cloud | Module |
+|---|---|
+| GCP | [cielara-network/google](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-network/google/latest) |
+| AWS | [cielara-network/aws](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-network/aws/latest) |
+| Azure | [cielara-network/azurerm](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-network/azurerm/latest) |
