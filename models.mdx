@@ -49,7 +49,10 @@ Each category has a default, with alternatives you can select per category. The 
 
 Models that Cielara has retired no longer appear in the list, though an existing configuration that still names one keeps working.
 
-Cielara resolves models by deployment name, so a deployment has to carry the same name as the model it serves. If it does not, that category's test fails even though the deployment exists.
+The deployment name does not have to match the model name. Enter the name exactly as it appears in Azure AI Foundry. The test for each category checks two things:
+
+- **Deployment not found**: no deployment with that name exists in your Foundry resource. Check the spelling against the **Deployments** list in Azure AI Foundry.
+- **Model mismatch**: the deployment exists but serves a different model from the one you selected. The error shows the model it serves and the model you selected. Pick the matching model in the dropdown, or point the field at a deployment of the right model.
 
 Click **Save & Continue** when all models verify. The provider activates as soon as you save.
 
