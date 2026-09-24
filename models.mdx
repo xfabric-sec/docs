@@ -1,0 +1,65 @@
+---
+title: "Models"
+description: "Configure LLM providers for code review, simulations, the AI assistant, and knowledge base features."
+---
+
+<Info>
+  This page is admin-only. It appears in the sidebar under the Configuration group as **Models**.
+</Info>
+
+Cielara needs at least one LLM provider configured to run code reviews, simulations, the AI assistant, and knowledge base question answering. Until a provider is active, AI features are unavailable. Non-admins can see the setup status but cannot change it.
+
+If no provider has been configured when an admin first signs in, Cielara redirects to this page before the dashboard becomes available.
+
+## Configuring a provider
+
+### Step 1: Select a provider
+
+Choose from the **Primary LLM Provider** dropdown:
+
+| Provider | Description |
+|---|---|
+| OpenAI | GPT models via the OpenAI API |
+| Microsoft Foundry | GPT models via Azure |
+
+A summary card shows which model Cielara will use for each job and what credentials you need to supply.
+
+Click **Next: Configure & Test**.
+
+### Step 2: Configure and test
+
+The form depends on which provider you selected:
+
+**OpenAI**:
+- **API Key**: paste your key (from platform.openai.com > API keys).
+- **Base URL** (optional): only change if using a proxy. Defaults to `https://api.openai.com/v1`.
+
+<Note>
+  Microsoft Foundry requires you to deploy the models in Azure AI Foundry first. Cielara connects to deployments that already exist and cannot create them for you, so each **Deployment name** field below expects the name of a deployment you have made. See Microsoft's [deployments overview](https://learn.microsoft.com/en-us/azure/foundry/concepts/deployments-overview).
+</Note>
+
+**Microsoft Foundry (Azure OpenAI / GPT)**:
+- **Endpoint**: your Azure OpenAI endpoint (e.g., `https://my-aoai-resource.openai.azure.com/`). Must be HTTPS.
+- **API Key**: from Azure Portal > AI Foundry > Keys and Endpoint.
+- For each model category (Reasoning, Coding, Mini, Embedding): a **Deployment name** field. Enter the name from Azure Portal > AI Foundry > Deployments.
+
+### Recommended Models
+
+Each category has a default, with alternatives you can select per category. The UI lists the models Cielara currently supports for the provider you selected, so use that list rather than a hardcoded model name.
+
+Models that Cielara has retired no longer appear in the list, though an existing configuration that still names one keeps working.
+
+The deployment name does not have to match the model name. Enter the name exactly as it appears in Azure AI Foundry. The test for each category checks two things:
+
+- **Deployment not found**: no deployment with that name exists in your Foundry resource. Check the spelling against the **Deployments** list in Azure AI Foundry.
+- **Model mismatch**: the deployment exists but serves a different model from the one you selected. The error shows the model it serves and the model you selected. Pick the matching model in the dropdown, or point the field at a deployment of the right model.
+
+Click **Save & Continue** when all models verify. The provider activates as soon as you save.
+
+## Embedding configuration
+
+The embedding config section lets you choose the embedding model used by the knowledge base for document indexing and semantic search.
+
+## Multiple providers
+
+Cielara supports OpenAI and Microsoft Foundry. You can configure both and switch between them without downtime. Configured providers appear in a list where you can activate or deactivate each one.

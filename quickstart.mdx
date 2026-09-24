@@ -1,47 +1,69 @@
 ---
 title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+description: "Create your account, connect a repository, and get your first code review."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
-
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+## Log In to Your Account
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
-
-    ```bash
-    npm install your-package
-    ```
+  <Step title="Open your invitation email">
+    When an admin creates your account, Cielara emails you an invitation link. Click it.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
-
-    ```bash
-    your-cli init
-    ```
+  <Step title="Create your password">
+    The link opens the **Complete Signup** screen. Choose a password and confirm it. It needs at least 8 characters, including an uppercase letter, a lowercase letter, a number, and a special character. Cielara confirms with **Account Activated!** and sends you to the login page.
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
-
-    ```bash
-    your-cli start
-    ```
+  <Step title="Log in">
+    Go to your Cielara URL, enter your email address, then click **Next** and enter the password you just created.
+  </Step>
+  <Step title="Accept the terms">
+    The first time you reach the dashboard, a **Terms & Conditions** dialog opens over it. Read them and click **Accept**. You cannot use Cielara until you do.
+  </Step>
+  <Step title="Set up an LLM provider">
+    If no LLM provider has been configured yet, Cielara sends you to the [LLM provider setup wizard](/models#configuring-a-provider) before the dashboard becomes available. Only an admin can complete it.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## Connect a Repository
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+<Steps>
+  <Step title="Open Connections">
+    Click **Connections** in the sidebar. This is where all your connections live.
+  </Step>
+  <Step title="Add a source code connection">
+    Click the **+ Connect** button, select **GitHub** (or **Azure DevOps**) from the Source Code group, and follow the OAuth prompts to authorize Cielara on your organization. Select the repositories you want to connect.
+  </Step>
+  <Step title="Verify">
+    Your repositories appear in the Connections list. Cielara sets up webhooks automatically to respond to pull requests.
+  </Step>
+</Steps>
+
+## See Your First Code Review
+
+Open a pull request on a connected repository. Cielara's Foresight engine picks up the pull request automatically, reviews the diff in the context of the full codebase, and posts inline findings on the PR. You can also view the review in the **Analytics** dashboard.
+
+## Finish Setting Up Connections
+
+The more data sources that are connected to Cielara, the more effectively Cielara can represent your world model. Return to **Connections** and add:
+
+- **Cloud** (AWS, GCP, Azure): discovers the accounts, regions, and resources that populate the World Model.
+- **Alerts** (PagerDuty, AlertManager): brings in incidents and on-call data, and lets incidents trigger simulations.
+- **Observability Tools** (Elasticsearch, Dynatrace): adds logs and metrics.
+- **Workplace** (Slack, Jira, Confluence, Notion, Canva, Google Drive): adds notifications, issue linking, and the documents behind the knowledge base.
+
+See [Connections](/connections) for the fields each provider needs.
+
+## What's Next?
+
+Once your connections are in place:
+
+<CardGroup cols={3}>
+  <Card title="Analytics" icon="chart-line" href="/analytics">
+    Your personal quality dashboard with antifragility scores and PR review history.
+  </Card>
+  <Card title="World Model" icon="globe" href="/world-model">
+    Explore your service topology as an interactive graph.
+  </Card>
+  <Card title="Ask Cielara" icon="message-bot" href="/ask-cielara">
+    Ask questions about your infrastructure in a chat interface.
+  </Card>
+</CardGroup>
