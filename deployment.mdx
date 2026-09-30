@@ -5,11 +5,11 @@ description: "Sign up for Cielara and deploy it into your own cloud account."
 
 Cielara runs inside your own cloud account, so your data stays in infrastructure you own. Your 30-day trial starts as soon as you sign up, and the steps below take you from a new account to a running Cielara instance.
 
-The deploy form is a five-step wizard: **Cloud**, **Target**, **Prepare**, **Infrastructure** and **Review**. This page follows it step by step. Names in bold are the labels you see in the form.
+The deploy form is a five-step wizard: **Cloud**, **Target**, **Prepare**, **Infrastructure** and **Review**. This page follows it step by step. Names in bold are the labels you see in the form. The form itself shows only titles, fields and commands; the explanation behind each step lives here.
 
 ## Before You Start
 
-You run two small Terraform configurations from your own machine: one that creates the identity Cielara deploys with, and one that creates the network Cielara deploys into. You need:
+You run two small Terraform configurations from your own machine: one that creates the identity Cielara deploys with, and one that creates the network Cielara deploys into. Both are required. You need:
 
 | What | Why |
 |---|---|
@@ -32,10 +32,6 @@ Every command the form shows starts with its own `cd` into the right folder, so 
 
 Your browser saves each download wherever it is set to save files. The form's move commands use `<download-folder>` for that location. Replace it before you run the command, usually with `~/Downloads`.
 
-<Note>
-On Windows the form shows PowerShell commands instead, marked with a `PS>` prompt. They use `$HOME\cielara\<deployment-name>\...` paths, and each command in a line runs only if the one before it succeeded. Run them in PowerShell, not Command Prompt.
-</Note>
-
 ## Deployment Flow
 
 <Steps>
@@ -50,7 +46,7 @@ On Windows the form shows PowerShell commands instead, marked with a `PS>` promp
     The footer names the one thing still blocking the current step, for example **Upload cielara-key.json to continue**, and **Continue** stays disabled until it is done. The steps along the top show where you are. Click a completed step to go back to it.
   </Step>
   <Step title="Cloud">
-    Under **Which cloud are you deploying to?**, pick **Google Cloud**, **AWS** or **Azure**. Every later step is tailored to that cloud. Each card lists what you need for it.
+    Under **Which cloud are you deploying to?**, pick **Google Cloud**, **AWS** or **Azure**. Every later step is tailored to that cloud. The **Deployment guide** link beside the title opens this page. What you need for each cloud is listed under [Before You Start](#before-you-start).
   </Step>
   <Step title="Target, Prepare and Infrastructure">
     <Tabs>
@@ -69,11 +65,17 @@ On Windows the form shows PowerShell commands instead, marked with a `PS>` promp
 
         1. **Sign in to your cloud.** Google expires these credentials on its own schedule, so repeat this before every apply.
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            gcloud auth login && gcloud auth application-default login
            ```
 
-           Then check the project. The form fills in your **Project ID**.
+           ```powershell Windows
+           gcloud auth login; gcloud auth application-default login
+           ```
+           </CodeGroup>
+
+           Then check that your project ID exists. The form fills in your **Project ID**.
 
            ```bash
            gcloud projects describe <project-id>
@@ -82,22 +84,43 @@ On Windows the form shows PowerShell commands instead, marked with a `PS>` promp
            If it prints the project, the ID is right and your account can see it. An error such as `does not have permission to access projects instance` means the Project ID or the signed-in account is wrong. Fix it before you apply: Terraform fails the same way, only later.
         2. **Make a folder for this deployment.**
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            mkdir -p ~/cielara/<name>/prepare && cd ~/cielara/<name>/prepare
            ```
-        3. **Download main.tf into it.** Click **Download main.tf**. The file is pre-filled with your project and region. Then move it into the folder:
 
-           ```bash
+           ```powershell Windows
+           New-Item -ItemType Directory -Force $HOME\cielara\<name>\prepare | Out-Null
+           cd $HOME\cielara\<name>\prepare
+           ```
+           </CodeGroup>
+        3. **Download main.tf into the /prepare folder you created.** Click **Download main.tf**. The file is pre-filled with your project and region. Then move it into the folder:
+
+           <CodeGroup>
+           ```bash macOS/Linux
            mv <download-folder>/main.tf ~/cielara/<name>/prepare/
            ```
+
+           ```powershell Windows
+           Move-Item <download-folder>\main.tf $HOME\cielara\<name>\prepare\
+           ```
+           </CodeGroup>
         4. **Apply.** The apply enables the required APIs, creates the service account with the minimum IAM roles, and writes `cielara-key.json`.
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            cd ~/cielara/<name>/prepare && terraform init && terraform apply
            ```
 
+           ```powershell Windows
+           cd $HOME\cielara\<name>\prepare
+           terraform init
+           terraform apply
+           ```
+           </CodeGroup>
+
            By default Terraform keeps its state in this folder. This is not recommended: the state exists only on this machine, and it holds the service account's private key. Keep it in a GCS bucket you own instead. `main.tf` carries ready-made `backend` blocks: uncomment the one you want before `terraform init`. If you already applied with local state, run `terraform init -migrate-state` after uncommenting it.
-        5. **Upload the cielara-key.json it writes.** It is in `~/cielara/<name>/prepare`. Drop it on **Drop cielara-key.json here**, or click **Browse**. Treat the file like a password and do not commit it to git.
+        5. **Upload the cielara-key.json.** It is in `~/cielara/<name>/prepare`. Drop it on **Drop cielara-key.json here**, or click **Browse**. Treat the file like a password and do not commit it to git.
 
         The key file also records where the Terraform state lives. Click **Enter manually** to see or change it:
 
@@ -107,27 +130,51 @@ On Windows the form shows PowerShell commands instead, marked with a `PS>` promp
 
         ### Infrastructure
 
+        The network is required. **Continue** stays disabled, with **Upload cielara-network.json to continue** in the footer, until you upload the file from the steps below. Node pools, database and version have defaults you can leave alone.
+
         #### Network
 
         Cielara deploys into a network you own. The form gives you a pre-filled Terraform file for Cielara's [`cielara-network`](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-network/google/latest) module. It creates a VPC, a regional subnet with pods and services ranges, private Google access, and Cloud NAT with a static egress IP.
 
         1. **Make a folder for the network.** It sits next to the prepare folder, not inside it: the network is its own Terraform configuration with its own state.
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            mkdir -p ~/cielara/<name>/network && cd ~/cielara/<name>/network
            ```
-        2. **Download main.tf into it.** Click **Download main.tf**. The file is pre-filled with your project and region. Move it into the network folder:
 
-           ```bash
+           ```powershell Windows
+           New-Item -ItemType Directory -Force $HOME\cielara\<name>\network | Out-Null
+           cd $HOME\cielara\<name>\network
+           ```
+           </CodeGroup>
+        2. **Download main.tf into the /network folder you created.** Click **Download main.tf**. The file is pre-filled with your project and region. Move it into the network folder:
+
+           <CodeGroup>
+           ```bash macOS/Linux
            mv <download-folder>/main.tf ~/cielara/<name>/network/
            ```
+
+           ```powershell Windows
+           Move-Item <download-folder>\main.tf $HOME\cielara\<name>\network\
+           ```
+           </CodeGroup>
 
            If your browser saved it as `main (1).tf` because the prepare `main.tf` was still in the download folder, move that file instead.
         3. **Apply it and write its output.**
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            cd ~/cielara/<name>/network && terraform init && terraform apply && terraform output -raw handback > cielara-network.json
            ```
+
+           ```powershell Windows
+           cd $HOME\cielara\<name>\network
+           terraform init
+           terraform apply
+           terraform output -raw handback > cielara-network.json
+           ```
+           </CodeGroup>
         4. **Upload cielara-network.json.** It is in `~/cielara/<name>/network`. The form lists the values it read from the file, and **Review** shows them again.
 
         The upload is refused, with the reason, when the file:
@@ -206,7 +253,7 @@ On Windows the form shows PowerShell commands instead, marked with a `PS>` promp
            aws sso login
            ```
 
-           If you use static keys instead of SSO, run `aws configure`. Then check the account:
+           If you use static keys instead of SSO, run `aws configure`. Then check which account you are signed in to:
 
            ```bash
            aws sts get-caller-identity
@@ -215,22 +262,43 @@ On Windows the form shows PowerShell commands instead, marked with a `PS>` promp
            It shows the account you are signed into. The apply prepares that account, so check it is the one Cielara should deploy into.
         2. **Make a folder for this deployment.**
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            mkdir -p ~/cielara/<name>/prepare && cd ~/cielara/<name>/prepare
            ```
-        3. **Download main.tf into it.** Click **Download main.tf**. The file is pre-filled for your account and region. Then move it into the folder:
 
-           ```bash
+           ```powershell Windows
+           New-Item -ItemType Directory -Force $HOME\cielara\<name>\prepare | Out-Null
+           cd $HOME\cielara\<name>\prepare
+           ```
+           </CodeGroup>
+        3. **Download main.tf into the /prepare folder you created.** Click **Download main.tf**. The file is pre-filled for your account and region. Then move it into the folder:
+
+           <CodeGroup>
+           ```bash macOS/Linux
            mv <download-folder>/main.tf ~/cielara/<name>/prepare/
            ```
+
+           ```powershell Windows
+           Move-Item <download-folder>\main.tf $HOME\cielara\<name>\prepare\
+           ```
+           </CodeGroup>
         4. **Apply.** The apply creates the `cielara_eks_deployer` role, trusted only by Cielara's control plane and gated by your Cielara client ID, and writes `cielara-creds.json`.
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            cd ~/cielara/<name>/prepare && terraform init && terraform apply
            ```
 
+           ```powershell Windows
+           cd $HOME\cielara\<name>\prepare
+           terraform init
+           terraform apply
+           ```
+           </CodeGroup>
+
            By default Terraform keeps its state in this folder. This is not recommended: the state exists only on this machine. Keep it in an S3 bucket you own instead. `main.tf` carries ready-made `backend` blocks: uncomment the one you want before `terraform init`. If you already applied with local state, run `terraform init -migrate-state` after uncommenting it.
-        5. **Upload the cielara-creds.json it writes.** It is in `~/cielara/<name>/prepare`. Drop it on **Drop cielara-creds.json here**, or click **Browse**.
+        5. **Upload the cielara-creds.json.** It is in `~/cielara/<name>/prepare`. Drop it on **Drop cielara-creds.json here**, or click **Browse**.
 
         The file fills the role and state location. Click **Enter manually** to see or change them:
 
@@ -241,27 +309,51 @@ On Windows the form shows PowerShell commands instead, marked with a `PS>` promp
 
         ### Infrastructure
 
+        The network is required. **Continue** stays disabled, with **Upload cielara-network.json to continue** in the footer, until you upload the file from the steps below. Node pools, database and version have defaults you can leave alone.
+
         #### Network
 
         Cielara deploys into a network you own. The form gives you a pre-filled Terraform file for Cielara's [`cielara-network`](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-network/aws/latest) module. It creates a VPC with one private and one public subnet in each of two availability zones, and NAT.
 
         1. **Make a folder for the network.** It sits next to the prepare folder, not inside it: the network is its own Terraform configuration with its own state.
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            mkdir -p ~/cielara/<name>/network && cd ~/cielara/<name>/network
            ```
-        2. **Download main.tf into it.** Click **Download main.tf**. The file is pre-filled with your region. Move it into the network folder:
 
-           ```bash
+           ```powershell Windows
+           New-Item -ItemType Directory -Force $HOME\cielara\<name>\network | Out-Null
+           cd $HOME\cielara\<name>\network
+           ```
+           </CodeGroup>
+        2. **Download main.tf into the /network folder you created.** Click **Download main.tf**. The file is pre-filled with your region. Move it into the network folder:
+
+           <CodeGroup>
+           ```bash macOS/Linux
            mv <download-folder>/main.tf ~/cielara/<name>/network/
            ```
+
+           ```powershell Windows
+           Move-Item <download-folder>\main.tf $HOME\cielara\<name>\network\
+           ```
+           </CodeGroup>
 
            If your browser saved it as `main (1).tf` because the prepare `main.tf` was still in the download folder, move that file instead.
         3. **Apply it and write its output.**
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            cd ~/cielara/<name>/network && terraform init && terraform apply && terraform output -raw handback > cielara-network.json
            ```
+
+           ```powershell Windows
+           cd $HOME\cielara\<name>\network
+           terraform init
+           terraform apply
+           terraform output -raw handback > cielara-network.json
+           ```
+           </CodeGroup>
         4. **Upload cielara-network.json.** It is in `~/cielara/<name>/network`. The form lists the values it read from the file, and **Review** shows them again.
 
         The upload is refused, with the reason, when the file:
@@ -333,7 +425,7 @@ On Windows the form shows PowerShell commands instead, marked with a `PS>` promp
            az login
            ```
 
-           Then check the subscription. The form fills in your **Subscription ID**.
+           Then check that your subscription ID exists. The form fills in your **Subscription ID**.
 
            ```bash
            az account show --subscription <subscription-id>
@@ -342,22 +434,43 @@ On Windows the form shows PowerShell commands instead, marked with a `PS>` promp
            If it prints the subscription, the ID is right and your account can see it. An error means the Subscription ID or the signed-in account is wrong. Fix it before you apply.
         2. **Make a folder for this deployment.**
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            mkdir -p ~/cielara/<name>/prepare && cd ~/cielara/<name>/prepare
            ```
-        3. **Download main.tf into it.** Click **Download main.tf**. The file is pre-filled with your subscription and region. Then move it into the folder:
 
-           ```bash
+           ```powershell Windows
+           New-Item -ItemType Directory -Force $HOME\cielara\<name>\prepare | Out-Null
+           cd $HOME\cielara\<name>\prepare
+           ```
+           </CodeGroup>
+        3. **Download main.tf into the /prepare folder you created.** Click **Download main.tf**. The file is pre-filled with your subscription and region. Then move it into the folder:
+
+           <CodeGroup>
+           ```bash macOS/Linux
            mv <download-folder>/main.tf ~/cielara/<name>/prepare/
            ```
+
+           ```powershell Windows
+           Move-Item <download-folder>\main.tf $HOME\cielara\<name>\prepare\
+           ```
+           </CodeGroup>
         4. **Apply.** The apply creates the `cielara_aks_deployer` service principal scoped to your subscription and writes `cielara-creds.json`.
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            cd ~/cielara/<name>/prepare && terraform init && terraform apply
            ```
 
+           ```powershell Windows
+           cd $HOME\cielara\<name>\prepare
+           terraform init
+           terraform apply
+           ```
+           </CodeGroup>
+
            By default Terraform keeps its state in this folder. This is not recommended: the state exists only on this machine, and it holds the client secret. Keep it in an Azure Storage container you own instead. `main.tf` carries ready-made `backend` blocks: uncomment the one you want before `terraform init`. If you already applied with local state, run `terraform init -migrate-state` after uncommenting it.
-        5. **Upload the cielara-creds.json it writes.** It is in `~/cielara/<name>/prepare`. Drop it on **Drop cielara-creds.json here**, or click **Browse**. The file holds the client secret, so treat it like a password and do not commit it to git.
+        5. **Upload the cielara-creds.json.** It is in `~/cielara/<name>/prepare`. Drop it on **Drop cielara-creds.json here**, or click **Browse**. The file holds the client secret, so treat it like a password and do not commit it to git.
 
         The file fills the service principal and state location. Click **Enter manually** to see or change them:
 
@@ -372,27 +485,51 @@ On Windows the form shows PowerShell commands instead, marked with a `PS>` promp
 
         ### Infrastructure
 
+        The network is required. **Continue** stays disabled, with **Upload cielara-network.json to continue** in the footer, until you upload the file from the steps below. Node pools, database and version have defaults you can leave alone.
+
         #### Network
 
         Cielara deploys into a network you own. The form gives you a pre-filled Terraform file for Cielara's [`cielara-network`](https://registry.terraform.io/modules/causal-dynamics-lab/cielara-network/azurerm/latest) module. It creates a VNet with the subnets Cielara needs and a NAT gateway, inside a resource group you already have.
 
         1. **Make a folder for the network.** It sits next to the prepare folder, not inside it: the network is its own Terraform configuration with its own state.
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            mkdir -p ~/cielara/<name>/network && cd ~/cielara/<name>/network
            ```
-        2. **Download main.tf into it.** First enter the **Existing resource group** the network is created in. It must already exist, in the region you chose: the module never creates one. Then click **Download main.tf** and move the file into the network folder:
 
-           ```bash
+           ```powershell Windows
+           New-Item -ItemType Directory -Force $HOME\cielara\<name>\network | Out-Null
+           cd $HOME\cielara\<name>\network
+           ```
+           </CodeGroup>
+        2. **Download main.tf into the /network folder you created.** First enter the **Existing resource group** the network is created in. It must already exist, in the region you chose: the module never creates one. Then click **Download main.tf** and move the file into the network folder:
+
+           <CodeGroup>
+           ```bash macOS/Linux
            mv <download-folder>/main.tf ~/cielara/<name>/network/
            ```
+
+           ```powershell Windows
+           Move-Item <download-folder>\main.tf $HOME\cielara\<name>\network\
+           ```
+           </CodeGroup>
 
            If your browser saved it as `main (1).tf` because the prepare `main.tf` was still in the download folder, move that file instead.
         3. **Apply it and write its output.**
 
-           ```bash
+           <CodeGroup>
+           ```bash macOS/Linux
            cd ~/cielara/<name>/network && terraform init && terraform apply && terraform output -raw handback > cielara-network.json
            ```
+
+           ```powershell Windows
+           cd $HOME\cielara\<name>\network
+           terraform init
+           terraform apply
+           terraform output -raw handback > cielara-network.json
+           ```
+           </CodeGroup>
         4. **Upload cielara-network.json.** It is in `~/cielara/<name>/network`. The form lists the values it read from the file, and **Review** shows them again.
 
         The upload is refused, with the reason, when the file:
