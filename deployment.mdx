@@ -14,7 +14,7 @@ You run two small Terraform configurations from your own machine: one that creat
 | What | Why |
 |---|---|
 | Terraform 1.7 or later | Runs the prepare and network configurations. [Install Terraform](https://developer.hashicorp.com/terraform/install) |
-| Your cloud's CLI, signed in with admin rights | Terraform uses its credentials. [gcloud](https://cloud.google.com/sdk/docs/install), [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) or [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) |
+| Your cloud's CLI, signed in as an IAM admin: a GCP project owner, an AWS IAM admin or an Azure subscription Owner | Terraform uses its credentials to create the identity Cielara deploys with and grant it roles. [gcloud](https://cloud.google.com/sdk/docs/install), [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) or [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) |
 | A GCP project, AWS account or Azure subscription | Where Cielara runs |
 
 `terraform version` and your CLI's version command (`gcloud version`, `aws --version`, `az version`) show whether you have them.
