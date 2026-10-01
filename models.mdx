@@ -4,10 +4,10 @@ description: "Configure LLM providers for code review, simulations, the AI assis
 ---
 
 <Info>
-  This page is admin-only. It appears in the sidebar under the Configuration group as **Models**.
+  This page is admin-only. Find this section in the sidebar under the Configuration group as **Models**.
 </Info>
 
-Cielara needs at least one LLM provider configured to run code reviews, simulations, the AI assistant, and knowledge base question answering. Until a provider is active, AI features are unavailable. Non-admins can see the setup status but cannot change it.
+Cielara needs at least one LLM provider configured to run code reviews, simulations, the AI assistant, and knowledge base question answering. Until a provider is active, AI features are unavailable. Non-admins can see the setup status but not configure anything.
 
 If no provider has been configured when an admin first signs in, Cielara redirects to this page before the dashboard becomes available.
 
@@ -49,10 +49,10 @@ Each category has a default, with alternatives you can select per category. The 
 
 Models that Cielara has retired no longer appear in the list, though an existing configuration that still names one keeps working.
 
-The deployment name does not have to match the model name. Enter the name exactly as it appears in Azure AI Foundry. The test for each category checks two things:
+The deployment name does not have to match the model name. Enter the name exactly as shown in Azure AI Foundry. The test for each category checks two things:
 
 - **Deployment not found**: no deployment with that name exists in your Foundry resource. Check the spelling against the **Deployments** list in Azure AI Foundry.
-- **Model mismatch**: the deployment exists but serves a different model from the one you selected. The error shows the model it serves and the model you selected. Pick the matching model in the dropdown, or point the field at a deployment of the right model.
+- **Model mismatch**: the deployment exists but serves a different model from the one you selected. The error shows the model served and the model you selected. Pick the matching model in the dropdown, or point the field at a deployment of the right model.
 
 Click **Save & Continue** when all models verify. The provider activates as soon as you save.
 
